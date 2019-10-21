@@ -14,6 +14,9 @@ mkdir -p $HOME/.config/awesome/.tmp
 # Sourcing Xresources
 xrdb ~/.Xresources
 
+# Starting libinput extended gestures
+libinput-gestures-setup start
+
 # Running Pulseaudio
 volume set +0
 

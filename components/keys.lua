@@ -11,8 +11,8 @@ local beautiful = require("beautiful")
 -- Including Custom Helper Libraries
 
 local helpers     = require("helpers")
+local spotify     = require("widgets.spotify")
 local systray     = require("components.systray")
-local startscreen = require("components.startscreen")
 
 --------------------------------------------------------------------------------
 -- Setting Mod Keys
@@ -48,18 +48,18 @@ end
 keys.desktopbuttons = join(
     -- Left click
     awful.button({ }, 1, function()
-        startscreen:hide()
+        awful.screen.focused().startscreen:hide()
         naughty.destroy_all_notifications()
     end),
 
     -- Middle button
     awful.button({ }, 2, function()
-        startscreen:toggle()
+        awful.screen.focused().startscreen:toggle()
     end),
 
     -- Scrolling - Switch tags
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev),
+    --awful.button({ }, 4, awful.tag.viewnext),
+    --awful.button({ }, 5, awful.tag.viewprev),
 
     -- Side buttons - Control volume
     -- awful.button({ }, 9, function() awful.spawn.with_shell("volume set +5") end),
@@ -79,7 +79,7 @@ keys.desktopbuttons = join(
     --           c:raise()
     --       end
     -- end)
-    
+
     keys.desktopbuttons
 )
 
@@ -434,14 +434,6 @@ keys.clientbuttons = join(
         { superkey }, 1,
         awful.mouse.client.move
     ),
-    
-    -- Middle button - Focus
-    awful.button(
-        {}, 2,
-        function(c)
-            c:kill()
-        end
-    ),
 
     keys.clientbuttons
 )
@@ -629,7 +621,7 @@ keys.globalkeys = join(
     awful.key(
         { superkey }, "grave",
         function()
-            startscreen:toggle()
+            awful.screen.focused().startscreen:toggle()
         end,
         { description = "toggle startscreen", group = "awesome" }
     ),
@@ -719,7 +711,7 @@ keys.globalkeys = join(
     awful.key(
         { superkey }, "period",
         function()
-            awful.spawn.with_shell("sp next")
+            spotify:run_script("sp next")
         end,
         { description = "next song", group = "media" }
     ),
@@ -727,7 +719,7 @@ keys.globalkeys = join(
     awful.key(
         { superkey }, "comma",
         function()
-            awful.spawn.with_shell("sp prev")
+            spotify:run_script("sp prev")
         end,
         { description = "previous song", group = "media" }
     ),
@@ -735,9 +727,18 @@ keys.globalkeys = join(
     awful.key(
         { superkey }, "space",
         function()
-            awful.spawn.with_shell("sp play")
+            spotify:run_script("sp play")
         end,
         { description = "play/pause song", group = "media" }
+    ),
+
+	-- Music control
+    awful.key(
+        {}, "XF86AudioPlay",
+        function()
+            awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
+        end,
+        { description = "toggle audio", group = "media" }
     ),
 
     keys.globalkeys

@@ -61,6 +61,7 @@ end
 local function update_widget(line)
 	local property = line:match("[^%s]+ ="):sub(1, -3):lower()
 	local status = line:match("= .*$"):sub(3, -1):lower()
+	require("naughty").notify({text = "ASD"})
 
 	if property == "powered" then
 		if status == "false" then

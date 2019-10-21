@@ -74,6 +74,7 @@ local function update_widget()
 					textboxes,
 					wibox.widget {
 						markup        = get_markup(line),
+						font          = beautiful.text.font,
 						forced_height = beautiful.line_height,
 						widget        = wibox.widget.textbox
 					}

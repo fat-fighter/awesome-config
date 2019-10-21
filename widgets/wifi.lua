@@ -68,7 +68,7 @@ local function startup_widget()
 
 			wifi.enabled = true
 			wifi_icon.image         = beautiful.icon_on
-			wifi.shape_border_color = beautiful.border_color_on
+			wifi.border_color = "#ffffff"
 
 			if status == "online" or status == "ready" then
 				wifi.bg = beautiful.bg.conn or "#0000ff"

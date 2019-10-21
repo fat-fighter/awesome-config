@@ -27,6 +27,9 @@ killall -q alarm-clock-applet
 # Clear the temporary directory (used for spotify)
 rm -rf ${HOME}/.config/awesome/.tmp/*
 
+# Stopping libinput extended gestures
+libinput-gestures-setup start
+
 # Clear already running scripts to avoid unnecessarily running orphan processes
 processes=(
 	"sp.subscribe"    # Spotify

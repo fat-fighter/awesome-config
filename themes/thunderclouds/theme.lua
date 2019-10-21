@@ -29,7 +29,6 @@ local dpi          = require("beautiful.xresources").apply_dpi
 local icons             = theme_dir .. "icons/"
 
 local layout_icons      = icons .. "layout/"
-local taglist_icons     = icons .. "taglist/"
 local titlebar_icons    = icons .. "titlebar/"
 local startscreen_icons = icons .. "startscreen/"
 
@@ -63,12 +62,27 @@ local window_highlight_urgent = "#FF4971"
 --------------------------------------------------------------------------------
 -- Setting Basic Theme Variables
 
+-- DPI Settings
+local dpi_scale = 1.1 
+local dpi       = function(x)
+	return dpi(math.floor(x * dpi_scale))
+end
+theme.dpi = dpi
+
+local font_scale = 1
+local font_size  = function(x)
+	return math.floor(x * font_scale)
+end
+theme.font_size = font_size
+
 -- Wallpaper
 theme.wallpaper = includes .. "wallpaper.jpg"
 
 -- Gaps
 theme.useless_gap   = dpi(10)
 theme.screen_margin = dpi(20)
+
+theme.taglist_icons     = icons .. "taglist/"
 
 --------------------------------------------------------------------------------
 -- Configuring Client Window Settings
@@ -95,7 +109,7 @@ titlebar.ontop_icon   = titlebar_icons .. "ontop.png"
 titlebar.sticky_icon  = titlebar_icons .. "sticky.png"
 
 titlebar.title        = {
-    font    = "IBM Plex Mono Medium 11",
+    font    = "IBM Plex Mono Medium " .. font_size(12),
     align   = "center",
     enabled = true
 }
@@ -180,29 +194,53 @@ widgetbox.bg_hover      = "#484F5799"
 widgetbox.margin        = dpi(6)
 widgetbox.border_radius = dpi(12)
 
+-- Datetime
+local battery       = {}
+
+battery.fg_normal   = foreground_normal
+battery.fg_urgent   = background_urgent
+battery.fg_charging = "#48dc60"
+
+battery.font        = "Roboto " .. font_size(12)
+
+battery.width       = dpi(40)
+battery.height      = dpi(18)
+
+battery.border      = { width = dpi(2), color = foreground_normal .. "99" }
+battery.radius      = dpi(3)
+
+battery.decoration  = dpi(7)
+
+battery.low_icon    = startscreen_icons .. "low-battery.png"
+battery.low_thresh  = 20
+
+-- Host
+host      = {}
+host.font = "Iosevka Medium " .. font_size(13)
+
 -- User
 local user          = {}
 
 user.logo           = config_dir .. "logo.png"
 user.picture        = config_dir .. "avatar.png"
 
-user.logo_height    = dpi(100)
-user.picture_height = dpi(220)
+user.logo_height    = dpi(90)
+user.picture_height = dpi(200)
 
 -- Datetime
 local datetime         = {}
 
 datetime.time          = {}
 datetime.time.fg       = foreground_normal
-datetime.time.font     = "BebasNeue Bold 60"
+datetime.time.font     = "BebasNeue Bold " .. font_size(60)
 
 datetime.date          = {}
 datetime.date.fg       = foreground_normal
-datetime.date.font     = "BebasNeue 24"
+datetime.date.font     = "BebasNeue " .. font_size(24)
 
 datetime.location      = {}
 datetime.location.fg   = foreground_title
-datetime.location.font = "BebasNeue Medium 24"
+datetime.location.font = "BebasNeue Medium " .. font_size(24)
 
 datetime.timeblock     = { margin = dpi(20) }
 
@@ -218,12 +256,12 @@ local calendar         = {
 	border_width = {}
 }
 
-calendar.font.focus    = "Oswald Medium 16"
-calendar.font.header   = "BebasNeue Bold 22"
-calendar.font.normal   = "Oswald Light 16"
-calendar.font.weekday  = "Oswald Medium 16"
-calendar.font.weekend  = "Oswald Medium 16"
-calendar.font.dweekend = "Oswald Light 16"
+calendar.font.focus    = "Iosevka Bold " .. font_size(13)
+calendar.font.header   = "BebasNeue Bold " .. font_size(22)
+calendar.font.normal   = "Iosevka Light " .. font_size(13)
+calendar.font.weekday  = "Iosevka Medium " .. font_size(14)
+calendar.font.weekend  = "Iosevka Medium " .. font_size(14)
+calendar.font.dweekend = "Iosevka Light " .. font_size(13)
 
 calendar.bg.focus      = background_highlight
 calendar.bg.dweekend   = background_focus .. "33"
@@ -247,11 +285,10 @@ calendar.markup        = function(text, flag)
 	return text
 end
 
-calendar.buttons_size  = dpi(25)
-calendar.buttons_depth = dpi(20)
+calendar.buttons_size  = dpi(20)
+calendar.buttons_depth = dpi(15)
 
 calendar.spacing       = dpi(10)
-calendar.bottom_margin = -dpi(50)
 
 -- Spotify
 local spotify             = {}
@@ -264,7 +301,7 @@ spotify.icons.prev        = startscreen_icons .. "spotify-prev.png"
 spotify.icons.play        = startscreen_icons .. "spotify-play.png"
 spotify.icons.pause       = startscreen_icons .. "spotify-pause.png"
 
-spotify.icons.size        = dpi(50)
+spotify.icons.size        = dpi(45)
 spotify.icons.margin      = dpi(50)
 
 spotify.fg                = { title = {}, artist = {} }
@@ -277,8 +314,8 @@ spotify.fg.artist.paused  = foreground_normal
 spotify.fg.artist.stopped = foreground_normal .. "33"
 
 spotify.font              = {
-	title  = "Din Light 18",
-	artist = "Iosevka 14"
+	title  = "Din Light " .. font_size(18),
+	artist = "Iosevka " .. font_size(14)
 }
 
 spotify.scroll_speed      = 50
@@ -286,7 +323,6 @@ spotify.scroll_space      = dpi(100)
 
 spotify.art_dir           = config_dir .. ".tmp/"
 spotify.art_size          = dpi(80)
-spotify.art_border_radius = dpi(6)
 
 spotify.margin            = dpi(70)
 
@@ -361,7 +397,7 @@ wifi.width            = controls.inner_widget_size
 wifi.height           = controls.inner_widget_size
 
 wifi.border_width     = dpi(1)
-wifi.border_color_on  = foreground_normal .. "55"
+wifi.border_color_on  = foreground_normal .. "FF"
 wifi.border_color_off = foreground_normal .. "77"
 
 -- Bluetooth
@@ -414,7 +450,7 @@ mail.bg_hover           = controls.bg_hover
 mail.bg_notification    = background_urgent
 
 mail.fg                 = foreground_urgent
-mail.font               = "Oswald Light 11"
+mail.font               = "Iosevka Light " .. font_size(11)
 
 mail.notification_size  = dpi(22)
 mail.notification_shift = dpi(0)
@@ -464,10 +500,10 @@ alarm.bg_hover      = controls.bg_hover
 -- Notes
 local notes           = { title = {}, text = {} }
 
-notes.title.font      = "BebasNeue Medium 24"
+notes.title.font      = "BebasNeue Medium " .. font_size(24)
 notes.title.fg        = foreground_title
 
-notes.text.font       = "Iosevka Light 16"
+notes.text.font       = "Iosevka Medium " .. font_size(13)
 notes.text.fg         = foreground_normal
 
 notes.text.heading_fg = foreground_highlight
@@ -480,6 +516,7 @@ notes.edit_icon       = startscreen_icons .. "edit.png"
 notes.edit_icon_size  = controls.inner_icon_size
 
 -- Adding widget settings to theme
+startscreen.host          = host
 startscreen.mail          = mail
 startscreen.user          = user
 startscreen.wifi          = wifi
@@ -487,6 +524,7 @@ startscreen.alarm         = alarm
 startscreen.notes         = notes
 startscreen.volume        = volume
 startscreen.webcam        = webcam
+startscreen.battery       = battery
 startscreen.spotify       = spotify
 startscreen.calendar      = calendar
 startscreen.controls      = controls
@@ -505,7 +543,7 @@ theme.startscreen      = startscreen
 
 local naughty         = {}
 
-naughty.font          = "IBM Plex Mono Medium 12"
+naughty.font          = "IBM Plex Mono Medium " .. font_size(12)
 
 naughty.bg            = background_normal
 naughty.fg            = foreground_normal

@@ -41,7 +41,7 @@ local centered = helpers.center_align_widget
 
 local user     = wibox.widget {
 	centered(user_picture, "horizontal"),
-	helpers.vpad(4),
+	helpers.vpad(3),
 	centered(user_logo, "horizontal"),
 	layout = wibox.layout.align.vertical
 }

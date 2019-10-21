@@ -32,7 +32,7 @@ local function update_widget()
 end
 
 local timer = gears.timer {
-    timeout   = 1,
+    timeout   = 0.1,
 	call_now  = true,
     autostart = true,
     callback  = update_widget

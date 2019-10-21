@@ -165,8 +165,4 @@ next_button:buttons(gears.table.join(
 ))
 
 --------------------------------------------------------------------------------
-return {
-	calendar,
-	bottom = beautiful.bottom_margin,
-	widget = wibox.container.margin
-}
+return calendar

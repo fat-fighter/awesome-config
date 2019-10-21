@@ -33,12 +33,13 @@ local gears = require("gears")
 local awful = require("awful")
 require("awful.autofocus")
 local wibox = require("wibox")
+local beautiful = require("beautiful")
 
 --------------------------------------------------------------------------------
 -- Defining Global Variables
 
 editor      = "gvim"
-terminal    = "terminology"
+terminal    = "termite"
 filemanager = terminal .. "-e ranger"
 
 ntags       = 8
@@ -55,10 +56,16 @@ os.execute(config_dir .. "scripts/cleanup.sh")
 
 beautiful.ntags = ntags
 
-local tagnames = {}
-for i = 1, ntags do
-	tagnames[i] = i
-end
+local tagnames = {
+	"browser",
+	"editor",
+	"reading",
+	"terminal",
+	"code",
+	"chill",
+	"music",
+	"social"
+}
 
 beautiful.tagnames = tagnames
 
@@ -148,18 +155,22 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Set wallpaper for every screen
 	set_wallpaper(s)
 
+	s.startscreen = require("components.startscreen")(s)
+
 	-- Each screen has its own tag table.
 	-- Layouts
 	local l = awful.layout.suit
 
 	-- Creating tags with separate configurations
 	awful.tag.add(tagnames[1], {
+		icon   = beautiful.taglist_icons .. tagnames[1] .. ".png",
 		layout = l.max,
 		screen = s,
 		selected = true,
 		-- Work::Browser
 	})
 	awful.tag.add(tagnames[2], {
+		icon   = beautiful.taglist_icons .. tagnames[2] .. ".png",
 		layout = l.spiral.dwindle,
 		screen = s,
 		-- Work::Writing
@@ -346,7 +357,7 @@ awful.rules.rules = {
       	properties = { tag = "5" }
 	},
 	{
-		rule_any   = { class = { "Skype" } },
+		rule_any   = { class = { "Skype Preview" } },
     	properties = { tag = "8" }
 	},
 }

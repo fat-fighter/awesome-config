@@ -4,6 +4,7 @@
 local awful     = require("awful")
 local gears     = require("gears")
 local wibox     = require("wibox")
+local naughty   = require("naughty")
 local beautiful = require("beautiful").startscreen.spotify
 
 --------------------------------------------------------------------------------
@@ -47,7 +48,6 @@ local artist_container = wibox.widget {
 local album_art        = wibox.widget {
 	resize        = true,
 	opacity       = 0.75,
-	clip_shape    = helpers.rrect(beautiful.art_border_radius),
 	forced_width  = beautiful.art_size,
 	forced_height = beautiful.art_size,
 	widget        = wibox.widget.imagebox
@@ -103,7 +103,7 @@ local spotify = wibox.widget {
 			},
 			layout = wibox.layout.fixed.horizontal
 		},
-		helpers.vpad(1.5),
+		helpers.vpad(2),
 		centered(
 			{
 				prev_button, toggle_button, next_button,
@@ -137,7 +137,6 @@ local function update_widget(line)
 	local status = line:match("^[^|]+"):lower()
 	line = line:sub(#status + 2)
 
-	
 	if status == "playing" then
 		toggle_button.image = beautiful.icons.pause
 	else
@@ -146,7 +145,7 @@ local function update_widget(line)
 
 	local at, tt
 	local ac, tc
-	
+
 	if status ~= "stopped" then
 		local artist = line:match("^[^|]+")
 		line = line:sub(#artist + 2)
@@ -155,7 +154,7 @@ local function update_widget(line)
 		line = line:sub(#title + 2)
 
 		local album = line:match("^[^|]+$")
-		
+
 		 --Escape &'s
 		artist = artist:gsub("&", "&amp;")
 		title  = title:gsub("&", "&amp;")
@@ -164,7 +163,7 @@ local function update_widget(line)
 		-- Set text and colours
 		at = artist .. " -- " .. album
 		tt = title
-		
+
 		ac = beautiful.fg.artist[status] or "#FDFDFD"
 		tc = beautiful.fg.title[status] or "#FDFDFD"
 
@@ -181,7 +180,7 @@ local function update_widget(line)
 	else
 		at = "----------"
 		tt = "----------"
-		
+
 		ac = beautiful.fg.artist[status] or "#777777"
 		tc = beautiful.fg.title[status] or "#777777"
 	end
@@ -202,6 +201,38 @@ awful.spawn.with_line_callback(spotify_script, {
 		update_widget(line)
 	end
 })
+
+function spotify:run_script(script)
+	awful.spawn.easy_async_with_shell(
+		script,
+		function(stdout)
+			if stdout:sub(1, 5) == "Error" then
+				naughty.notify({
+					title = "Spotify not Running",
+					text  = "I will try to create a new instance of Spotify"
+				})
+				awful.spawn("spotify")
+
+				local timer = gears.timer({
+					timeout   = 10,
+					call_now  = false,
+					autostart = true
+				})
+				timer:connect_signal(
+					"timeout",
+					function()
+						awful.spawn.with_line_callback(spotify_script, {
+							stdout = function(line)
+								update_widget(line)
+							end
+						})
+						timer:stop()
+					end
+				)
+			end
+		end
+	)
+end
 
 --------------------------------------------------------------------------------
 return spotify
