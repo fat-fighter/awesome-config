@@ -63,13 +63,15 @@ local window_highlight_urgent = "#FF4971"
 -- Setting Basic Theme Variables
 
 -- DPI Settings
-local dpi_scale = 1.1 
+ local dpi_scale = 1.1
+--local dpi_scale = 0.8
 local dpi       = function(x)
 	return dpi(math.floor(x * dpi_scale))
 end
 theme.dpi = dpi
 
-local font_scale = 1
+ local font_scale = 1
+--local font_scale = 0.8
 local font_size  = function(x)
 	return math.floor(x * font_scale)
 end

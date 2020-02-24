@@ -20,7 +20,7 @@ local timezones = {
 	},
 	{
 		location = "Kanpur, UP",
-		offset   = 34200
+		offset   = 37800
 	}
 }
 

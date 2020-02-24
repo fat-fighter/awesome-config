@@ -736,9 +736,26 @@ keys.globalkeys = join(
     awful.key(
         {}, "XF86AudioPlay",
         function()
-            awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
+            -- awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
+			spotify:run_script("sp play")
         end,
         { description = "toggle audio", group = "media" }
+    ),
+    awful.key(
+        {}, "XF86AudioPrev",
+        function()
+            -- awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
+			spotify:run_script("sp prev")
+        end,
+        { description = "prev song", group = "media" }
+    ),
+    awful.key(
+        {}, "XF86AudioNext",
+        function()
+            -- awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
+			spotify:run_script("sp next")
+        end,
+        { description = "next song", group = "media" }
     ),
 
     keys.globalkeys
