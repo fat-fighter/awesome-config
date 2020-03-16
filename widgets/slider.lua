@@ -39,6 +39,7 @@ function slider.create_slider(style, update_cmd)
 		handle_border_width = 0,
 		forced_width        = style.height,
 		forced_height       = style.width,
+		enabled             = true,
 		widget              = wibox.widget.slider
 	}
 
@@ -102,7 +103,7 @@ function slider.create_slider(style, update_cmd)
 	--           end
 	-- }}
 	bar:connect_signal("button::release", function(_, _, _, button, _, _)
-		if button == 1 then
+		if button == 1 and bar.enabled == true then
 			awful.spawn.with_shell(update_cmd .. " " .. bar.value)
 		end
 	end)

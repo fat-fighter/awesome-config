@@ -66,8 +66,8 @@ local function startup_widget()
 		function(stdout)
 			local status = stdout:match("= .*$"):sub(3, -2)
 
-			wifi.enabled = true
-			wifi_icon.image         = beautiful.icon_on
+			wifi.enabled      = true
+			wifi_icon.image   = beautiful.icon_on
 			wifi.border_color = "#ffffff"
 
 			if status == "online" or status == "ready" then
@@ -125,7 +125,7 @@ startup_widget()
 -- Sleeps until connmanctl detects an event (wifi on/off/connected)
 local connman_script = [[
 	bash -c "
-		connman-monitor | grep --line-buffered 'technology/wifi'
+		connman-monitor
 	"
 ]]
 

@@ -616,7 +616,7 @@ keys.globalkeys = join(
         awesome.restart,
         { description = "reload awesome", group = "awesome" }
     ),
-    
+
     -- Toggle startscreen
     awful.key(
         { superkey }, "grave",
@@ -707,55 +707,54 @@ keys.globalkeys = join(
         { description = "capture whole screen", group = "screenshots" }
     ),
 
-    -- Spotify control
+    -- Media control
     awful.key(
         { superkey }, "period",
         function()
-            spotify:run_script("sp next")
+			awful.spawn.with_shell("playerctl next")
         end,
-        { description = "next song", group = "media" }
+        { description = "next", group = "media" }
     ),
 
     awful.key(
         { superkey }, "comma",
         function()
             spotify:run_script("sp prev")
+			awful.spawn.with_shell("playerctl previous")
         end,
-        { description = "previous song", group = "media" }
+        { description = "prev", group = "media" }
     ),
 
     awful.key(
         { superkey }, "space",
         function()
-            spotify:run_script("sp play")
+			awful.spawn.with_shell("playerctl play-pause")
         end,
-        { description = "play/pause song", group = "media" }
+        { description = "toggle", group = "media" }
     ),
 
-	-- Music control
     awful.key(
         {}, "XF86AudioPlay",
         function()
-            -- awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
-			spotify:run_script("sp play")
+			awful.spawn.with_shell("playerctl play-pause")
         end,
-        { description = "toggle audio", group = "media" }
+        { description = "toggle", group = "media" }
     ),
+
     awful.key(
         {}, "XF86AudioPrev",
         function()
-            -- awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
-			spotify:run_script("sp prev")
+			awful.spawn.with_shell("playerctl previous")
         end,
-        { description = "prev song", group = "media" }
+        { description = "prev", group = "media" }
     ),
+
     awful.key(
         {}, "XF86AudioNext",
         function()
-            -- awful.spawn.with_shell("/home/fat-fighter/downloads/t.sh")
-			spotify:run_script("sp next")
+			awful.spawn.with_shell("playerctl next")
         end,
-        { description = "next song", group = "media" }
+        { description = "next", group = "media" }
     ),
 
     keys.globalkeys

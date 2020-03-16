@@ -34,11 +34,13 @@ local function update_widget()
 
 			if status == "N" then
 				mute = true
+				volume.bar.enabled = false
 
 				volume.cover.bg = beautiful.controller_bg .. "00"
 				volume.icon.image = beautiful.icon_mute
 			else
 				mute = false
+				volume.bar.enabled = true
 
 				volume.cover.bg = beautiful.controller_bg
 				volume.icon.image = beautiful.icon_on
@@ -76,11 +78,13 @@ volume:buttons(
 			
 			if mute then
 				mute = false
+				volume.bar.enabled = true
 
 				volume.cover.bg = beautiful.controller_bg
 				volume.icon.image = beautiful.icon_on
 			else
 				mute = true
+				volume.bar.enabled = false
 				
 				volume.cover.bg = beautiful.controller_bg .. "00"
 				volume.icon.image = beautiful.icon_mute
