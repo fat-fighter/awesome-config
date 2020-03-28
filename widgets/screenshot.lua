@@ -53,12 +53,12 @@ helpers.add_clickable_effect(
 screenshot:buttons(gears.table.join(
 	-- Left click - Take screenshot
 	awful.button({ }, 1, function ()
-		awful.spawn.with_shell("screenshot.sh")
+		awful.spawn.with_shell("gnome-screenshot -f ~/downloads/screenshot.png")
 	end),
 	-- Right click - Take screenshot in 5 seconds
 	awful.button({ }, 3, function ()
 		naughty.notify({title = "Say cheese!", text = "Taking shot in 5 seconds", timeout = 4, icon = beautiful.icon})
-		awful.spawn.with_shell("sleep 5 && screenshot.sh")
+		awful.spawn.with_shell("sleep 5 && gnome-screenshot -f ~/downloads/screenshot.png")
 	end)
 ))
 

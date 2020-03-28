@@ -23,7 +23,7 @@ local webcam_icon = wibox.widget {
 	widget        = wibox.widget.imagebox
 }
 
-local centered        = helpers.center_align_widget
+local centered    = helpers.center_align_widget
 
 local webcam      = wibox.widget {
 	centered(
@@ -46,12 +46,6 @@ helpers.add_clickable_effect(
 		webcam.bg = beautiful.bg or "#333333"
 	end
 )
-
-awful.spawn.with_line_callback(volume_script, {
-	stdout = function(line)
-		update_widget()
-	end
-})
 
 --------------------------------------------------------------------------------
 -- Adding Button Controls to the Widget

@@ -68,9 +68,11 @@ client.connect_signal(
         local titlebar = awful.titlebar(
             c,
             {
-                font     = beautiful.font,
-                size     = beautiful.size,
-                position = beautiful.position
+                font      = beautiful.font,
+                size      = beautiful.size,
+                position  = beautiful.position,
+				bg_focus  = beautiful.bg_focus,
+				bg_normal = beautiful.bg_normal
             }
         )
 

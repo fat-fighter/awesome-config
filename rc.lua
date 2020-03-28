@@ -292,6 +292,20 @@ awful.rules.rules = {
 		properties = { titlebars_enabled = true },
     },
 
+	-- Turn off titlebars for some clients
+	{
+        rule_any = {
+			name = {
+				"Chrome",
+				"Chromium",
+			},
+            class = {
+                "qutebrowser",
+            },
+        },
+        properties = { titlebars_enabled = false },
+    },
+
 	-- Floating clients
 	{
 		rule_any   = {

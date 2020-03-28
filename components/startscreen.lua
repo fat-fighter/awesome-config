@@ -246,7 +246,7 @@ local function create_startscreen(screen)
 						),
 						boxed(
 							require("widgets.spotify"),
-							beautiful.column_widths[1], dpi(300)
+							beautiful.column_widths[1], dpi(310)
 						),
 						layout = wibox.layout.fixed.vertical
 					},
@@ -258,7 +258,7 @@ local function create_startscreen(screen)
 						),
 						boxed(
 							require("widgets.notes"),
-							beautiful.column_widths[2], dpi(350), true
+							beautiful.column_widths[2], dpi(360), true
 						),
 						layout = wibox.layout.fixed.vertical
 					},

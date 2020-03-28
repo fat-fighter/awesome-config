@@ -1,12 +1,30 @@
---   ███     ████                                                                        ████
---  ░███    ░░███                                 ░░███                                 ░░███                           ░░███
---  ██████   ░███      █████ ████  █████████       ░███   ██████   ████████     ██████   ░███    ██████  █████ ████      ░███   █████
--- ░░███░    ░███      ░███ ░███  ░░███░░███    ███████  ███░░███  ░░███░░███  ███░░███  ░███   ███░░███ ░███ ░███    ███████ ░███░░
---  ░███     ░███████  ░███ ░███   ░███ ░███   ███░░███ ░███████    ░███ ░░░  ░███ ░░░   ░███  ░███ ░███ ░███ ░███   ███░░███  ░████
---  ░███  █  ░███░░███ ░███ ░███   ░███ ░███  ░███░░███ ░███░░░     ░███      ░███  ███  ░███  ░███ ░███ ░███ ░███  ░███░░███  ░░░███
---  ░░████   ████░░███ ░████████   █████░████ ░░██████  ░░███████   █████     ░░██████   █████ ░░██████  ░████████  ░░██████   █████
---   ░░░░   ░░░░  ░░░  ░░░░░░░░   ░░░░░ ░░░░   ░░░░░░    ░░░░░░░   ░░░░░       ░░░░░░   ░░░░░   ░░░░░░   ░░░░░░░░    ░░░░░░   ░░░░░
--------------------------------------------------------------------------------------------------------------------------------------
+--
+--    ███     ████                                  ████
+--   ░███    ░░███                                 ░░███
+--   ██████   ░███      █████ ████  █████████       ░███   ██████   ████████
+--  ░░███░    ░███      ░███ ░███  ░░███░░███    ███████  ███░░███  ░░███░░███
+--   ░███     ░███████  ░███ ░███   ░███ ░███   ███░░███ ░███████    ░███ ░░░
+--   ░███  █  ░███░░███ ░███ ░███   ░███ ░███  ░███░░███ ░███░░░     ░███
+--   ░░████   ████░░███ ░████████   █████░████ ░░██████  ░░███████   █████
+--    ░░░░   ░░░░  ░░░  ░░░░░░░░   ░░░░░ ░░░░   ░░░░░░    ░░░░░░░   ░░░░░
+--                                          ████                            ████
+--                 ██                     ░░███                           ░░███
+--               ███              ██████   ░███    ██████  █████ ████      ░███   █████
+--             ████              ███░░███  ░███   ███░░███ ░███ ░███    ███████ ░███░░
+--           █████              ░███ ░░░   ░███  ░███ ░███ ░███ ░███   ███░░███  ░████
+--             ████             ░███  ███  ░███  ░███ ░███ ░███ ░███  ░███░░███  ░░░███
+--            ███               ░░██████   █████ ░░██████  ░████████  ░░██████   █████
+--           ██                  ░░░░░░   ░░░░░   ░░░░░░   ░░░░░░░░    ░░░░░░   ░░░░░
+--
+-- =====================================================================================
+--   Name:       thunder⚡clouds
+--   Author:     Gurpreet Singh
+--   Url:        https://github.com/ffs97/awesome-config/themes/thunderclouds/theme.lua
+--   License:    The MIT License (MIT)
+--
+--   A dark UI theme for aweosme heavily based on elenapan's  dotfiles
+--   (github.com/elenapan/dotfiles)
+-- =====================================================================================
 
 local theme_name = "thunderclouds"
 
@@ -29,6 +47,7 @@ local dpi          = require("beautiful.xresources").apply_dpi
 local icons             = theme_dir .. "icons/"
 
 local layout_icons      = icons .. "layout/"
+local weather_icons     = icons .. "weather/"
 local titlebar_icons    = icons .. "titlebar/"
 local startscreen_icons = icons .. "startscreen/"
 
@@ -55,23 +74,21 @@ local foreground_normal       = "#F7F7F7"
 local foreground_urgent       = "#282A36"
 local foreground_highlight    = "#7AB3CC"
 
-local window_highlight_focus  = "#1B1D26"
-local window_highlight_normal = "#282A36"
+local window_highlight_normal = "#252C36"
+local window_highlight_focus  = "#15131A"
 local window_highlight_urgent = "#FF4971"
 
 --------------------------------------------------------------------------------
 -- Setting Basic Theme Variables
 
 -- DPI Settings
- local dpi_scale = 1.1
---local dpi_scale = 0.8
+local dpi_scale = 1
 local dpi       = function(x)
 	return dpi(math.floor(x * dpi_scale))
 end
 theme.dpi = dpi
 
- local font_scale = 1
---local font_scale = 0.8
+local font_scale = 1
 local font_size  = function(x)
 	return math.floor(x * font_scale)
 end
@@ -102,27 +119,27 @@ local titlebar        = {}
 
 titlebar.enabled      = true
 
-titlebar.size         = dpi(35)
+titlebar.size         = dpi(40)
 
-titlebar.icon_size    = dpi(20)
+titlebar.icon_size    = dpi(15)
 titlebar.icon_spacing = dpi(10)
 
 titlebar.ontop_icon   = titlebar_icons .. "ontop.png"
 titlebar.sticky_icon  = titlebar_icons .. "sticky.png"
 
 titlebar.title        = {
-    font    = "IBM Plex Mono Medium " .. font_size(12),
+    font    = "IBM Plex Mono Medium " .. font_size(12.5),
     align   = "center",
     enabled = true
 }
 
 titlebar.position     = "top" -- | "right" | "bottom" | "left"
 
-titlebar_bg_normal    = window_highlight_normal
-titlebar_fg_normal    = foreground_normal
+titlebar.bg_normal    = window_highlight_normal
+titlebar.fg_normal    = foreground_normal
 
-titlebar_bg_focus     = window_highlight_focus
-titlebar_fg_focus     = foreground_focus
+titlebar.bg_focus     = window_highlight_focus
+titlebar.fg_focus     = foreground_focus
 
 titlebar.padding      = dpi(50)
 
@@ -186,12 +203,12 @@ startscreen.border_radius      = 0
 --------------------------------------------------------------------------------
 -- StartScreen Widgets
 
-local column_widths = { dpi(500), dpi(300), dpi(396) }
+local column_widths = { dpi(500), dpi(300), dpi(402) }
 
 -- Widget Box settings
 local widgetbox         = {}
 
-widgetbox.bg            = "#282F3799"
+widgetbox.bg            = "#282F37B4"
 widgetbox.bg_hover      = "#484F5799"
 widgetbox.margin        = dpi(6)
 widgetbox.border_radius = dpi(12)
@@ -399,7 +416,7 @@ wifi.width            = controls.inner_widget_size
 wifi.height           = controls.inner_widget_size
 
 wifi.border_width     = dpi(1)
-wifi.border_color_on  = foreground_normal .. "FF"
+wifi.border_color_on  = foreground_normal .. "BB"
 wifi.border_color_off = foreground_normal .. "77"
 
 -- Bluetooth
@@ -419,7 +436,7 @@ bluetooth.width            = controls.inner_widget_size
 bluetooth.height           = controls.inner_widget_size
 
 bluetooth.border_width     = dpi(1)
-bluetooth.border_color_on  = foreground_normal .. "55"
+bluetooth.border_color_on  = foreground_normal .. "BB"
 bluetooth.border_color_off = foreground_normal .. "77"
 
 -- Screenshot
@@ -485,6 +502,37 @@ webcam.border_radius = controls.border_radius
 webcam.bg            = controls.bg
 webcam.bg_hover      = controls.bg_hover
 
+-- Weather
+local weather          = {}
+
+weather.icon_size      = dpi(60)
+weather.temp_icon_size = dpi(40)
+weather.icons          = {
+    mist       = weather_icons .. "mist.png",
+    snow       = weather_icons .. "snow.png",
+    storm      = weather_icons .. "storm.png",
+    cloudy     = weather_icons .. "cloudy.png",
+    dclear     = weather_icons .. "dclear.png",
+    nclear     = weather_icons .. "nclear.png",
+    dcloud     = weather_icons .. "dcloud.png",
+    ncloud     = weather_icons .. "ncloud.png",
+    drain      = weather_icons .. "drain.png",
+    nrain      = weather_icons .. "nrain.png",
+    default    = weather_icons .. "default.png",
+    celcius    = weather_icons .. "celcius.png",
+    fahrenheit = weather_icons .. "fahrenheit.png",
+}
+
+weather.font           = "BebasNeue " .. font_size(40)
+
+weather.width          = controls.widget_width
+weather.height         = (controls.widget_height + controls.margin) * 2
+
+weather.border_radius  = controls.border_radius
+
+weather.bg             = controls.bg
+weather.bg_hover       = controls.bg_hover
+
 -- Alarm
 local alarm         = {}
 
@@ -528,6 +576,7 @@ startscreen.volume        = volume
 startscreen.webcam        = webcam
 startscreen.battery       = battery
 startscreen.spotify       = spotify
+startscreen.weather       = weather
 startscreen.calendar      = calendar
 startscreen.controls      = controls
 startscreen.datetime      = datetime
