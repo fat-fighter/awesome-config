@@ -60,11 +60,7 @@ return {
                     widget        = wibox.container.background
                 },
                 nil,
-                {
-                    require("widgets.weather"),
-                    top = (beautiful.margin or 0) * 0,
-                    widget = wibox.container.margin
-                },
+                require("widgets.weather"),
                 expand = "none",
                 layout = wibox.layout.align.vertical
             },

@@ -10,7 +10,7 @@ local beautiful = require("beautiful").naughty
 naughty.config.defaults["icon_size"] = beautiful.icon_size
 
 -- Timeouts
-naughty.config.defaults.timeout         = 5
+naughty.config.defaults.timeout         = 50
 naughty.config.presets.low.timeout      = 2
 naughty.config.presets.critical.timeout = 50
 

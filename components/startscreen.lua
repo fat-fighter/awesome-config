@@ -70,23 +70,28 @@ local function create_startscreen(screen)
 	----------------------------------------------------------------------------
 	-- Creating the StartScreen
 
-	local startscreen   = wibox { visible = false, ontop = true, type = "dock" }
+	local startscreen    = wibox { visible = false, ontop = true, type = "dock" }
 
-	if beautiful.bg_image then
-		local bg_image = gears.surface(beautiful.bg_image)
-		local bg_width, bg_height = gears.surface.get_size(bg_image)
+    local startscreen_bg = wibox.widget {
+        helpers.get_empty_widget(),
+        opacity = beautiful.bg_opacity,
+        widget  = wibox.container.background
+    }
 
-		local function bg_image_function(_, cr, width, height)
-			cr:scale(width / bg_width, height / bg_height)
-			cr:set_source_surface(bg_image)
-			cr:paint()
-		end
+    if beautiful.bg_image then
+        local bg_image = gears.surface(beautiful.bg_image)
+        local bg_width, bg_height = gears.surface.get_size(bg_image)
 
-		startscreen.bgimage = bg_image_function
-	else
-		startscreen.bg = beautiful.bg or "#111111"
-	end
+        local function bg_image_function(_, cr, width, height)
+            cr:scale(width / bg_width, height / bg_height)
+            cr:set_source_surface(bg_image)
+            cr:paint()
+        end
 
+        startscreen_bg.bgimage = bg_image_function
+    end
+
+	startscreen.bg = beautiful.bg
 	startscreen.fg = beautiful.fg or "#FFFFFF"
 
 	if beautiful.border_radius then
@@ -215,77 +220,77 @@ local function create_startscreen(screen)
 	local boxed    = helpers.create_widget_box
 	local centered = helpers.center_align_widget
 
+    local boxes = {
+        {
+            -- Column: 1
+            boxed(
+                require("widgets.user"),
+                beautiful.column_widths[1], dpi(500)
+            ),
+            boxed(
+                require("widgets.spotify"),
+                beautiful.column_widths[1], dpi(310)
+            ),
+            layout = wibox.layout.fixed.vertical
+        },
+        {
+            -- Column: 2
+            boxed(
+                require("widgets.datetime"),
+                beautiful.column_widths[2], dpi(450)
+            ),
+            boxed(
+                require("widgets.notes"),
+                beautiful.column_widths[2], dpi(360), true
+            ),
+            layout = wibox.layout.fixed.vertical
+        },
+        {
+            -- Column: 3
+            boxed(
+                require("widgets.calendar"),
+                beautiful.column_widths[3], dpi(510)
+            ),
+            require("widgets.controls"),
+            layout = wibox.layout.fixed.vertical
+        },
+        layout = wibox.layout.fixed.horizontal
+    }
+
+    boxes = centered(boxes, "horizontal")
+    boxes = centered(boxes, "vertical")
+
 	startscreen:setup{
-		{
-			{
-				{
-					require("widgets.host"),
-					--require("widgets.workspace")(screen),
-					nil,
-					require("widgets.battery"),
-					expand = "none",
-					layout = wibox.layout.align.horizontal
-				},
-				layout = wibox.layout.fixed.vertical
-			},
-			top    = dpi(5),
-			left   = dpi(10),
-			right  = dpi(10),
-			widget = wibox.container.margin
-		},
-		{
-			{
-				-- Center boxes vertically
-				nil,
-				centered({
-					{
-						-- Column: 1
-						boxed(
-							require("widgets.user"),
-							beautiful.column_widths[1], dpi(500)
-						),
-						boxed(
-							require("widgets.spotify"),
-							beautiful.column_widths[1], dpi(310)
-						),
-						layout = wibox.layout.fixed.vertical
-					},
-					{
-						-- Column: 2
-						boxed(
-							require("widgets.datetime"),
-							beautiful.column_widths[2], dpi(450)
-						),
-						boxed(
-							require("widgets.notes"),
-							beautiful.column_widths[2], dpi(360), true
-						),
-						layout = wibox.layout.fixed.vertical
-					},
-					{
-						-- Column: 3
-						boxed(
-							require("widgets.calendar"),
-							beautiful.column_widths[3], dpi(510)
-						),
-						require("widgets.controls"),
-						layout = wibox.layout.fixed.vertical
-					},
-					layout = wibox.layout.fixed.horizontal
-				}, "horizontal"),
-				nil,
-				expand = "none",
-				layout = wibox.layout.align.vertical
-			},
-			margins = beautiful.border_width or 0,
-			color = beautiful.border_color or "#00000000",
-			widget = wibox.container.margin
-		},
+        startscreen_bg,
+        {
+            {
+                {
+                    require("widgets.host"),
+                    --require("widgets.workspace")(screen),
+                    nil,
+                    require("widgets.battery"),
+                    expand = "none",
+                    layout = wibox.layout.align.horizontal
+                },
+                layout = wibox.layout.fixed.vertical
+            },
+            top    = dpi(5),
+            left   = dpi(10),
+            right  = dpi(10),
+            widget = wibox.container.margin
+        },
+        {
+            boxes,
+            margins = beautiful.border_width or 0,
+            color = beautiful.border_color or "#00000000",
+            widget = wibox.container.margin
+        },
 		layout = wibox.layout.stack
 	}
 
 	----------------------------------------------------------------------------
 	return startscreen
+
 end
 
 --------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ local wibox     = require("wibox")
 local gears     = require("gears")
 local naughty   = require("naughty")
 local beautiful = require("beautiful")
+local cairo     = require("lgi").cairo
 local dpi       = require("beautiful.xresources").apply_dpi
 
 local helpers = {}
@@ -118,6 +119,13 @@ end
 --------------------------------------------------------------------------------
 -- Adding Wibox Widget Helpers
 
+function helpers.get_empty_widget()
+    return {
+        text   = "",
+        widget = wibox.widget.textbox
+    }
+end
+
 function helpers.center_align_widget(widget, direction)
 	local layout
 	if direction == "vertical" then
@@ -151,17 +159,15 @@ function helpers.create_widget_box(widget, width, height, ignore_center, bg, br)
 		)
 	end
 
-	local boxed_widget = wibox.widget {
+	return wibox.widget {
 		{
 			widget,
 			widget = box_container,
-		},
-		margins = style.margin,
-		color = "#00000000",
-		widget = wibox.container.margin
-	}
-
-	return boxed_widget
+        },
+        margins = style.margin,
+        color = "#00000000",
+        widget = wibox.container.margin
+    }
 end
 
 function helpers.add_clickable_effect(widget, press_callback, release_callback)
@@ -194,6 +200,66 @@ end
 
 function helpers.colorize_text(text, fg)
 	return "<span foreground='" .. fg .."'>" .. text .. "</span>"
+end
+
+--------------------------------------------------------------------------------
+-- Adding Shadow Widget
+
+function helpers.add_shadow(widget, w, h, s, br, col)
+    w = w + 2 * s
+    h = h + 2 * s
+
+    local img = cairo.ImageSurface.create(cairo.Format.ARGB32, w, h)
+    local cr  = cairo.Context(img)
+
+    local r, g, b, a = gears.color.parse_color(col)
+    local off = s + br
+
+    local corners = {
+        {off, off, 0, 0},
+        {w - off, off, w - off, 0},
+        {w - off, h - off, w - off, h - off},
+        {off, h - off, 0, h - off}
+    }
+    local sides = {
+        { {0, s, 0, 0}, {off, 0, w - 2 * off, s} },
+        { {w - s, 0, w, 0}, {w - s, off, s, h - 2 * off} },
+        { {s, h - s, s, h}, {off, h - s, w - 2 * off, s} },
+        { {s, 0, 0, 0}, {0, off, s, h - 2 * off} },
+    }
+
+    for _, c in ipairs(corners) do
+        local pat = cairo.RadialPattern(c[1], c[2], br, c[1], c[2], off)
+        pat:add_color_stop_rgba(0, r, g, b, 0);
+        pat:add_color_stop_rgba(0, r, g, b, a); -- To handle a bug in cairo
+        pat:add_color_stop_rgba(1, r, g, b, 0);
+
+        cr:rectangle(c[3], c[4], off, off)
+        cr:set_source(pat)
+        cr:fill()
+    end
+
+    for _, side in ipairs(sides) do
+        local pat = cairo.LinearPattern(unpack(side[1]))
+        pat:add_color_stop_rgba(0, r, g, b, a);
+        pat:add_color_stop_rgba(1, r, g, b, 0);
+
+        cr:rectangle(unpack(side[2]))
+        cr:set_source(pat)
+        cr:fill()
+    end
+
+    return {
+        {
+            widget,
+            margins = s,
+            widget  = wibox.container.margin
+        },
+        bgimage       = img,
+        forced_width  = w,
+        forced_height = h,
+        widget        = wibox.container.background
+    }
 end
 
 --------------------------------------------------------------------------------

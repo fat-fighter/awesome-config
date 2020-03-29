@@ -2,9 +2,7 @@
 -- Including Standard Awesome Libraries
 
 local awful     = require("awful")
-local gears     = require("gears")
 local wibox     = require("wibox")
-local naughty   = require("naughty")
 local beautiful = require("beautiful").startscreen.weather
 
 --------------------------------------------------------------------------------
@@ -41,6 +39,12 @@ local weather_temp_icon = wibox.widget {
 
 local centered          = helpers.center_align_widget
 
+local tt = {
+    weather_temp,
+    shape = helpers.rrect(5),
+    widget = wibox.container.background
+}
+
 local weather           = wibox.widget {
 	centered({
 		centered(weather_icon, "horizontal"),
@@ -52,9 +56,9 @@ local weather           = wibox.widget {
             layout = wibox.layout.align.horizontal
         }, "horizontal"),
 		layout = wibox.layout.align.vertical
-    },"vertical"),
+    }, "vertical"),
 	bg            = beautiful.bg or "#333333",
-	shape         = helpers.rrect(beautiful.border_radius or 0),
+    shape         = helpers.rrect(beautiful.border_radius or 0),
 	forced_width  = beautiful.width,
 	forced_height = beautiful.height,
 	widget        = wibox.container.background
@@ -110,7 +114,7 @@ awful.widget.watch(weather_details_script, update_interval, function(widget, std
     -- local description = weather_details:match('(.*)@@')
 
     local temperature = weather_details:match('@@(.*)')
-    weather_temp.markup = temperature
+    weather_temp.markup = helpers.colorize_text(temperature, beautiful.fg)
 
     local dn = string.sub(icon_code, 3, 3)
 

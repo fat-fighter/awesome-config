@@ -816,6 +816,14 @@ keys.globalkeys = join(
         { description = "spawn editor", group = "launcher" }
     ),
 
+    awful.key(
+        { superkey }, "i", 
+        function()
+            require("awful.hotkeys_popup").show_help()
+        end,
+        {description="show help", group="awesome"}
+    ),
+
     keys.globalkeys
 )
 

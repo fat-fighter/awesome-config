@@ -178,12 +178,13 @@ theme.systray_icon_spacing = systray.spacing
 
 local startscreen              = { animation = {} }
 
-startscreen.bg	               = background_normal .. "ED"
+startscreen.bg	               = foreground_normal .. "00"
 startscreen.fg                 = foreground_normal
 
 startscreen.bg_image           = includes .. "wallpaper-blur.jpg"
 
 startscreen.opacity            = 1.0
+startscreen.bg_opacity         = 0.9
 
 startscreen.width              = screen_width
 startscreen.height             = screen_height
@@ -523,15 +524,18 @@ weather.icons          = {
     fahrenheit = weather_icons .. "fahrenheit.png",
 }
 
+weather.fg             = foreground_normal
 weather.font           = "BebasNeue " .. font_size(40)
 
-weather.width          = controls.widget_width
+weather.width          = (controls.widget_width + controls.margin) * 2
 weather.height         = (controls.widget_height + controls.margin) * 2
 
 weather.border_radius  = controls.border_radius
 
 weather.bg             = controls.bg
 weather.bg_hover       = controls.bg_hover
+
+weather.shadow_radius  = controls.border_radius
 
 -- Alarm
 local alarm         = {}
@@ -588,6 +592,20 @@ startscreen.brightness    = brightness
 startscreen.column_widths = column_widths
 
 theme.startscreen      = startscreen
+
+--------------------------------------------------------------------------------
+-- Hoteys Help
+
+theme.hotkeys_bg               = background_normal
+theme.hotkeys_fg	           = foreground_normal .. "88"
+theme.hotkeys_border_width     = 0
+theme.hotkeys_border_color     = background_normal
+theme.hotkeys_modifiers_fg     = foreground_focus
+theme.hotkeys_label_bg         = background_normal .. "00"
+theme.hotkeys_label_fg	       = foreground_title
+theme.hotkeys_font	           = "Iosevka Medium " .. font_size(16)
+theme.hotkeys_description_font = "Iosevka Medium " .. font_size(14)
+theme.hotkeys_group_margin     = dpi(50)
 
 --------------------------------------------------------------------------------
 -- Notifications
