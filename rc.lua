@@ -163,14 +163,12 @@ awful.screen.connect_for_each_screen(function(s)
 
 	-- Creating tags with separate configurations
 	awful.tag.add(tagnames[1], {
-		icon   = beautiful.taglist_icons .. tagnames[1] .. ".png",
 		layout = l.max,
 		screen = s,
 		selected = true,
 		-- Work::Browser
 	})
 	awful.tag.add(tagnames[2], {
-		icon   = beautiful.taglist_icons .. tagnames[2] .. ".png",
 		layout = l.spiral.dwindle,
 		screen = s,
 		-- Work::Writing

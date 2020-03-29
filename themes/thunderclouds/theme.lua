@@ -33,36 +33,39 @@ local theme_dir  = config_dir .. "themes/" .. theme_name .. "/"
 
 local theme      = {}
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
 local awful        = require("awful")
 local theme_assets = require("beautiful.theme_assets")
 local dpi          = require("beautiful.xresources").apply_dpi
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- Setting Local Variables
 
--- Icon paths
+-- Icon paths {{
 local icons             = theme_dir .. "icons/"
 
 local layout_icons      = icons .. "layout/"
 local weather_icons     = icons .. "weather/"
 local titlebar_icons    = icons .. "titlebar/"
 local startscreen_icons = icons .. "startscreen/"
+-- }}
 
--- Includes path
+-- Includes path {{
 local includes = theme_dir .. "includes/"
+-- }}
 
--- Screen size
+-- Screen size {{
 local screen_width  = function()
 	return awful.screen.focused().geometry.width
 end
 local screen_height = function()
 	return awful.screen.focused().geometry.height
 end
+-- }}
 
--- Colors
+-- Colors {{
 local background_focus        = "#1B1D26"
 local background_normal       = "#1B1D26"
 local background_urgent       = "#FF4971"
@@ -77,44 +80,49 @@ local foreground_highlight    = "#7AB3CC"
 local window_highlight_normal = "#252C36"
 local window_highlight_focus  = "#15131A"
 local window_highlight_urgent = "#FF4971"
+-- }}
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- Setting Basic Theme Variables
 
--- DPI Settings
+-- DPI Settings {{
 local dpi_scale = 1
 local dpi       = function(x)
 	return dpi(math.floor(x * dpi_scale))
 end
 theme.dpi = dpi
+-- }}
 
+-- Font Settings {{
 local font_scale = 1
 local font_size  = function(x)
 	return math.floor(x * font_scale)
 end
 theme.font_size = font_size
+-- }}
 
--- Wallpaper
+-- Wallpaper {{
 theme.wallpaper = includes .. "wallpaper.jpg"
+-- }}
 
--- Gaps
+-- Gaps {{
 theme.useless_gap   = dpi(10)
 theme.screen_margin = dpi(20)
+-- }}
 
-theme.taglist_icons     = icons .. "taglist/"
-
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- Configuring Client Window Settings
 
--- Borders
+-- Borders {{
 theme.window_border_radius = dpi(6)
 theme.window_border_width  = dpi(0)
 
 theme.window_border_focus  = window_highlight_focus
 theme.window_border_normal = window_highlight_normal
 theme.window_border_urgent = window_highlight_urgent
+-- }}
 
--- Titlebars
+-- Titlebars {{
 local titlebar        = {}
 
 titlebar.enabled      = true
@@ -144,8 +152,9 @@ titlebar.fg_focus     = foreground_focus
 titlebar.padding      = dpi(50)
 
 theme.titlebar        = titlebar
+-- }}
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- System Tray
 
 local systray  = {}
@@ -173,7 +182,7 @@ theme.systray         = systray
 theme.systray_icon_spacing = systray.spacing
 
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- StartScreen
 
 local startscreen              = { animation = {} }
@@ -184,7 +193,7 @@ startscreen.fg                 = foreground_normal
 startscreen.bg_image           = includes .. "wallpaper-blur.jpg"
 
 startscreen.opacity            = 1.0
-startscreen.bg_opacity         = 0.9
+startscreen.bg_opacity         = 1.0
 
 startscreen.width              = screen_width
 startscreen.height             = screen_height
@@ -201,20 +210,21 @@ startscreen.animation.duration = 0.3
 
 startscreen.border_radius      = 0
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- StartScreen Widgets
 
-local column_widths = { dpi(500), dpi(300), dpi(402) }
+local column_widths = { dpi(500), dpi(330), dpi(402) }
 
--- Widget Box settings
+-- Widget Box settings {{
 local widgetbox         = {}
 
-widgetbox.bg            = "#282F37B4"
+widgetbox.bg            = "#282F3777"
 widgetbox.bg_hover      = "#484F5799"
 widgetbox.margin        = dpi(6)
 widgetbox.border_radius = dpi(12)
+-- }}
 
--- Datetime
+-- Battery {{
 local battery       = {}
 
 battery.fg_normal   = foreground_normal
@@ -233,12 +243,14 @@ battery.decoration  = dpi(7)
 
 battery.low_icon    = startscreen_icons .. "low-battery.png"
 battery.low_thresh  = 20
+-- }}
 
--- Host
+-- Host {{
 host      = {}
 host.font = "Iosevka Medium " .. font_size(13)
+-- }}
 
--- User
+-- User {{
 local user          = {}
 
 user.logo           = config_dir .. "logo.png"
@@ -246,8 +258,9 @@ user.picture        = config_dir .. "avatar.png"
 
 user.logo_height    = dpi(90)
 user.picture_height = dpi(200)
+-- }}
 
--- Datetime
+-- Datetime {{
 local datetime         = {}
 
 datetime.time          = {}
@@ -263,9 +276,9 @@ datetime.location.fg   = foreground_title
 datetime.location.font = "BebasNeue Medium " .. font_size(24)
 
 datetime.timeblock     = { margin = dpi(20) }
+-- }}
 
--- Calendar
-
+-- Calendar {{
 local calendar         = {
 	bg           = {},
 	fg           = {},
@@ -309,8 +322,9 @@ calendar.buttons_size  = dpi(20)
 calendar.buttons_depth = dpi(15)
 
 calendar.spacing       = dpi(10)
+-- }}
 
--- Spotify
+-- Spotify {{
 local spotify             = {}
 
 spotify.icons             = {}
@@ -345,8 +359,9 @@ spotify.art_dir           = config_dir .. ".tmp/"
 spotify.art_size          = dpi(80)
 
 spotify.margin            = dpi(70)
+-- }}
 
--- Controls
+-- Controls {{
 local controls             = {}
 
 controls.bg                = widgetbox.bg
@@ -364,8 +379,9 @@ controls.inner_icon_size   = dpi(25)
 
 controls.margin            = widgetbox.margin
 controls.inner_margin      = (controls.widget_width - controls.inner_widget_size + controls.margin) * 2.0 / 3.0
+-- }}
 
--- Brightness
+-- Brightness {{
 local brightness         = { icons = {} }
 
 brightness.icon          = startscreen_icons .. "brightness.png"
@@ -381,8 +397,9 @@ brightness.height        = (controls.widget_height + controls.margin) * 2
 brightness.scale         = brightness.height / dpi(100)
 
 brightness.border_radius = controls.border_radius
+-- }}
 
--- Volume
+-- Volume {{
 local volume         = { icons = {} }
 
 volume.icon_on       = startscreen_icons .. "volume-on.png"
@@ -399,8 +416,9 @@ volume.height        = (controls.widget_height + controls.margin) * 2
 volume.scale         = volume.height / dpi(100)
 
 volume.border_radius = controls.border_radius
+-- }}
 
--- Wifi
+-- Wifi {{
 local wifi            = { bg = {} }
 
 wifi.icon_size        = controls.inner_icon_size
@@ -408,10 +426,10 @@ wifi.icon_size        = controls.inner_icon_size
 wifi.icon_on          = startscreen_icons .. "wifi-on.png"
 wifi.icon_off         = startscreen_icons .. "wifi-off.png"
 
-wifi.bg.on            = widgetbox.bg .. "00"
-wifi.bg.off           = widgetbox.bg .. "00"
+wifi.bg.on            = controls.bg .. "00"
+wifi.bg.off           = controls.bg .. "00"
 wifi.bg.conn          = foreground_normal .. "55"
--- wifi.bg.hover         = foreground_highlight
+wifi.bg.hover         = controls.bg_hover
 
 wifi.width            = controls.inner_widget_size
 wifi.height           = controls.inner_widget_size
@@ -419,8 +437,9 @@ wifi.height           = controls.inner_widget_size
 wifi.border_width     = dpi(1)
 wifi.border_color_on  = foreground_normal .. "BB"
 wifi.border_color_off = foreground_normal .. "77"
+-- }}
 
--- Bluetooth
+-- Bluetooth {{
 local bluetooth            = { bg = {} }
 
 bluetooth.icon_size        = controls.inner_icon_size
@@ -428,10 +447,10 @@ bluetooth.icon_size        = controls.inner_icon_size
 bluetooth.icon_on          = startscreen_icons .. "bluetooth-on.png"
 bluetooth.icon_off         = startscreen_icons .. "bluetooth-off.png"
 
-bluetooth.bg.on            = widgetbox.bg .. "00"
-bluetooth.bg.off           = widgetbox.bg .. "00"
+bluetooth.bg.on            = controls.bg .. "00"
+bluetooth.bg.off           = controls.bg .. "00"
 bluetooth.bg.conn          = foreground_normal .. "55"
--- bluetooth.bg.hover         = foreground_highlight
+bluetooth.bg.hover         = controls.bg_hover
 
 bluetooth.width            = controls.inner_widget_size
 bluetooth.height           = controls.inner_widget_size
@@ -439,8 +458,9 @@ bluetooth.height           = controls.inner_widget_size
 bluetooth.border_width     = dpi(1)
 bluetooth.border_color_on  = foreground_normal .. "BB"
 bluetooth.border_color_off = foreground_normal .. "77"
+-- }}
 
--- Screenshot
+-- Screenshot {{
 local screenshot         = {}
 
 screenshot.bg            = controls.bg
@@ -453,8 +473,9 @@ screenshot.icon          = startscreen_icons .. "screenshot.png"
 screenshot.icon_size     = controls.icon_size
 
 screenshot.border_radius = controls.border_radius
+-- }}
 
--- Mail
+-- Mail {{
 local mail              = {}
 
 mail.icon               = startscreen_icons .. "mail.png"
@@ -474,8 +495,9 @@ mail.font               = "Iosevka Light " .. font_size(11)
 
 mail.notification_size  = dpi(22)
 mail.notification_shift = dpi(0)
+-- }}
 
--- Calculator
+-- Calculator {{
 local calculator         = {}
 
 calculator.icon          = startscreen_icons .. "calculator.png"
@@ -488,8 +510,9 @@ calculator.border_radius = controls.border_radius
 
 calculator.bg            = controls.bg
 calculator.bg_hover      = controls.bg_hover
+-- }}
 
--- Webcam
+-- Webcam {{
 local webcam         = {}
 
 webcam.icon          = startscreen_icons .. "webcam.png"
@@ -502,8 +525,9 @@ webcam.border_radius = controls.border_radius
 
 webcam.bg            = controls.bg
 webcam.bg_hover      = controls.bg_hover
+-- }}
 
--- Weather
+-- Weather {{
 local weather          = {}
 
 weather.icon_size      = dpi(60)
@@ -536,8 +560,9 @@ weather.bg             = controls.bg
 weather.bg_hover       = controls.bg_hover
 
 weather.shadow_radius  = controls.border_radius
+-- }}
 
--- Alarm
+-- Alarm {{
 local alarm         = {}
 
 alarm.icon          = startscreen_icons .. "alarm.png"
@@ -550,8 +575,9 @@ alarm.border_radius = controls.border_radius
 
 alarm.bg            = controls.bg
 alarm.bg_hover      = controls.bg_hover
+-- }}
 
--- Notes
+-- Notes {{
 local notes           = { title = {}, text = {} }
 
 notes.title.font      = "BebasNeue Medium " .. font_size(24)
@@ -568,8 +594,9 @@ notes.margin          = controls.inner_margin
 
 notes.edit_icon       = startscreen_icons .. "edit.png"
 notes.edit_icon_size  = controls.inner_icon_size
+-- }}
 
--- Adding widget settings to theme
+-- Adding widget settings to theme {{
 startscreen.host          = host
 startscreen.mail          = mail
 startscreen.user          = user
@@ -590,10 +617,11 @@ startscreen.calculator    = calculator
 startscreen.screenshot    = screenshot
 startscreen.brightness    = brightness
 startscreen.column_widths = column_widths
+-- }}
 
 theme.startscreen      = startscreen
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- Hoteys Help
 
 theme.hotkeys_bg               = background_normal
@@ -607,7 +635,7 @@ theme.hotkeys_font	           = "Iosevka Medium " .. font_size(16)
 theme.hotkeys_description_font = "Iosevka Medium " .. font_size(14)
 theme.hotkeys_group_margin     = dpi(50)
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 -- Notifications
 
 local naughty         = {}
@@ -635,10 +663,10 @@ naughty.spacing       = dpi(10)
 
 naughty.icon_size     = dpi(60)
 
- -- BUG: some notifications appear at top_right regardless
+-- BUG: some notifications appear at top_right regardless
 naughty.position      = "top_right"
 
 theme.naughty         = naughty
 
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 return theme
