@@ -26,12 +26,7 @@
 --   (github.com/elenapan/dotfiles)
 -- =====================================================================================
 
-local theme_name = "thunderclouds"
-
-local config_dir = os.getenv("HOME") .. "/.config/awesome/"
-local theme_dir  = config_dir .. "themes/" .. theme_name .. "/"
-
-local theme      = {}
+local theme      = { name = "thunderclouds" }
 
 ----------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
@@ -129,7 +124,7 @@ titlebar.position        = "top" -- | "right" | "bottom" | "left"
 titlebar.size            = dpi(40)
 
 titlebar.imitate_borders = false
-titlebar.border_size     = dpi(0)
+titlebar.border_size     = dpi(2)
 
 titlebar.icon_size       = dpi(15)
 titlebar.icon_spacing    = dpi(10)
@@ -641,35 +636,39 @@ theme.hotkeys_group_margin     = dpi(50)
 ----------------------------------------------------------------------------------------
 -- Notifications
 
-local naughty         = {}
+local naughty            = {}
 
-naughty.font          = "IBM Plex Mono Medium " .. font_size(12)
+naughty.font             = "IBM Plex Mono Medium " .. font_size(12)
 
-naughty.bg            = background_normal
-naughty.fg            = foreground_normal
+naughty.bg               = background_normal
+naughty.fg               = foreground_normal
 
-naughty.bg_critical   = background_urgent
-naughty.fg_critical   = foreground_urgent
+naughty.bg_critical      = background_urgent
+naughty.fg_critical      = foreground_urgent
 
--- naughty.width      = dpi(..)
--- naughty.height     = dpi(..)
-naughty.margin        = dpi(30)
+-- naughty.width         = dpi(..)
+-- naughty.height        = dpi(..)
+naughty.margin           = dpi(30)
 
-naughty.opacity       = 0.95
+naughty.opacity          = 0.95
 
-naughty.border_width  = 0
-naughty.border_color  = "#18E3C8"
-naughty.border_radius = theme.window_border_radius
+naughty.border_width     = 0
+naughty.border_color     = "#18E3C8"
+naughty.border_radius    = theme.window_border_radius
 
-naughty.padding       = dpi(10)
-naughty.spacing       = dpi(10)
+naughty.padding          = dpi(10)
+naughty.spacing          = dpi(10)
 
-naughty.icon_size     = dpi(60)
+naughty.icon_size        = dpi(60)
 
 -- BUG: some notifications appear at top_right regardless
-naughty.position      = "top_right"
+naughty.position         = "top_right"
 
-theme.naughty         = naughty
+theme.notification_shape = function(cr, width, height)
+	require("gears").shape.rounded_rect(cr, width, height, theme.window_border_radius)
+end
+
+theme.naughty            = naughty
 ----------------------------------------------------------------------------------------
 
 return theme

@@ -8,22 +8,14 @@
 -- ░░░░      ░░░░░░░    ░░░         ░░░░░░░      ░░░    ░░       ░░░░░░  ░░░░    ░░░░░   ░░░░░ ░░░ ░░░░   ░░░░░░
 ----------------------------------------------------------------------------------------------------
 
--- Setting Awful Theme
-local theme_collection = {
-	"thunderclouds",      -- 1 --
-}
+do
+    -- Choosing awful theme
+    local theme_collection = {
+        "thunderclouds",      -- 1 --
+    }
 
--- Change this number to use a different theme
-local theme_name = theme_collection[1]
-
-local beautiful = require("beautiful")
-
-local theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/"
-if not beautiful.init( "/home/fat-fighter/.config/awesome/themes/thunderclouds/theme.lua" ) then
-	naughty.notify({
-		text   = "Error loading theme " .. theme_name .. " from " .. theme_dir,
-		preset = naughty.config.presets.critical
-	})
+    -- Change this number to use a different theme
+    theme_name = theme_collection[1]
 end
 
 --------------------------------------------------------------------------------
@@ -34,7 +26,6 @@ require("awful.autofocus")
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
-local beautiful = require("beautiful")
 
 --------------------------------------------------------------------------------
 -- Defining Global Variables
@@ -46,6 +37,20 @@ filemanager = terminal .. "-e ranger"
 ntags       = 8
 
 config_dir  = os.getenv("HOME") .. "/.config/awesome/"
+
+--------------------------------------------------------------------------------
+-- Initializing the Theme
+
+theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/" .. theme_name .. "/"
+
+local beautiful = require("beautiful")
+
+if not beautiful.init(theme_dir .. "theme.lua") then
+    naughty.notify({
+        text   = "Error loading theme " .. theme_name .. " from " .. theme_dir,
+        preset = naughty.config.presets.critical
+    })
+end
 
 --------------------------------------------------------------------------------
 -- Running Cleanup Script
@@ -73,9 +78,12 @@ beautiful.tagnames = tagnames
 --------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
-local keys      = require("components.keys")
-local helpers   = require("helpers")
-local naughty   = require("components.notify")
+package.path = package.path .. ";" .. theme_dir .. "?.lua"
+
+local keys     = require("keys")
+local helpers  = require("helpers")
+local naughty  = require("components.notify")
+local handlers = require("handlers")
 
 require("components.titlebar")
 
@@ -92,7 +100,7 @@ if awesome.startup_errors then
 	}
 end
 
--- Handle runtime errors after startup
+-- Handle runtime errors after startup {{
 do
 	local in_error = false
 	awesome.connect_signal(
@@ -110,6 +118,7 @@ do
 		end
 	)
 end
+-- }}
 
 --------------------------------------------------------------------------------
 -- Choosing Possible Layouts
@@ -156,7 +165,7 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Set wallpaper for every screen
 	set_wallpaper(s)
 
-    s.startscreen = require("components.startscreen")(s)
+    handlers.connect_for_each_screen(s)
 
 	-- Each screen has its own tag table.
 	-- Layouts
@@ -207,7 +216,7 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 
 --------------------------------------------------------------------------------
--- Creating Clients
+-- Connect Handlers for Clients
 
 client.connect_signal("manage", function (c)
 	-- Set every new window as a slave,
@@ -221,11 +230,6 @@ client.connect_signal("manage", function (c)
 		end
 	end
 
-	-- Hide titlebars if required by the theme
-	if not beautiful.titlebar.enabled then
-		awful.titlebar.hide(c, beautiful.titlebar_position)
-	end
-
 	-- If the layout is not floating, every floating client that appears is centered
 	if awful.layout.get(mouse.screen) ~= awful.layout.suit.floating then
 		awful.placement.centered(c, { honor_workarea = true })
@@ -235,37 +239,71 @@ client.connect_signal("manage", function (c)
 			awful.placement.centered(c, { honor_workarea = true })
 		end
 	end
+    
+    -- Fixes wrong geometry when titlebars are enabled
+    if c.fullscreen then
+        gears.timer.delayed_call(function()
+            if c.valid then
+                c:geometry(c.screen.geometry)
+            end
+        end)
+    end
+        
+    if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
+        awful.client.property.set(c, "floating_geometry", c:geometry())
+    end
+
+    handlers.client_connect_manage(c)
 end)
 
+client.connect_signal("focus", function(c) handlers.client_connect_focus(c) end)
+client.connect_signal("unfocus", function(c) handlers.client_connect_unfocus(c) end)
+
+client.connect_signal(
+	"property::geometry",
+    function(c)
+        if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
+            awful.client.property.set(c, "floating_geometry", c:geometry())
+        end
+    end
+)
+
+-- Make rofi able to unminimize minimized clients
+-- Note: causes clients to unminimize after restarting awesome
+client.connect_signal(
+	"request::activate",
+    function(c, context, hints)
+        if c.minimized then
+            c.minimized = false
+        end
+        awful.ewmh.activate(c, context, hints)
+    end
+)
+
+client.connect_signal("property::fullscreen", function (c) handlers.client_connect_fullscreen(c) end)
+
 --------------------------------------------------------------------------------
--- Handling Window Borders
+-- Connect Handlers for Tags
 
--- Change border-color on focus change
-client.connect_signal("focus", function(c) c.border_color = beautiful.window_border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.window_border_normal end)
-
--- Round corners
-if beautiful.window_border_radius ~= 0 then
-    client.connect_signal("manage", function (c, startup)
-        if not c.fullscreen then
-            c.shape = helpers.rrect(beautiful.window_border_radius)
+tag.connect_signal(
+	"property::layout",
+    function(t)
+        for k, c in ipairs(t:clients()) do
+            if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
+                local cgeo = awful.client.property.get(c, "floating_geometry")
+                if cgeo ~= nil then
+                    if not (cgeo.x == 0 and cgeo.y == 0) then
+                        c:geometry(awful.client.property.get(c, "floating_geometry"))
+                    end
+                end
+            end
         end
-    end)
-
-    -- Fullscreen clients should not have rounded corners
-    client.connect_signal("property::fullscreen", function (c)
-        if c.fullscreen then
-            c.shape = helpers.rect()
-        else
-            c.shape = helpers.rrect(beautiful.window_border_radius)
-        end
-    end)
-end
+    end
+)
 
 --------------------------------------------------------------------------------
 -- Adding Awful Rules for Clients
 
--- TODO {{
 awful.rules.rules = {
 	-- All clients will match this rule.
 	{
@@ -344,7 +382,7 @@ awful.rules.rules = {
 		end
 	},
 
-	-- Centered clients
+	-- Centered clients with forced titlebars
 	{
 		rule_any   = {
 			name = {
@@ -374,77 +412,6 @@ awful.rules.rules = {
     	properties = { tag = "8" }
 	},
 }
--- }}
-
---------------------------------------------------------------------------------
--- Handling bugs and hacks
-
--- When a client starts up in fullscreen, resize it to cover the fullscreen a short moment later
--- Fixes wrong geometry when titlebars are enabled
-client.connect_signal(
-	"manage",
-	function(c)
-		if c.fullscreen then
-			gears.timer.delayed_call(function()
-				if c.valid then
-					c:geometry(c.screen.geometry)
-				end
-			end)
-		end
-	end
-)
-
-tag.connect_signal(
-	"property::layout",
-    function(t)
-        for k, c in ipairs(t:clients()) do
-            if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
-                local cgeo = awful.client.property.get(c, "floating_geometry")
-                if cgeo ~= nil then
-                    if not (cgeo.x == 0 and cgeo.y == 0) then
-                        c:geometry(awful.client.property.get(c, "floating_geometry"))
-                    end
-                end
-            end
-        end
-    end
-)
-
-client.connect_signal(
-	"manage",
-    function(c)
-        if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
-            awful.client.property.set(c, "floating_geometry", c:geometry())
-        end
-    end
-)
-
-client.connect_signal(
-	"property::geometry",
-    function(c)
-        if awful.layout.get(mouse.screen) == awful.layout.suit.floating then
-            awful.client.property.set(c, "floating_geometry", c:geometry())
-        end
-    end
-)
-
--- Make rofi able to unminimize minimized clients
--- Note: causes clients to unminimize after restarting awesome
-client.connect_signal(
-	"request::activate",
-    function(c, context, hints)
-        if c.minimized then
-            c.minimized = false
-        end
-        awful.ewmh.activate(c, context, hints)
-    end
-)
-
-
---------------------------------------------------------------------------------
--- Adding Different Shapes to Beautiful
-
-beautiful.notification_shape = helpers.rrect(beautiful.notification_border_radius)
 
 --------------------------------------------------------------------------------
 -- Running Autostart Script

@@ -10,8 +10,8 @@ local beautiful = require("beautiful")
 --------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
-local helpers     = require("helpers")
-local systray     = require("components.systray")
+local keys   = require("components.keys")
+local helpers = require("helpers")
 
 --------------------------------------------------------------------------------
 -- Setting Mod Keys
@@ -22,15 +22,14 @@ altkey   = "Mod1"
 ctrlkey  = "Control"
 shiftkey = "Shift"
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
 -- Defining Local Variables
 
-
-local keys = {
-    clientkeys     = {},
-    globalkeys     = {},
-    clientbuttons  = {},
-    desktopbuttons = {}
+keys = {
+    clientkeys     = keys.clientkeys or {},
+    globalkeys     = keys.globalkeys or {},
+    clientbuttons  = keys.clientbuttons or {},
+    desktopbuttons = keys.desktopbuttons or {}
 }
 
 local screen_width  = function()
@@ -47,37 +46,18 @@ end
 keys.desktopbuttons = join(
     -- Left click
     awful.button({ }, 1, function()
-        awful.screen.focused().startscreen:hide()
         naughty.destroy_all_notifications()
     end),
 
-    -- Middle button
+    -- Middle click - restore minimized client
     awful.button({ }, 2, function()
-        awful.screen.focused().startscreen:toggle()
-    end),
-
-    -- Scrolling - Switch tags
-    --awful.button({ }, 4, awful.tag.viewnext),
-    --awful.button({ }, 5, awful.tag.viewprev),
-
-    -- Side buttons - Control volume
-    -- awful.button({ }, 9, function() awful.spawn.with_shell("volume set +5") end),
-    -- awful.button({ }, 8, function() awful.spawn.with_shell("volume set -5") end),
-
-    -- Side buttons - Minimize and restore minimized client
-    -- awful.button({ }, 8, function()
-    --     if client.focus ~= nil then
-    --         client.focus.minimized = true
-    --     end
-    -- end),
-    -- awful.button({ }, 9, function()
-    --       local c = awful.client.restore()
-    --       -- Focus restored client
-    --       if c then
-    --           client.focus = c
-    --           c:raise()
-    --       end
-    -- end)
+          local c = awful.client.restore()
+          -- Focus restored client
+          if c then
+              client.focus = c
+              c:raise()
+          end
+     end),
 
     keys.desktopbuttons
 )
@@ -128,7 +108,7 @@ keys.globalkeys = join(
     awful.key(
         { superkey }, "j",
         function()
-            awful.client.focus.byidx( 1)
+            awful.client.focus.byidx(1)
         end,
         { description = "focus next by index", group = "client" }
     ),
@@ -616,24 +596,6 @@ keys.globalkeys = join(
         { description = "reload awesome", group = "awesome" }
     ),
 
-    -- Toggle startscreen
-    awful.key(
-        { superkey }, "grave",
-        function()
-            awful.screen.focused().startscreen:toggle()
-        end,
-        { description = "toggle startscreen", group = "awesome" }
-    ),
-
-    -- Toggle system tray
-    awful.key(
-        { superkey }, "equal",
-        function()
-            systray.visible = not systray.visible
-        end,
-        { description = "toggle tray visibility", group = "awesome" }
-    ),
-
     -- Dismiss notifications
     awful.key(
         { ctrlkey }, "space",
@@ -794,15 +756,6 @@ keys.globalkeys = join(
             awful.spawn(terminal .. " -e ranger")
         end,
         { description = "spawn ranger", group = "launcher" }
-    ),
-
-    -- Cava
-    awful.key(
-        { superkey }, "F2",
-        function()
-            awful.spawn(terminal .. " -e cava")
-        end,
-        { description = "spawn cava", group = "launcher" }
     ),
 
     -- Editor

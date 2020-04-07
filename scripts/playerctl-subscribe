@@ -1,0 +1,66 @@
+#!/usr/bin/python
+
+import gi
+import sys
+
+gi.require_version("Playerctl", "2.0")
+
+from gi.repository import Playerctl, GLib
+from subprocess import Popen
+
+
+player = Playerctl.Player()
+
+prev_info = ""
+
+
+def on_track_play(player):
+    global prev_info
+
+    track_info = "Playing|{artist}|{title}|{album}".format(
+        artist=player.get_artist(), title=player.get_title(), album=player.get_album()
+    )
+
+    if track_info != prev_info:
+        prev_info = track_info
+        print(track_info)
+        sys.stdout.flush()
+
+
+def on_track_pause(player):
+    global prev_info
+
+    track_info = "Paused|{artist}|{title}|{album}".format(
+        artist=player.get_artist(), title=player.get_title(), album=player.get_album()
+    )
+
+    if track_info != prev_info:
+        prev_info = track_info
+        print(track_info)
+        sys.stdout.flush()
+
+
+def on_track_stop(player):
+    global prev_info
+
+    track_info = "Stopped"
+
+    if track_info != prev_info:
+        prev_info = track_info
+        print(track_info)
+        sys.stdout.flush()
+
+
+status = player.get_property("status")
+if status is None:
+    on_track_stop(player)
+elif status == "Playing":
+    on_track_play(player)
+elif status == "Paused":
+    on_track_pause(player)
+
+player.connect("play", on_track_play)
+player.connect("pause", on_track_pause)
+player.connect("stop", on_track_stop)
+
+GLib.MainLoop().run()

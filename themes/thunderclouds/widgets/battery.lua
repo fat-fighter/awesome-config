@@ -4,13 +4,13 @@
 local wibox     = require("wibox")
 local gears     = require("gears")
 local vicious   = require("vicious")
-local naughty   = require("components.notify")
 local beautiful = require("beautiful").startscreen.battery
 
 --------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
+local naughty = require("themes." .. theme_name .. ".components.notify")
 
 --------------------------------------------------------------------------------
 -- Creating the Time and Date Widgets

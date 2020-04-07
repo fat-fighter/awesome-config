@@ -4,8 +4,7 @@
 local awful     = require("awful")
 local gears     = require("gears")
 local wibox     = require("wibox")
-local naughty   = require("naughty")
-local beautiful = require("beautiful").startscreen.spotify
+local beautiful = require("beautiful").startscreen.player
 
 --------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
@@ -67,17 +66,17 @@ toggle_button.forced_height = beautiful.icons.size
 
 prev_button:buttons(gears.table.join(
 	awful.button({ }, 1, function ()
-		awful.spawn.with_shell("sp prev")
+		awful.spawn.with_shell("playerctl previous")
 	end)
 ))
 toggle_button:buttons(gears.table.join(
 	awful.button({ }, 1, function ()
-		awful.spawn.with_shell("sp play")
+		awful.spawn.with_shell("playerctl play-pause")
 	end)
 ))
 next_button:buttons(gears.table.join(
 	awful.button({ }, 1, function ()
-		awful.spawn.with_shell("sp next")
+		awful.spawn.with_shell("playerctl next")
 	end)
 ))
 
@@ -85,7 +84,7 @@ next_button:buttons(gears.table.join(
 -- Creating the Widget
 
 local centered = helpers.center_align_widget
-local spotify = wibox.widget {
+local player = wibox.widget {
 	{
 		{
 			album_art,
@@ -118,15 +117,15 @@ local spotify = wibox.widget {
 	widget = wibox.container.margin
 }
 
-spotify.current_track_url = nil
+player.current_track_url = nil
 
 --------------------------------------------------------------------------------
--- Subscribing to Spotify Changes
+-- Subscribing to Player Changes
 
 local art_update_script = [[
 	track=`playerctl metadata mpris:artUrl | cut -f5 -d"/"`
 	if ]] .. "[[ ! -f " .. beautiful.art_dir .. "$track.jpg ]]" .. [[ ; then
-		wget https://open.spotify.com/image/$track -O ]] .. beautiful.art_dir .. [[$track.jpg
+		wget https://open.player.com/image/$track -O ]] .. beautiful.art_dir .. [[$track.jpg
 	fi
 	echo $track
 ]]
@@ -147,13 +146,22 @@ local function update_widget(line)
 	local ac, tc
 
 	if status ~= "stopped" then
-		local artist = line:match("^[^|]+")
-		line = line:sub(#artist + 2)
+		local artist = ""
+        if line ~= "" then
+            artist = line:match("^[^|]+")
+		    line = line:sub(#artist + 2)
+        end
 
-		local title = line:match("^[^|]+")
-		line = line:sub(#title + 2)
+		local title = ""
+        if line ~= "" then
+            title = line:match("^[^|]+")
+		    line = line:sub(#title + 2)
+        end
 
-		local album = line:match("^[^|]+$")
+        local album = ""
+        if line ~= "" then
+		    album = line:match("^[^|]+$")
+        end
 
 		 --Escape &'s
 		artist = artist:gsub("&", "&amp;")
@@ -189,50 +197,14 @@ local function update_widget(line)
 	title_text.markup  = helpers.colorize_text(tt, tc)
 end
 
--- Sleeps until spotify changes state
-local spotify_script = [[
-	bash -c "
-		sp subscribe
-	"
-]]
+-- Sleeps until player changes state
+local player_script = "bash -c " .. "/home/fat-fighter/.config/awesome/scripts/playerctl-subscribe"
 
-awful.spawn.with_line_callback(spotify_script, {
+awful.spawn.with_line_callback(player_script, {
 	stdout = function(line)
 		update_widget(line)
 	end
 })
 
-function spotify:run_script(script)
-	awful.spawn.easy_async_with_shell(
-		script,
-		function(stdout)
-			if stdout:sub(1, 5) == "Error" then
-				naughty.notify({
-					title = "Spotify not Running",
-					text  = "I will try to create a new instance of Spotify"
-				})
-				awful.spawn("spotify")
-
-				local timer = gears.timer({
-					timeout   = 10,
-					call_now  = false,
-					autostart = true
-				})
-				timer:connect_signal(
-					"timeout",
-					function()
-						awful.spawn.with_line_callback(spotify_script, {
-							stdout = function(line)
-								update_widget(line)
-							end
-						})
-						timer:stop()
-					end
-				)
-			end
-		end
-	)
-end
-
 --------------------------------------------------------------------------------
-return spotify
+return player

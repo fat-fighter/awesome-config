@@ -105,43 +105,43 @@ local function create_startscreen(screen)
 	startscreen.visibility = false
 
 	function startscreen:show(width, height, x, y)
-		startscreen.visibility = true
+		self.visibility = true
 
 		width  = width or get_width()
 		height = height or get_height()
 
-		startscreen.width  = width
-		startscreen.height = height
+		self.width  = width
+		self.height = height
 
 		x = x or get_x(width)
 		y = y or get_y(height)
 
-		if not startscreen.animator then
+		if not self.animator then
 			if beautiful.animation.style == "opacity" then
-				startscreen.opacity = 0.01  -- Non-zero to avoid glitches with full-screen windows
+				self.opacity = 0.01  -- Non-zero to avoid glitches with full-screen windows
 			else
-				startscreen.opacity = beautiful.opacity
+				self.opacity = beautiful.opacity
 			end
 
 			if beautiful.animation.style == "slide_tb" then
-				startscreen.x = x
-				startscreen.y = - height
+				self.x = x
+				self.y = - height
 			elseif beautiful.animation.style == "slide_lr" then
-				startscreen.x = - width
-				startscreen.y = y
+				self.x = - width
+				self.y = y
 			else
-				startscreen.x = x
-				startscreen.y = y
+				self.x = x
+				self.y = y
 			end
 		end
 
-		startscreen.visible = true
+		self.visible = true
 
 		if beautiful.animation.style ~= "none" then
-			if startscreen.animator then startscreen.animator:stopAnimation() end
+			if self.animator then self.animator:stopAnimation() end
 
-			startscreen.animator = animation(
-				startscreen,
+			self.animator = animation(
+				self,
 				beautiful.animation.duration,
 				{
 					opacity = beautiful.opacity,
@@ -150,12 +150,12 @@ local function create_startscreen(screen)
 				},
 				beautiful.animation.easing
 			)
-			startscreen.animator:startAnimation()
+			self.animator:startAnimation()
 		end
 	end
 
 	function startscreen:hide(width, height, x, y)
-		startscreen.visibility = false
+		self.visibility = false
 
 		if beautiful.animation.style ~= "none" then
 			width  = width or get_width()
@@ -183,22 +183,22 @@ local function create_startscreen(screen)
 				target.y = y
 			end
 
-			if startscreen.animator then startscreen.animator:stopAnimation() end
+			if self.animator then self.animator:stopAnimation() end
 
-			startscreen.animator = animation(
-				startscreen,
+			self.animator = animation(
+				self,
 				beautiful.animation.duration,
 				target,
 				beautiful.animation.easing
 			)
-			startscreen.animator:startAnimation()
+			self.animator:startAnimation()
 
-			startscreen.animator:connect_signal(
+			self.animator:connect_signal(
 				"anim::animation_finished",
-				function() startscreen.visible = false end
+				function() self.visible = false end
 			)
 		else
-			startscreen.visible = false
+			self.visible = false
 		end
 	end
 
@@ -206,10 +206,10 @@ local function create_startscreen(screen)
 		local width, height = get_width(), get_height()
 		local x, y          = get_x(width), get_y(height)
 
-		if not startscreen.visibility then
-			startscreen:show(width, height, x, y)
+		if not self.visibility then
+			self:show(width, height, x, y)
 		else
-			startscreen:hide(width, height, x, y)
+			self:hide(width, height, x, y)
 		end
 	end
 
@@ -228,7 +228,7 @@ local function create_startscreen(screen)
                 beautiful.column_widths[1], dpi(500)
             ),
             boxed(
-                require("widgets.spotify"),
+                require("widgets.player"),
                 beautiful.column_widths[1], dpi(310)
             ),
             layout = wibox.layout.fixed.vertical
@@ -266,7 +266,6 @@ local function create_startscreen(screen)
             {
                 {
                     require("widgets.host"),
-                    --require("widgets.workspace")(screen),
                     nil,
                     require("widgets.battery"),
                     expand = "none",
@@ -290,7 +289,6 @@ local function create_startscreen(screen)
 
 	----------------------------------------------------------------------------
 	return startscreen
-
 end
 
 --------------------------------------------------------------------------------
