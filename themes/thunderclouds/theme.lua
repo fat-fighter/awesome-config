@@ -149,6 +149,9 @@ titlebar.fg_normal       = foreground_normal
 titlebar.bg_focus        = window_highlight_focus
 titlebar.fg_focus        = foreground_focus
 
+titlebar.sticky_bg       = foreground_highlight
+titlebar.ontop_bg        = background_urgent
+
 titlebar.padding         = dpi(50)
 
 theme.titlebar           = titlebar
@@ -253,8 +256,8 @@ host.font = "Iosevka Medium " .. font_size(13)
 -- User {{
 local user          = {}
 
-user.logo           = config_dir .. "logo.png"
-user.picture        = config_dir .. "avatar.png"
+user.logo           = startscreen_icons .. "logo.png"
+user.picture        = startscreen_icons .. "avatar.png"
 
 user.logo_height    = dpi(90)
 user.picture_height = dpi(200)
@@ -533,19 +536,19 @@ local weather          = {}
 weather.icon_size      = dpi(60)
 weather.temp_icon_size = dpi(40)
 weather.icons          = {
-    mist       = startscreen_icons .. "weather_mist.png",
-    snow       = startscreen_icons .. "weather_snow.png",
-    storm      = startscreen_icons .. "weather_storm.png",
-    cloudy     = startscreen_icons .. "weather_cloudy.png",
-    dclear     = startscreen_icons .. "weather_dclear.png",
-    nclear     = startscreen_icons .. "weather_nclear.png",
-    dcloud     = startscreen_icons .. "weather_dcloud.png",
-    ncloud     = startscreen_icons .. "weather_ncloud.png",
-    drain      = startscreen_icons .. "weather_drain.png",
-    nrain      = startscreen_icons .. "weather_nrain.png",
-    default    = startscreen_icons .. "weather_default.png",
-    celcius    = startscreen_icons .. "weather_celcius.png",
-    fahrenheit = startscreen_icons .. "weather_fahrenheit.png",
+    mist       = startscreen_icons .. "weather-mist.png",
+    snow       = startscreen_icons .. "weather-snow.png",
+    storm      = startscreen_icons .. "weather-storm.png",
+    cloudy     = startscreen_icons .. "weather-cloudy.png",
+    dclear     = startscreen_icons .. "weather-dclear.png",
+    nclear     = startscreen_icons .. "weather-nclear.png",
+    dcloud     = startscreen_icons .. "weather-dcloud.png",
+    ncloud     = startscreen_icons .. "weather-ncloud.png",
+    drain      = startscreen_icons .. "weather-drain.png",
+    nrain      = startscreen_icons .. "weather-nrain.png",
+    default    = startscreen_icons .. "weather-default.png",
+    celcius    = startscreen_icons .. "weather-celcius.png",
+    fahrenheit = startscreen_icons .. "weather-fahrenheit.png",
 }
 
 weather.fg             = foreground_normal

@@ -53,6 +53,37 @@ local buttons = gears.table.join(
 )
 
 --------------------------------------------------------------------------------
+-- Creating widgets
+
+-- Sticky widget {{
+local sticky = helpers.center_align_widget({
+    {
+        image         = beautiful.sticky_icon,
+        forced_height = beautiful.icon_size,
+        forced_width  = beautiful.icon_size,
+        widget        = wibox.widget.imagebox
+    },
+    left    = beautiful.icon_spacing,
+    right   = beautiful.icon_spacing,
+    widget  = wibox.container.margin
+}, "vertical")
+-- }}
+
+-- Ontop widget {{
+local ontop = helpers.center_align_widget({
+    {
+        image         = beautiful.ontop_icon,
+        forced_height = beautiful.icon_size,
+        forced_width  = beautiful.icon_size,
+        widget        = wibox.widget.imagebox
+    },
+    left    = beautiful.icon_spacing,
+    right   = beautiful.icon_spacing,
+    widget  = wibox.container.margin
+}, "vertical")
+-- }}
+
+--------------------------------------------------------------------------------
 -- Creating a Titlebar
 
 local positions
@@ -110,31 +141,20 @@ if beautiful.enabled then
                 )
                 -- }}
 
-                local sticky, ontop
-
                 -- Add icons for main titlebar {{
                 if pos == beautiful.position then
                     titlebar.sticky = wibox.widget {
-                        {
-                            image         = beautiful.sticky_icon,
-                            forced_height = beautiful.icon_size,
-                            forced_width  = beautiful.icon_size,
-                            widget        = wibox.widget.imagebox
-                        },
+                        sticky,
                         visible = c.sticky,
-                        margins   = beautiful.icon_spacing,
-                        widget  = wibox.container.margin
+                        bg      = beautiful.sticky_bg,
+                        widget  = wibox.container.background
                     }
+
                     titlebar.ontop = wibox.widget {
-                        {
-                            image         = beautiful.ontop_icon,
-                            forced_height = beautiful.icon_size,
-                            forced_width  = beautiful.icon_size,
-                            widget        = wibox.widget.imagebox
-                        },
+                        ontop,
                         visible = c.ontop,
-                        margins = beautiful.icon_spacing,
-                        widget  = wibox.container.margin
+                        bg      = beautiful.ontop_bg,
+                        widget  = wibox.container.background
                     }
                 end
                 -- }}
@@ -169,22 +189,19 @@ if beautiful.enabled then
                 titlebar:setup {
                     title_widget,
                     {
+                        {
+                            titlebar.sticky,
+                            titlebar.ontop,
+                            layout  = wibox.layout.fixed[item_layout]
+                        },
                         nil, nil,
-                        helpers.center_align_widget(
-                            {
-                                titlebar.sticky,
-                                titlebar.ontop,
-                                layout  = wibox.layout.fixed[item_layout]
-                            },
-                            center_layout
-                        ),
                         layout = wibox.layout.align[item_layout]
                     },
                     layout = wibox.layout.stack
                 }
                 -- }}
 
-                if pos == beautiful.pos then
+                if pos == beautiful.position then
                     -- Set main titlebar as client titlebar
                     c.titlebar = titlebar
                 end
@@ -201,7 +218,9 @@ if beautiful.enabled then
     client.connect_signal(
         "property::sticky",
         function(c)
-            c.titlebar.sticky.visible = c.sticky
+            if c.titlebar then
+                c.titlebar.sticky.visible = c.sticky
+            end
         end
     )
     -- }}
@@ -210,7 +229,9 @@ if beautiful.enabled then
     client.connect_signal(
         "property::ontop",
         function(c)
-            c.titlebar.ontop.visible = c.ontop
+            if c.titlebar then
+                c.titlebar.ontop.visible = c.ontop
+            end
         end
     )
     -- }}
