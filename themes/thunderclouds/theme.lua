@@ -47,7 +47,6 @@ local dpi          = require("beautiful.xresources").apply_dpi
 local icons             = theme_dir .. "icons/"
 
 local layout_icons      = icons .. "layout/"
-local weather_icons     = icons .. "weather/"
 local titlebar_icons    = icons .. "titlebar/"
 local startscreen_icons = icons .. "startscreen/"
 -- }}
@@ -123,35 +122,36 @@ theme.window_border_urgent = window_highlight_urgent
 -- }}
 
 -- Titlebars {{
-local titlebar        = {}
+local titlebar           = {}
+titlebar.enabled         = true
 
-titlebar.enabled      = true
+titlebar.position        = "top" -- | "right" | "bottom" | "left"
+titlebar.size            = dpi(40)
 
-titlebar.size         = dpi(40)
+titlebar.imitate_borders = false
+titlebar.border_size     = dpi(0)
 
-titlebar.icon_size    = dpi(15)
-titlebar.icon_spacing = dpi(10)
+titlebar.icon_size       = dpi(15)
+titlebar.icon_spacing    = dpi(10)
 
-titlebar.ontop_icon   = titlebar_icons .. "ontop.png"
-titlebar.sticky_icon  = titlebar_icons .. "sticky.png"
+titlebar.ontop_icon      = titlebar_icons .. "ontop.png"
+titlebar.sticky_icon     = titlebar_icons .. "sticky.png"
 
-titlebar.title        = {
+titlebar.title           = {
     font    = "IBM Plex Mono Medium " .. font_size(12.5),
     align   = "center",
     enabled = true
 }
 
-titlebar.position     = "top" -- | "right" | "bottom" | "left"
+titlebar.bg_normal       = window_highlight_normal
+titlebar.fg_normal       = foreground_normal
 
-titlebar.bg_normal    = window_highlight_normal
-titlebar.fg_normal    = foreground_normal
+titlebar.bg_focus        = window_highlight_focus
+titlebar.fg_focus        = foreground_focus
 
-titlebar.bg_focus     = window_highlight_focus
-titlebar.fg_focus     = foreground_focus
+titlebar.padding         = dpi(50)
 
-titlebar.padding      = dpi(50)
-
-theme.titlebar        = titlebar
+theme.titlebar           = titlebar
 -- }}
 
 ----------------------------------------------------------------------------------------
@@ -324,41 +324,41 @@ calendar.buttons_depth = dpi(15)
 calendar.spacing       = dpi(10)
 -- }}
 
--- Spotify {{
-local spotify             = {}
+-- Player {{
+local player             = {}
 
-spotify.icons             = {}
+player.icons             = {}
 
-spotify.icons.next        = startscreen_icons .. "spotify-next.png"
-spotify.icons.prev        = startscreen_icons .. "spotify-prev.png"
+player.icons.next        = startscreen_icons .. "player-next.png"
+player.icons.prev        = startscreen_icons .. "player-prev.png"
 
-spotify.icons.play        = startscreen_icons .. "spotify-play.png"
-spotify.icons.pause       = startscreen_icons .. "spotify-pause.png"
+player.icons.play        = startscreen_icons .. "player-play.png"
+player.icons.pause       = startscreen_icons .. "player-pause.png"
 
-spotify.icons.size        = dpi(45)
-spotify.icons.margin      = dpi(50)
+player.icons.size        = dpi(45)
+player.icons.margin      = dpi(50)
 
-spotify.fg                = { title = {}, artist = {} }
-spotify.fg.title.playing  = foreground_normal
-spotify.fg.title.paused   = foreground_normal
-spotify.fg.title.stopped  = foreground_normal .. "33"
+player.fg                = { title = {}, artist = {} }
+player.fg.title.playing  = foreground_normal
+player.fg.title.paused   = foreground_normal
+player.fg.title.stopped  = foreground_normal .. "33"
 
-spotify.fg.artist.playing = foreground_normal
-spotify.fg.artist.paused  = foreground_normal
-spotify.fg.artist.stopped = foreground_normal .. "33"
+player.fg.artist.playing = foreground_normal
+player.fg.artist.paused  = foreground_normal
+player.fg.artist.stopped = foreground_normal .. "33"
 
-spotify.font              = {
+player.font              = {
 	title  = "Din Light " .. font_size(18),
 	artist = "Iosevka " .. font_size(14)
 }
 
-spotify.scroll_speed      = 50
-spotify.scroll_space      = dpi(100)
+player.scroll_speed      = 50
+player.scroll_space      = dpi(100)
 
-spotify.art_dir           = config_dir .. ".tmp/"
-spotify.art_size          = dpi(80)
+player.art_dir           = config_dir .. ".tmp/"
+player.art_size          = dpi(80)
 
-spotify.margin            = dpi(70)
+player.margin            = dpi(70)
 -- }}
 
 -- Controls {{
@@ -533,19 +533,19 @@ local weather          = {}
 weather.icon_size      = dpi(60)
 weather.temp_icon_size = dpi(40)
 weather.icons          = {
-    mist       = weather_icons .. "mist.png",
-    snow       = weather_icons .. "snow.png",
-    storm      = weather_icons .. "storm.png",
-    cloudy     = weather_icons .. "cloudy.png",
-    dclear     = weather_icons .. "dclear.png",
-    nclear     = weather_icons .. "nclear.png",
-    dcloud     = weather_icons .. "dcloud.png",
-    ncloud     = weather_icons .. "ncloud.png",
-    drain      = weather_icons .. "drain.png",
-    nrain      = weather_icons .. "nrain.png",
-    default    = weather_icons .. "default.png",
-    celcius    = weather_icons .. "celcius.png",
-    fahrenheit = weather_icons .. "fahrenheit.png",
+    mist       = startscreen_icons .. "weather_mist.png",
+    snow       = startscreen_icons .. "weather_snow.png",
+    storm      = startscreen_icons .. "weather_storm.png",
+    cloudy     = startscreen_icons .. "weather_cloudy.png",
+    dclear     = startscreen_icons .. "weather_dclear.png",
+    nclear     = startscreen_icons .. "weather_nclear.png",
+    dcloud     = startscreen_icons .. "weather_dcloud.png",
+    ncloud     = startscreen_icons .. "weather_ncloud.png",
+    drain      = startscreen_icons .. "weather_drain.png",
+    nrain      = startscreen_icons .. "weather_nrain.png",
+    default    = startscreen_icons .. "weather_default.png",
+    celcius    = startscreen_icons .. "weather_celcius.png",
+    fahrenheit = startscreen_icons .. "weather_fahrenheit.png",
 }
 
 weather.fg             = foreground_normal
@@ -603,10 +603,10 @@ startscreen.user          = user
 startscreen.wifi          = wifi
 startscreen.alarm         = alarm
 startscreen.notes         = notes
+startscreen.player        = player
 startscreen.volume        = volume
 startscreen.webcam        = webcam
 startscreen.battery       = battery
-startscreen.spotify       = spotify
 startscreen.weather       = weather
 startscreen.calendar      = calendar
 startscreen.controls      = controls
@@ -667,6 +667,6 @@ naughty.icon_size     = dpi(60)
 naughty.position      = "top_right"
 
 theme.naughty         = naughty
-
 ----------------------------------------------------------------------------------------
+
 return theme
