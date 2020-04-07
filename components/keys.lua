@@ -11,7 +11,6 @@ local beautiful = require("beautiful")
 -- Including Custom Helper Libraries
 
 local helpers     = require("helpers")
-local spotify     = require("widgets.spotify")
 local systray     = require("components.systray")
 
 --------------------------------------------------------------------------------
@@ -719,7 +718,6 @@ keys.globalkeys = join(
     awful.key(
         { superkey }, "comma",
         function()
-            spotify:run_script("sp prev")
 			awful.spawn.with_shell("playerctl previous")
         end,
         { description = "prev", group = "media" }

@@ -59,27 +59,6 @@ helpers.infobubble = function(radius, arrow_placement, arrow_size, arrow_positio
 end
 
 --------------------------------------------------------------------------------
--- Adding Titlebar Helpers
-
-function helpers.create_titlebar(c, titlebar_buttons, titlebar_position, titlebar_size)
-	awful.titlebar(c, {font = beautiful.titlebar_font, position = titlebar_position, size = titlebar_size}) : setup {
-		{
-			buttons = titlebar_buttons,
-			layout  = wibox.layout.fixed.horizontal
-		},
-		{
-			buttons = titlebar_buttons,
-			layout  = wibox.layout.fixed.horizontal
-		},
-		{
-			buttons = titlebar_buttons,
-			layout = wibox.layout.fixed.horizontal
-		},
-		layout = wibox.layout.align.horizontal
-	}
-end
-
---------------------------------------------------------------------------------
 -- Adding Client Helpers
 
 function helpers.move_client_to_edge(c, direction)

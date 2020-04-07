@@ -74,9 +74,7 @@ local function update_widget(line)
 			bluetooth_icon.image         = beautiful.icon_on
 			bluetooth.shape_border_color = beautiful.border_color_on
 		end
-	end
-
-	if property == "connected" then
+	elseif property == "connected" then
 		if status == "false" then
 			bluetooth.bg = beautiful.bg.on or "#333333"
 		else

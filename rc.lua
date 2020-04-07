@@ -29,9 +29,10 @@ end
 --------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
+require("awful.autofocus")
+
 local gears = require("gears")
 local awful = require("awful")
-require("awful.autofocus")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 
@@ -155,7 +156,7 @@ awful.screen.connect_for_each_screen(function(s)
 	-- Set wallpaper for every screen
 	set_wallpaper(s)
 
-	s.startscreen = require("components.startscreen")(s)
+    s.startscreen = require("components.startscreen")(s)
 
 	-- Each screen has its own tag table.
 	-- Layouts
