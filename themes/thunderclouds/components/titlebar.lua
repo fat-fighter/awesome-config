@@ -1,17 +1,24 @@
---------------------------------------------------------------------------------
--- Including Standard Awesome Libraries
+-- =====================================================================================
+--   Name:       titlebar.lua
+--   Author:     Gurpreet Singh
+--   Url:        https://github.com/ffs97/awesome-config/themes/thunderclouds/ ...
+--               ... components/titlebar.lua
+--   License:    The MIT License (MIT)
+--
+--   Theme specific custom configuration for titlebars
+-- =====================================================================================
 
-local awful     = require("awful")
-local wibox     = require("wibox")
-local gears     = require("gears")
+local awful = require("awful")
+local wibox = require("wibox")
+local gears = require("gears")
 local beautiful = require("beautiful").titlebar
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
-local helpers   = require("helpers")
+local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Button Controls
 
 local buttons = gears.table.join(
@@ -32,7 +39,7 @@ local buttons = gears.table.join(
     -- Middle button - close {{
     awful.button(
         {}, 2,
-        function ()
+        function()
             window_to_kill = mouse.object_under_pointer()
             window_to_kill:kill()
         end
@@ -52,38 +59,38 @@ local buttons = gears.table.join(
     -- }}
 )
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating widgets
 
 -- Sticky widget {{
 local sticky = helpers.center_align_widget({
     {
-        image         = beautiful.sticky_icon,
+        image = beautiful.sticky_icon,
         forced_height = beautiful.icon_size,
-        forced_width  = beautiful.icon_size,
-        widget        = wibox.widget.imagebox
+        forced_width = beautiful.icon_size,
+        widget = wibox.widget.imagebox
     },
-    left    = beautiful.icon_spacing,
-    right   = beautiful.icon_spacing,
-    widget  = wibox.container.margin
+    left = beautiful.icon_spacing,
+    right = beautiful.icon_spacing,
+    widget = wibox.container.margin
 }, "vertical")
 -- }}
 
 -- Ontop widget {{
 local ontop = helpers.center_align_widget({
     {
-        image         = beautiful.ontop_icon,
+        image = beautiful.ontop_icon,
         forced_height = beautiful.icon_size,
-        forced_width  = beautiful.icon_size,
-        widget        = wibox.widget.imagebox
+        forced_width = beautiful.icon_size,
+        widget = wibox.widget.imagebox
     },
-    left    = beautiful.icon_spacing,
-    right   = beautiful.icon_spacing,
-    widget  = wibox.container.margin
+    left = beautiful.icon_spacing,
+    right = beautiful.icon_spacing,
+    widget = wibox.container.margin
 }, "vertical")
 -- }}
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating a Titlebar
 
 local positions
@@ -108,8 +115,8 @@ if beautiful.enabled then
                     -- Title text widget {{
                     if beautiful.title.enabled then
                         title_text = {
-                            font   = beautiful.title.font,
-                            align  = beautiful.title.align,
+                            font = beautiful.title.font,
+                            align = beautiful.title.align,
                             widget = awful.titlebar.widget.titlewidget(c),
                         }
                     end
@@ -132,10 +139,10 @@ if beautiful.enabled then
                 local titlebar = awful.titlebar(
                     c,
                     {
-                        font      = beautiful.font,
-                        size      = size,
-                        position  = pos,
-                        bg_focus  = beautiful.bg_focus,
+                        font = beautiful.font,
+                        size = size,
+                        position = pos,
+                        bg_focus = beautiful.bg_focus,
                         bg_normal = beautiful.bg_normal
                     }
                 )
@@ -146,15 +153,15 @@ if beautiful.enabled then
                     titlebar.sticky = wibox.widget {
                         sticky,
                         visible = c.sticky,
-                        bg      = beautiful.sticky_bg,
-                        widget  = wibox.container.background
+                        bg = beautiful.sticky_bg,
+                        widget = wibox.container.background
                     }
 
                     titlebar.ontop = wibox.widget {
                         ontop,
                         visible = c.ontop,
-                        bg      = beautiful.ontop_bg,
-                        widget  = wibox.container.background
+                        bg = beautiful.ontop_bg,
+                        widget = wibox.container.background
                     }
                 end
                 -- }}
@@ -174,14 +181,14 @@ if beautiful.enabled then
                         {
                             title_text,
                             buttons = buttons,
-                            layout  = wibox.layout.flex[item_layout]
+                            layout = wibox.layout.flex[item_layout]
                         },
-                        left   = beautiful.margin,
-                        right  = beautiful.margin,
+                        left = beautiful.margin,
+                        right = beautiful.margin,
                         widget = wibox.container.margin
                     },
                     direction = direction,
-                    widget    = wibox.container.rotate
+                    widget = wibox.container.rotate
                 }
                 -- }}
 
@@ -192,7 +199,7 @@ if beautiful.enabled then
                         {
                             titlebar.sticky,
                             titlebar.ontop,
-                            layout  = wibox.layout.fixed[item_layout]
+                            layout = wibox.layout.fixed[item_layout]
                         },
                         nil, nil,
                         layout = wibox.layout.align[item_layout]
@@ -210,7 +217,7 @@ if beautiful.enabled then
     )
 end
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Connect Signals to Update Titlebar Indicators
 
 if beautiful.enabled then
@@ -237,5 +244,5 @@ if beautiful.enabled then
     -- }}
 end
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return titlebars

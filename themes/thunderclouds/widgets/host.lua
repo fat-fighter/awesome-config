@@ -1,20 +1,20 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful     = require("awful")
-local wibox     = require("wibox")
+local awful = require("awful")
+local wibox = require("wibox")
 local beautiful = require("beautiful").startscreen.host
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Final Widget
 
 local host = {
 	markup = io.popen("hostname"):read(),
-	font   = beautiful.font,
+	font = beautiful.font,
 	widget = wibox.widget.textbox
 }
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 
 return {
 	host,

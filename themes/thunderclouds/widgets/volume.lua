@@ -1,22 +1,22 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful     = require("awful")
-local gears     = require("gears")
+local awful = require("awful")
+local gears = require("gears")
 local beautiful = require("beautiful").startscreen.volume
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
-local slider  = require("widgets.slider").create_slider
+local slider = require("widgets.slider").create_slider
 local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Volume Widget
 
 local volume = slider(beautiful, "volume set")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Update Function and Async Script to Update Slider on Volume Change
 
 local mute
@@ -67,13 +67,13 @@ awful.spawn.with_line_callback(volume_script, {
 	end
 })
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Button Controls to the Widget
 
 volume:buttons(
 	gears.table.join(
 		-- Right click - Mute / Unmute
-		awful.button({ }, 3, function ()
+		awful.button({}, 3, function()
 			awful.spawn.with_shell("volume mute")
 			
 			if mute then
@@ -91,14 +91,14 @@ volume:buttons(
 			end
 		end),
 		-- Scroll - Increase / Decrease volume
-		awful.button({ }, 4, function ()
+		awful.button({}, 4, function()
 			awful.spawn.with_shell("volume set +2")
 		end),
-		awful.button({ }, 5, function ()
+		awful.button({}, 5, function()
 			awful.spawn.with_shell("volume set -2")
 		end)
 	)
 )
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return volume

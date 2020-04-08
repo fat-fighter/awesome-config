@@ -1,37 +1,44 @@
---------------------------------------------------------------------------------
--- Including Standard Awesome Libraries
+-- =====================================================================================
+--   Name:       systray.lua
+--   Author:     Gurpreet Singh
+--   Url:        https://github.com/ffs97/awesome-config/themes/thunderclouds/ ...
+--               ... components/systray.lua
+--   License:    The MIT License (MIT)
+--
+--   Theme specific custom configuration for systray
+-- =====================================================================================
 
-local awful     = require("awful")
-local wibox     = require("wibox")
-local gears     = require("gears")
+local awful = require("awful")
+local wibox = require("wibox")
+local gears = require("gears")
 local beautiful = require("beautiful").systray
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Widget
 
 local function create_systray(screen)
     local systray_container = wibox.widget {
         wibox.widget.systray(),
         margins = beautiful.margin,
-        widget  = wibox.container.margin
+        widget = wibox.container.margin
     }
 
     local systray = wibox {
-        ontop   = true,
-        shape   = helpers.rrect(beautiful.border_radius),
+        ontop = true,
+        shape = helpers.rrect(beautiful.border_radius),
         opacity = beautiful.opacity,
         visible = false,
-        type    = "dock"
+        type = "dock"
     }
 
-    systray.bg     = beautiful.bg
+    systray.bg = beautiful.bg
 
-    systray.width  = beautiful.width
+    systray.width = beautiful.width
     systray.height = beautiful.height
 
     systray:setup {
@@ -44,7 +51,7 @@ local function create_systray(screen)
 
     systray:buttons(gears.table.join(
         -- Middle click - Hide systray
-        awful.button({ }, 2, function ()
+        awful.button({}, 2, function()
             systray.visible = false
         end)
     ))
@@ -73,5 +80,5 @@ local function create_systray(screen)
     return systray
 end
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return create_systray

@@ -1,18 +1,25 @@
---------------------------------------------------------------------------------
--- Including Standard Awesome Libraries
+-- =====================================================================================
+--   Name:       keys.lua
+--   Author:     Gurpreet Singh
+--   Url:        https://github.com/ffs97/awesome-config/themes/thunderclouds/ ...
+--               ... widgets/startscreen.lua
+--   License:    The MIT License (MIT)
+--
+--   Widget for custom dashboard
+-- =====================================================================================
 
-local awful     = require("awful")
-local wibox     = require("wibox")
-local gears     = require("gears")
+local awful = require("awful")
+local wibox = require("wibox")
+local gears = require("gears")
 local beautiful = require("beautiful").startscreen
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
-local helpers   = require("helpers")
+local helpers = require("helpers")
 local animation = require("animation.animation")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Defining Helper Functions for Creating Startscreen
 
 local function get_width()
@@ -63,19 +70,19 @@ local function get_y(height)
 	return y
 end
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Defining Function to Create a Startscreen
 
 local function create_startscreen(screen)
 	----------------------------------------------------------------------------
 	-- Creating the StartScreen
 
-	local startscreen    = wibox { visible = false, ontop = true, type = "dock" }
+	local startscreen = wibox {visible = false, ontop = true, type = "dock"}
 
     local startscreen_bg = wibox.widget {
-        helpers.get_empty_widget(),
+        helpers.empty_widget,
         opacity = beautiful.bg_opacity,
-        widget  = wibox.container.background
+        widget = wibox.container.background
     }
 
     if beautiful.bg_image then
@@ -101,16 +108,16 @@ local function create_startscreen(screen)
 	----------------------------------------------------------------------------
 	-- Adding Toggle Controls with Animation to the Widget
 
-	startscreen.animator   = nil
+	startscreen.animator = nil
 	startscreen.visibility = false
 
 	function startscreen:show(width, height, x, y)
 		self.visibility = true
 
-		width  = width or get_width()
+		width = width or get_width()
 		height = height or get_height()
 
-		self.width  = width
+		self.width = width
 		self.height = height
 
 		x = x or get_x(width)
@@ -118,7 +125,8 @@ local function create_startscreen(screen)
 
 		if not self.animator then
 			if beautiful.animation.style == "opacity" then
-				self.opacity = 0.01  -- Non-zero to avoid glitches with full-screen windows
+                -- Non-zero to avoid glitches with full-screen windows
+				self.opacity = 0.01
 			else
 				self.opacity = beautiful.opacity
 			end
@@ -145,9 +153,9 @@ local function create_startscreen(screen)
 				beautiful.animation.duration,
 				{
 					opacity = beautiful.opacity,
-					x       = x,
-					y       = y
-				},
+					x = x,
+					y = y
+	},
 				beautiful.animation.easing
 			)
 			self.animator:startAnimation()
@@ -158,7 +166,7 @@ local function create_startscreen(screen)
 		self.visibility = false
 
 		if beautiful.animation.style ~= "none" then
-			width  = width or get_width()
+			width = width or get_width()
 			height = height or get_height()
 
 			x = x or get_x(width)
@@ -167,7 +175,8 @@ local function create_startscreen(screen)
 			local target = {}
 
 			if beautiful.animation.style == "opacity" then
-				target.opacity = 0.01  -- Non-zero to avoid glitches with full-screen windows
+                -- Non-zero to avoid glitches with full-screen windows
+				target.opacity = 0.01
 			else
 				target.opacity = beautiful.opacity
 			end
@@ -204,7 +213,7 @@ local function create_startscreen(screen)
 
 	function startscreen:toggle()
 		local width, height = get_width(), get_height()
-		local x, y          = get_x(width), get_y(height)
+		local x, y = get_x(width), get_y(height)
 
 		if not self.visibility then
 			self:show(width, height, x, y)
@@ -216,9 +225,8 @@ local function create_startscreen(screen)
 	----------------------------------------------------------------------------
 	-- Setting up the Layout of the StartScreen
 
-	local dpi      = require("beautiful").dpi
-	local boxed    = helpers.create_widget_box
-	local centered = helpers.center_align_widget
+	local dpi = require("beautiful").dpi
+	local boxed = helpers.create_widget_box
 
     local boxes = {
         {
@@ -257,8 +265,7 @@ local function create_startscreen(screen)
         layout = wibox.layout.fixed.horizontal
     }
 
-    boxes = centered(boxes, "horizontal")
-    boxes = centered(boxes, "vertical")
+    boxes = helpers.center_align_widget(boxes)
 
 	startscreen:setup{
         startscreen_bg,
@@ -273,15 +280,15 @@ local function create_startscreen(screen)
                 },
                 layout = wibox.layout.fixed.vertical
             },
-            top    = dpi(5),
-            left   = dpi(10),
-            right  = dpi(10),
+            top = dpi(5),
+            left = dpi(10),
+            right = dpi(10),
             widget = wibox.container.margin
         },
         {
             boxes,
             margins = beautiful.border_width or 0,
-            color = beautiful.border_color or "#00000000",
+            color = beautiful.border_color,
             widget = wibox.container.margin
         },
 		layout = wibox.layout.stack
@@ -291,5 +298,5 @@ local function create_startscreen(screen)
 	return startscreen
 end
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return create_startscreen

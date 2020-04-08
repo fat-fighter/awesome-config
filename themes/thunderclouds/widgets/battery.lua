@@ -1,18 +1,18 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local wibox     = require("wibox")
-local gears     = require("gears")
-local vicious   = require("vicious")
+local wibox = require("wibox")
+local gears = require("gears")
+local vicious = require("vicious")
 local beautiful = require("beautiful").startscreen.battery
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
 local naughty = require("themes." .. theme_name .. ".components.notify")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Time and Date Widgets
 
 local semicircle = function(cr, width, height)
@@ -20,24 +20,24 @@ local semicircle = function(cr, width, height)
 end
 
 local perc = wibox.widget {
-	font          = beautiful.font,
-	color         = beautiful.fg_normal,
-	valign        = "center",
+	font = beautiful.font,
+	color = beautiful.fg_normal,
+	valign = "center",
 	forced_height = beautiful.height,
-	widget        = wibox.widget.textbox
+	widget = wibox.widget.textbox
 }
-local bar  = wibox.widget {
-	color            = beautiful.fg_normal,
-	value            = 0,
-	shape            = helpers.rrect(beautiful.radius),
-	bar_shape        = helpers.rrect(beautiful.radius),
-	max_value        = 100,
-	border_color     = beautiful.border.color,
-	border_width     = beautiful.border.width,
-	forced_width     = beautiful.width,
-	forced_height    = beautiful.height,
+local bar = wibox.widget {
+	color = beautiful.fg_normal,
+	value = 0,
+	shape = helpers.rrect(beautiful.radius),
+	bar_shape = helpers.rrect(beautiful.radius),
+	max_value = 100,
+	border_color = beautiful.border.color,
+	border_width = beautiful.border.width,
+	forced_width = beautiful.width,
+	forced_height = beautiful.height,
 	background_color = "#00000000",
-	widget           = wibox.widget.progressbar
+	widget = wibox.widget.progressbar
 }
 
 local notified = false
@@ -59,9 +59,12 @@ vicious.register(
 				if not notified then
 					naughty.notify({
 						title = "Low Battery",
-						text  = "The current battery percentage is lower than " .. tostring(beautiful.low_thresh) .. "%. Please charge",
-						icon  = beautiful.low_icon
-					})
+						text = (
+                            "The current battery percentage is lower than " ..
+                            tostring(beautiful.low_thresh) .. "%. Please charge"
+                        ),
+						icon = beautiful.low_icon
+	                })
 					notified = true
 				end
 			end
@@ -81,9 +84,9 @@ local decoration = wibox.widget {
 			markup = "",
 			font = beautiful.font,
 			widget = wibox.widget.textbox
-		},
-		bg     = "#ffffff",
-		shape  = semicircle,
+	    },
+		bg = "#ffffff",
+		shape = semicircle,
 		forced_height = beautiful.decoration,
 		forced_width = beautiful.decoration,
 		widget = wibox.container.background
@@ -92,7 +95,7 @@ local decoration = wibox.widget {
 	widget = wibox.container.margin
 }
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Final Widget
 
 local battery = helpers.center_align_widget(
@@ -107,6 +110,6 @@ local battery = helpers.center_align_widget(
 	"vertical"
 )
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 
 return battery

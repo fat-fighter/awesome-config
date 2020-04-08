@@ -1,58 +1,58 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful     = require("awful")
-local gears     = require("gears")
-local wibox     = require("wibox")
+local awful = require("awful")
+local gears = require("gears")
+local wibox = require("wibox")
 local beautiful = require("beautiful").startscreen.player
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating Information Textboxes and Imageboxes
 
 local title_text = wibox.widget{
-	text          = "---------",
-	font          = beautiful.font.title,
-	valign        = "center",
+	text = "---------",
+	font = beautiful.font.title,
+	valign = "center",
 	forced_height = 22,
-	widget        = wibox.widget.textbox,
+	widget = wibox.widget.textbox,
 }
 local title_container = wibox.widget {
 	title_text,
-	layout        = wibox.container.scroll.horizontal,
+	layout = wibox.container.scroll.horizontal,
 	step_function = wibox.container.scroll.step_functions.linear_increase,
-	extra_space   = beautiful.scroll_space,
-   	speed         = beautiful.scroll_speed
+	extra_space = beautiful.scroll_space,
+   	speed = beautiful.scroll_speed
 }
 
 local artist_text = wibox.widget{
-	text          = "---------",
-	font          = beautiful.font.artist,
-	valign        = "center",
+	text = "---------",
+	font = beautiful.font.artist,
+	valign = "center",
 	forced_height = 22,
-	widget        = wibox.widget.textbox
+	widget = wibox.widget.textbox
 }
 local artist_container = wibox.widget {
 	artist_text,
-	layout        = wibox.container.scroll.horizontal,
+	layout = wibox.container.scroll.horizontal,
 	step_function = wibox.container.scroll.step_functions.linear_increase,
-	extra_space   = beautiful.scroll_space,
-   	speed         = beautiful.scroll_speed
+	extra_space = beautiful.scroll_space,
+   	speed = beautiful.scroll_speed
 }
 
-local album_art        = wibox.widget {
-	resize        = true,
-	opacity       = 0.75,
-	forced_width  = beautiful.art_size,
+local album_art = wibox.widget {
+	resize = true,
+	opacity = 0.75,
+	forced_width = beautiful.art_size,
 	forced_height = beautiful.art_size,
-	widget        = wibox.widget.imagebox
+	widget = wibox.widget.imagebox
 }
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating Control Buttons
 
 local prev_button = wibox.widget.imagebox(beautiful.icons.prev)
@@ -65,22 +65,22 @@ local toggle_button = wibox.widget.imagebox(beautiful.icons.play)
 toggle_button.forced_height = beautiful.icons.size
 
 prev_button:buttons(gears.table.join(
-	awful.button({ }, 1, function ()
+	awful.button({}, 1, function()
 		awful.spawn.with_shell("playerctl previous")
 	end)
 ))
 toggle_button:buttons(gears.table.join(
-	awful.button({ }, 1, function ()
+	awful.button({}, 1, function()
 		awful.spawn.with_shell("playerctl play-pause")
 	end)
 ))
 next_button:buttons(gears.table.join(
-	awful.button({ }, 1, function ()
+	awful.button({}, 1, function()
 		awful.spawn.with_shell("playerctl next")
 	end)
 ))
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Widget
 
 local centered = helpers.center_align_widget
@@ -97,35 +97,37 @@ local player = wibox.widget {
 					helpers.vpad(0.2),
 					artist_container,
 					layout = wibox.layout.fixed.vertical
-				},
+	},
 				layout = wibox.layout.align.vertical
-			},
+	},
 			layout = wibox.layout.fixed.horizontal
-		},
+	},
 		helpers.vpad(2),
 		centered(
 			{
 				prev_button, toggle_button, next_button,
 				spacing = beautiful.icons.margin,
 				layout = wibox.layout.flex.horizontal
-			}, "horizontal"
+	}, "horizontal"
 		),
 		layout = wibox.layout.fixed.vertical
 	},
-	left   = beautiful.margin,
-	right  = beautiful.margin,
+	left = beautiful.margin,
+	right = beautiful.margin,
 	widget = wibox.container.margin
 }
 
 player.current_track_url = nil
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Subscribing to Player Changes
 
 local art_update_script = [[
 	track=`playerctl metadata mpris:artUrl | cut -f5 -d"/"`
 	if ]] .. "[[ ! -f " .. beautiful.art_dir .. "$track.jpg ]]" .. [[ ; then
-		wget https://open.player.com/image/$track -O ]] .. beautiful.art_dir .. [[$track.jpg
+        wget https://open.player.com/image/$track -O ]]
+            .. beautiful.art_dir ..
+       [[$track.jpg
 	fi
 	echo $track
 ]]
@@ -165,8 +167,8 @@ local function update_widget(line)
 
 		 --Escape &'s
 		artist = artist:gsub("&", "&amp;")
-		title  = title:gsub("&", "&amp;")
-		album  = album:gsub("&", "&amp;")
+		title = title:gsub("&", "&amp;")
+		album = album:gsub("&", "&amp;")
 
 		-- Set text and colours
 		at = artist .. " -- " .. album
@@ -189,16 +191,16 @@ local function update_widget(line)
 		at = "----------"
 		tt = "----------"
 
-		ac = beautiful.fg.artist[status] or "#777777"
-		tc = beautiful.fg.title[status] or "#777777"
+		ac = beautiful.fg.artist[status]
+		tc = beautiful.fg.title[status]
 	end
 
 	artist_text.markup = helpers.colorize_text(at, ac)
-	title_text.markup  = helpers.colorize_text(tt, tc)
+	title_text.markup = helpers.colorize_text(tt, tc)
 end
 
 -- Sleeps until player changes state
-local player_script = "bash -c " .. "/home/fat-fighter/.config/awesome/scripts/playerctl-subscribe"
+local player_script = "bash -c " .. config_dir .. "/scripts/playerctl-subscribe"
 
 awful.spawn.with_line_callback(player_script, {
 	stdout = function(line)
@@ -206,5 +208,5 @@ awful.spawn.with_line_callback(player_script, {
 	end
 })
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return player

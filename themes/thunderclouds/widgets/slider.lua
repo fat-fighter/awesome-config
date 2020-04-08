@@ -1,18 +1,18 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful     = require("awful")
-local gears     = require("gears")
-local wibox     = require("wibox")
+local awful = require("awful")
+local gears = require("gears")
+local wibox = require("wibox")
 local beautiful = require("beautiful").startscreen.volume
-local dpi       = require("beautiful.xresources").apply_dpi
+local dpi = require("beautiful.xresources").apply_dpi
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating Volume Icon and Volume Slider
 
 local slider = {}
@@ -20,34 +20,34 @@ local slider = {}
 function slider.create_slider(style, update_cmd)
 	-- Creating the icon and slider bars
 	local icon = wibox.widget {
-		resize        = true,
-		forced_width  = style.icon_size,
+		resize = true,
+		forced_width = style.icon_size,
 		forced_height = style.icon_size,
-		widget        = wibox.widget.imagebox
+		widget = wibox.widget.imagebox
 	}
 
 	local bar = wibox.widget {
-		value               = 0,
-		maximum	            = 100,
-		bar_shape           = helpers.rrect(style.border_radius),
-		bar_height          = style.width,
-		bar_color           = "#00000000",
-		handle_color        = style.controller_bg or "#dddddd",
-		handle_shape        = gears.shape.rect,
-		handle_border_color = style.controller_bg or "#dddddd",
-		handle_width        = 0,
+		value = 0,
+		maximum = 100,
+		bar_shape = helpers.rrect(style.border_radius),
+		bar_height = style.width,
+		bar_color = "#00000000",
+		handle_color = style.controller_bg,
+		handle_shape = gears.shape.rect,
+		handle_border_color = style.controller_bg,
+		handle_width = 0,
 		handle_border_width = 0,
-		forced_width        = style.height,
-		forced_height       = style.width,
-		enabled             = true,
-		widget              = wibox.widget.slider
+		forced_width = style.height,
+		forced_height = style.width,
+		enabled = true,
+		widget = wibox.widget.slider
 	}
 
 	local cover = wibox.widget {
-		bg           = style.controller_bg or "#dddddd",
-		shape        = helpers.rrect(style.border_radius),
+		bg = style.controller_bg,
+		shape = helpers.rrect(style.border_radius),
 		forced_width = style.width,
-		widget       = wibox.container.background
+		widget = wibox.container.background
 	}
 	cover:setup {
 		nil,
@@ -59,19 +59,19 @@ function slider.create_slider(style, update_cmd)
 		{
 			bar,
 			direction = "east",
-			widget    = wibox.container.rotate
-		},
+			widget = wibox.container.rotate
+	},
 		{
 			{
 				nil, nil,
 				cover,
 				layout = wibox.layout.align.vertical
-			},
-			bg           = style.bar_bg or "#33333366",
-			shape        = helpers.rrect(style.border_radius),
+	},
+			bg = style.bar_bg,
+			shape = helpers.rrect(style.border_radius),
 			forced_width = style.width,
-			widget       = wibox.container.background
-		},
+			widget = wibox.container.background
+	},
 		{
 			nil, nil,
 			{
@@ -80,15 +80,15 @@ function slider.create_slider(style, update_cmd)
 				),
 				bottom = style.icon_bottom,
 				layout = wibox.container.margin
-			},
+	},
 			layout = wibox.layout.align.vertical
-		},
+	},
 		layout = wibox.layout.stack
 	}
 
 	-- Adding local variables to widget
-	widget.bar   = bar
-	widget.icon  = icon
+	widget.bar = bar
+	widget.icon = icon
 	widget.cover = cover
 
 	-- Adding update signals {{
@@ -114,5 +114,5 @@ function slider.create_slider(style, update_cmd)
 	return widget
 end
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return slider

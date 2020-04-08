@@ -1,18 +1,19 @@
-----------------------------------------------------------------------------------------
--- Including Standard Awesome Libraries
+-- =====================================================================================
+--   Name:       handlers.lua
+--   Author:     Gurpreet Singh
+--   Url:        https://github.com/ffs97/awesome-config/themes/thunderclouds/ ...
+--               ... handlers.lua
+--   License:    The MIT License (MIT)
+--
+--   Theme specific connect handlers for clients and tags
+-- =====================================================================================
 
 local beautiful = require("beautiful")
 
 --------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
-local helpers   = require("helpers")
-
---------------------------------------------------------------------------------
--- Setting Local Variables
-
-local theme_name = "thunderclouds"
-local theme_lib  = "themes." .. theme_name .. "."
+local helpers = require("helpers")
 
 --------------------------------------------------------------------------------
 -- Defining handlers
@@ -21,8 +22,8 @@ handlers = {}
 
 -- Screen {{
 function handlers.connect_for_each_screen(s)
-    s.systray     = require(theme_lib .. "components.systray")(s)
-    s.startscreen = require(theme_lib .. "components.startscreen")(s)
+    s.systray = require("components.systray")(s)
+    s.startscreen = require("components.startscreen")(s)
 end
 -- }}
 
@@ -36,12 +37,16 @@ function handlers.client_connect_unfocus(c)
 end
 
 function handlers.client_connect_manage(c)
+    -- Add shape to client
+    
     if not c.fullscreen then
         c.shape = helpers.rrect(beautiful.window_border_radius)
     end
 end
 
 function handlers.client_connect_fullscreen(c)
+    -- Remove shapes in fullscreen mode
+    
     if c.fullscreen then
         c.shape = helpers.rect()
     else

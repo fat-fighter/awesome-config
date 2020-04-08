@@ -1,43 +1,43 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful     = require("awful")
-local wibox     = require("wibox")
+local awful = require("awful")
+local wibox = require("wibox")
 local beautiful = require("beautiful").startscreen.weather
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Webcam Widget
 
-local weather_icon      = wibox.widget {
-	image         = beautiful.icons.default,
-	resize        = true,
-	forced_width  = beautiful.icon_size,
+local weather_icon = wibox.widget {
+	image = beautiful.icons.default,
+	resize = true,
+	forced_width = beautiful.icon_size,
 	forced_height = beautiful.icon_size,
-	widget        = wibox.widget.imagebox
+	widget = wibox.widget.imagebox
 }
 
-local weather_temp      = wibox.widget {
-    text   = "-",
-    align  = "center",
+local weather_temp = wibox.widget {
+    text = "-",
+    align = "center",
     valign = "center",
-    font   = beautiful.font,
+    font = beautiful.font,
     widget = wibox.widget.textbox
 }
 
 local weather_temp_icon = wibox.widget {
-	image         = beautiful.icons.default,
-	resize        = true,
-	forced_width  = beautiful.temp_icon_size,
+	image = beautiful.icons.default,
+	resize = true,
+	forced_width = beautiful.temp_icon_size,
 	forced_height = beautiful.temp_icon_size,
-	widget        = wibox.widget.imagebox
+	widget = wibox.widget.imagebox
 }
 
-local centered          = helpers.center_align_widget
+local centered = helpers.center_align_widget
 
 local tt = {
     weather_temp,
@@ -45,7 +45,7 @@ local tt = {
     widget = wibox.container.background
 }
 
-local weather           = wibox.widget {
+local weather = wibox.widget {
 	centered({
 		centered(weather_icon, "horizontal"),
         helpers.vpad(2),
@@ -57,21 +57,21 @@ local weather           = wibox.widget {
         }, "horizontal"),
 		layout = wibox.layout.align.vertical
     }, "vertical"),
-	bg            = beautiful.bg or "#333333",
-    shape         = helpers.rrect(beautiful.border_radius or 0),
-	forced_width  = beautiful.width,
+	bg = beautiful.bg,
+    shape = helpers.rrect(beautiful.border_radius or 0),
+	forced_width = beautiful.width,
 	forced_height = beautiful.height,
-	widget        = wibox.container.background
+	widget = wibox.container.background
 }
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Update Functions to Update Weather periodically
 
-local app_id  = "d0d6a88b3a4ef6f54248a8055af908b4"
+local app_id = "d0d6a88b3a4ef6f54248a8055af908b4"
 local city_id = "5128581"
-local units   = "metric" -- | "imperial"
+local units = "metric" -- | "imperial"
 
-local icons   = beautiful.icons
+local icons = beautiful.icons
 
 if units == "metric" then
     weather_temp_icon.image = icons.celcius
@@ -137,5 +137,5 @@ awful.widget.watch(weather_details_script, update_interval, function(widget, std
     end
 end)
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return weather

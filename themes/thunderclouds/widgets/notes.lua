@@ -1,36 +1,36 @@
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful     = require("awful")
-local gears     = require("gears")
-local wibox     = require("wibox")
+local awful = require("awful")
+local gears = require("gears")
+local wibox = require("wibox")
 local beautiful = require("beautiful").startscreen.notes
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Creating the Widget
 
 local title = wibox.widget {
-	font   = beautiful.title.font,
-	align  = "left",
+	font = beautiful.title.font,
+	align = "left",
 	valign = "center",
 	markup = helpers.colorize_text("Notes", beautiful.title.fg),
 	widget = wibox.widget.textbox
 }
 
-local text  = wibox.widget {
+local text = wibox.widget {
 	widget = wibox.container.background
 }
 
-local edit  = wibox.widget {
-	image         = beautiful.edit_icon,
-	forced_width  = beautiful.edit_icon_size,
+local edit = wibox.widget {
+	image = beautiful.edit_icon,
+	forced_width = beautiful.edit_icon_size,
 	forced_height = beautiful.edit_icon_size,
-	widget        = wibox.widget.imagebox
+	widget = wibox.widget.imagebox
 }
 
 local notes = {
@@ -38,22 +38,22 @@ local notes = {
 		{
 			title, nil, edit,
 			layout = wibox.layout.align.horizontal
-		},
+	},
 		{
 			helpers.vpad(0.2),
-			color  = beautiful.title.fg .. "99",
+			color = beautiful.title.fg .. "99",
 			bottom = 1,
 			widget = wibox.container.margin
-		},
+	},
 		helpers.vpad(0.4),
 		text,
 		layout = wibox.layout.fixed.vertical
 	},
 	margins = beautiful.margin,
-	widget  = wibox.container.margin
+	widget = wibox.container.margin
 }
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Update Function
 
 local function get_markup(line)
@@ -73,11 +73,11 @@ local function update_widget()
     			table.insert(
 					textboxes,
 					wibox.widget {
-						markup        = get_markup(line),
-						font          = beautiful.text.font,
+						markup = get_markup(line),
+						font = beautiful.text.font,
 						forced_height = beautiful.line_height,
-						widget        = wibox.widget.textbox
-					}
+						widget = wibox.widget.textbox
+	}
 				)
 			end
 			textboxes.layout = wibox.layout.fixed.vertical
@@ -87,21 +87,21 @@ local function update_widget()
 end
 
 local timer = gears.timer {
-    timeout   = 120,
-	call_now  = true,
+    timeout = 120,
+	call_now = true,
     autostart = true,
-    callback  = update_widget
+    callback = update_widget
 }
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 -- Adding Button Controls to the Widget
 
 edit:buttons(gears.table.join(
 	-- Left click - Open google mail
-	awful.button({ }, 1, function ()
+	awful.button({}, 1, function()
 		awful.spawn.with_shell(editor .. " ~/todo")
 	end)
 ))
 
---------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
 return notes
