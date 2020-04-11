@@ -98,7 +98,7 @@ local decoration = wibox.widget {
 -- -------------------------------------------------------------------------------------
 -- Creating the Final Widget
 
-local battery = helpers.center_align_widget(
+local battery = helpers.centered(
 	{
 		perc,
 		bar,

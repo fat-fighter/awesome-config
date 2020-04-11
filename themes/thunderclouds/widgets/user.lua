@@ -37,7 +37,7 @@ user_logo:setup {
 -- -------------------------------------------------------------------------------------
 -- Creating the Final Widget
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 
 local user = wibox.widget {
 	centered(user_picture, "horizontal"),

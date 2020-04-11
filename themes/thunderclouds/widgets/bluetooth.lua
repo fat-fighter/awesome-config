@@ -32,7 +32,7 @@ local bluetooth = wibox.widget {
 	widget = wibox.container.background
 }
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 bluetooth:setup {
 	nil,
 	centered(bluetooth_icon, "horizontal"),

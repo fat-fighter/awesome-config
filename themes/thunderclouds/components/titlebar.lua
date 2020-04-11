@@ -63,7 +63,7 @@ local buttons = gears.table.join(
 -- Creating widgets
 
 -- Sticky widget {{
-local sticky = helpers.center_align_widget({
+local sticky = helpers.centered({
     {
         image = beautiful.sticky_icon,
         forced_height = beautiful.icon_size,
@@ -77,7 +77,7 @@ local sticky = helpers.center_align_widget({
 -- }}
 
 -- Ontop widget {{
-local ontop = helpers.center_align_widget({
+local ontop = helpers.centered({
     {
         image = beautiful.ontop_icon,
         forced_height = beautiful.icon_size,

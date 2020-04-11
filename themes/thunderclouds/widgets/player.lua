@@ -83,7 +83,7 @@ next_button:buttons(gears.table.join(
 -- -------------------------------------------------------------------------------------
 -- Creating the Widget
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 local player = wibox.widget {
 	{
 		{

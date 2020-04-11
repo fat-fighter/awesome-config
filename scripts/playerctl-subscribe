@@ -1,66 +1,98 @@
 #!/usr/bin/python
 
-import gi
 import sys
+import dbus
+import dbus.mainloop.glib
 
-gi.require_version("Playerctl", "2.0")
-
-from gi.repository import Playerctl, GLib
-from subprocess import Popen
-
-
-player = Playerctl.Player()
-
-prev_info = ""
+from gi.repository import GLib
 
 
-def on_track_play(player):
-    global prev_info
+def dbus_to_python(data):
+    if isinstance(data, str):
+        data = str(data)
 
-    track_info = "Playing|{artist}|{title}|{album}".format(
-        artist=player.get_artist(), title=player.get_title(), album=player.get_album()
+    elif isinstance(data, bool):
+        data = bool(data)
+
+    elif isinstance(data, int):
+        data = int(data)
+
+    elif isinstance(data, float):
+        data = float(data)
+
+    elif isinstance(data, list):
+        data = [dbus_to_python(value) for value in data]
+
+    elif isinstance(data, object):
+        new_data = dict()
+        for key, item in data.items():
+            new_data[dbus_to_python(key)] = dbus_to_python(item)
+        data = new_data
+
+    return data
+
+
+def flatten_dict(data, separator=":", prefix=""):
+    if isinstance(data, dict):
+        if prefix != "":
+            prefix = prefix + separator
+
+        flat_data = {}
+        for k, v in data.items():
+            for kk, vv in flatten_dict(v, separator, k).items():
+                flat_data[prefix + kk] = vv
+
+        return flat_data
+
+    elif isinstance(data, list):
+        return {prefix + str(i): v for i, v in enumerate(data)}
+
+    else:
+        return {prefix: data}
+
+
+def property_changed(iface, props, *args, path="/org/mpris/MediaPlayer2"):
+    iface = dbus_to_python(iface)
+
+    props = dbus_to_python(props)
+    props = flatten_dict(props)
+
+    for key, value in props.items():
+        print("{%s} [%s] %s = %s" % (iface, path, key, value))
+        sys.stdout.flush()
+
+
+def get_bus_names(bus):
+    proxy = bus.get_object("org.freedesktop.DBus", "/org/freedesktop/DBus")
+    iface = dbus.Interface(proxy, "org.freedesktop.DBus")
+
+    return iface.ListNames()
+
+
+if __name__ == "__main__":
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+
+    bus = dbus.SessionBus()
+
+    path = "/org/mpris/MediaPlayer2"
+    dbus_iname = "org.freedesktop.DBus.Properties"
+    player_iname = "org.mpris.MediaPlayer2.Player"
+
+    bus.add_signal_receiver(
+        property_changed,
+        path=path,
+        dbus_interface=dbus_iname,
+        signal_name="PropertiesChanged",
     )
 
-    if track_info != prev_info:
-        prev_info = track_info
-        print(track_info)
-        sys.stdout.flush()
+    for player in get_bus_names(bus):
+        if "org.mpris.MediaPlayer2." in player:
+            proxy = bus.get_object(player, path)
+            iface = dbus.Interface(proxy, dbus_iname)
 
+            if iface.Get(player_iname, "PlaybackStatus") == "Playing":
+                property_changed(player_iname, iface.GetAll(player_iname), path)
+                break
 
-def on_track_pause(player):
-    global prev_info
-
-    track_info = "Paused|{artist}|{title}|{album}".format(
-        artist=player.get_artist(), title=player.get_title(), album=player.get_album()
-    )
-
-    if track_info != prev_info:
-        prev_info = track_info
-        print(track_info)
-        sys.stdout.flush()
-
-
-def on_track_stop(player):
-    global prev_info
-
-    track_info = "Stopped"
-
-    if track_info != prev_info:
-        prev_info = track_info
-        print(track_info)
-        sys.stdout.flush()
-
-
-status = player.get_property("status")
-if status is None:
-    on_track_stop(player)
-elif status == "Playing":
-    on_track_play(player)
-elif status == "Paused":
-    on_track_pause(player)
-
-player.connect("play", on_track_play)
-player.connect("pause", on_track_pause)
-player.connect("stop", on_track_stop)
-
-GLib.MainLoop().run()
+    mainloop = GLib.MainLoop()
+    mainloop.run()

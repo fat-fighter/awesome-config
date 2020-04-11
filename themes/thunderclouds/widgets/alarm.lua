@@ -23,7 +23,7 @@ local alarm_icon = wibox.widget {
 	widget = wibox.widget.imagebox
 }
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 
 local alarm = wibox.widget {
 	centered(

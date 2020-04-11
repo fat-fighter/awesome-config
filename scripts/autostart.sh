@@ -21,7 +21,7 @@ libinput-gestures-setup start
 volume set +0
 
 # Run Compton
-compton --config=$HOME/.config/compton/config &
+compton --config=$HOME/.config/compton/$THEME.config &
 
 # Run dropbox client
 dropbox &
@@ -29,5 +29,8 @@ dropbox &
 # Run blueman-applet
 blueman-applet &
 
+# Run xflux
+# fluxgui &
+
 # Run alarm clock applet
-alarm-clock-applet &
+# alarm-clock-applet &

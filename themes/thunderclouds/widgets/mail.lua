@@ -22,7 +22,7 @@ local mail_icon = wibox.widget {
 	widget = wibox.widget.imagebox
 }
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 
 local mail_text = wibox.widget {
 	font = beautiful.font,

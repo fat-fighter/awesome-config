@@ -25,11 +25,12 @@
 
 -- Choosing awful theme
 local theme_collection = {
-    "thunderclouds",      -- 1 --
+    "thunderclouds"
 }
 
 -- Change this number to use a different theme
 theme_name = os.getenv("THEME") or theme_collection[1]
+theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/" .. theme_name .. "/"
 
 -- -------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
@@ -38,37 +39,44 @@ require("awful.autofocus")
 
 local gears = require("gears")
 local awful = require("awful")
-local wibox = require("wibox")
+
+local lgi = require("lgi")
+local Gio = lgi.require("Gio")
 
 -- -------------------------------------------------------------------------------------
 -- Defining Global Variables
 
-editor = "gvim"
 terminal = "termite"
+editor = terminal .. " -e vim"
 filemanager = terminal .. "-e ranger"
 
 ntags = 8
 
 config_dir = os.getenv("HOME") .. "/.config/awesome/"
+scripts_dir = config_dir .. "scripts/"
+
+system_bus = Gio.bus_get_sync(Gio.BusType.SYSTEM)
+session_bus = Gio.bus_get_sync(Gio.BusType.SESSION)
 
 -- -------------------------------------------------------------------------------------
 -- Initializing the Theme
 
-theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/" .. theme_name .. "/"
-
 local beautiful = require("beautiful")
 
 if not beautiful.init(theme_dir .. "theme.lua") then
-    naughty.notify({
-        text = "Error loading theme " .. theme_name .. " from " .. theme_dir,
-        preset = naughty.config.presets.critical
-    })
+    local naughty = require("naughty")
+    naughty.notify(
+        {
+            text = "Error loading theme " .. theme_name .. " from " .. theme_dir,
+            preset = naughty.config.presets.critical
+        }
+    )
 end
 
 -- -------------------------------------------------------------------------------------
 -- Running Cleanup Script
 
-os.execute(config_dir .. "scripts/cleanup.sh")
+os.execute(scripts_dir .. "cleanup.sh")
 
 -- -------------------------------------------------------------------------------------
 -- Setting Tags
@@ -94,7 +102,6 @@ beautiful.tagnames = tagnames
 package.path = package.path .. ";" .. theme_dir .. "?.lua"
 
 local keys = require("keys")
-local helpers = require("helpers")
 local naughty = require("components.notify")
 local handlers = require("handlers")
 
@@ -118,7 +125,9 @@ local in_error = false
 awesome.connect_signal(
     "debug::error",
     function(err)
-        if in_error then return end
+        if in_error then
+            return
+        end
         in_error = true
 
         naughty.notify {
@@ -150,7 +159,7 @@ awful.layout.layouts = {
     awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.floating,
-    awful.layout.suit.magnifier,
+    awful.layout.suit.magnifier
 }
 
 -- -------------------------------------------------------------------------------------
@@ -185,47 +194,71 @@ awful.screen.connect_for_each_screen(
         local l = awful.layout.suit
 
         -- Creating tags with separate configurations
-        awful.tag.add(tagnames[1], {
-            layout = l.max,
-            screen = s,
-            selected = true,
-            -- Work::Browser
-        })
-        awful.tag.add(tagnames[2], {
-            layout = l.spiral.dwindle,
-            screen = s,
-            -- Work::Writing
-        })
-        awful.tag.add(tagnames[3], {
-            layout = l.spiral.dwindle,
-            screen = s,
-            -- Work::Reading
-        })
-        awful.tag.add(tagnames[4], {
-            layout = l.fair,
-            screen = s,
-            -- Work::Terminal
-        })
-        awful.tag.add(tagnames[5], {
-            layout = l.max,
-            screen = s,
-            -- Work::Code
-        })
-        awful.tag.add(tagnames[6], {
-            layout = l.max,
-            screen = s,
-            -- Leisure::Videos
-        })
-        awful.tag.add(tagnames[7], {
-            layout = l.max,
-            screen = s,
-            -- Leisure::Music
-        })
-        awful.tag.add(tagnames[8], {
-            layout = l.max,
-            screen = s,
-            -- Leisure::Social
-        })
+        awful.tag.add(
+            tagnames[1],
+            {
+                layout = l.max,
+                screen = s,
+                selected = true
+                -- Work::Browser
+            }
+        )
+        awful.tag.add(
+            tagnames[2],
+            {
+                layout = l.spiral.dwindle,
+                screen = s
+                -- Work::Writing
+            }
+        )
+        awful.tag.add(
+            tagnames[3],
+            {
+                layout = l.spiral.dwindle,
+                screen = s
+                -- Work::Reading
+            }
+        )
+        awful.tag.add(
+            tagnames[4],
+            {
+                layout = l.fair,
+                screen = s
+                -- Work::Terminal
+            }
+        )
+        awful.tag.add(
+            tagnames[5],
+            {
+                layout = l.max,
+                screen = s
+                -- Work::Code
+            }
+        )
+        awful.tag.add(
+            tagnames[6],
+            {
+                layout = l.max,
+                screen = s
+                -- Leisure::Videos
+            }
+        )
+        awful.tag.add(
+            tagnames[7],
+            {
+                layout = l.max,
+                screen = s
+                -- Leisure::Music
+            }
+        )
+        awful.tag.add(
+            tagnames[8],
+            {
+                layout = l.max,
+                screen = s
+                -- Leisure::Social
+            }
+        )
     end
 )
 
@@ -240,11 +273,10 @@ client.connect_signal(
             -- Sets all new clients as slaves
             awful.client.setslave(c)
         end
-        if (
-            awesome.startup
-            and not c.size_hints.user_position
-            and not c.size_hints.program_position
-        ) then
+        if
+            (awesome.startup and not c.size_hints.user_position and
+                not c.size_hints.program_position)
+         then
             -- Prevent clients from being unreachable after screen count changes.
             awful.placement.no_offscreen(c)
         end
@@ -266,8 +298,18 @@ client.connect_signal(
 -- }}
 
 -- Focus change handlers {{
-client.connect_signal("focus", function(c) handlers.client_connect_focus(c) end)
-client.connect_signal("unfocus", function(c) handlers.client_connect_unfocus(c) end)
+client.connect_signal(
+    "focus",
+    function(c)
+        handlers.client_connect_focus(c)
+    end
+)
+client.connect_signal(
+    "unfocus",
+    function(c)
+        handlers.client_connect_unfocus(c)
+    end
+)
 -- }}
 
 -- Make rofi able to unminimize minimized clients {{
@@ -285,7 +327,10 @@ client.connect_signal(
 
 -- Fullscreen handler {{
 client.connect_signal(
-    "property::fullscreen", function(c) handlers.client_connect_fullscreen(c) end
+    "property::fullscreen",
+    function(c)
+        handlers.client_connect_fullscreen(c)
+    end
 )
 -- }}
 
@@ -318,11 +363,11 @@ awful.rules.rules = {
         rule_any = {
             name = {
                 "Chrome",
-                "Chromium",
+                "Chromium"
             },
             class = {
-                "qutebrowser",
-            },
+                "qutebrowser"
+            }
         },
         properties = {titlebars_enabled = false}
     },
@@ -334,10 +379,10 @@ awful.rules.rules = {
             class = {
                 "Lxappearance",
                 "Pavucontrol",
-                "Alarm-clock-applet",
+                "Alarm-clock-applet"
             },
             role = {
-                "pop-up",
+                "pop-up"
             }
         },
         properties = {floating = true, ontop = false}
@@ -348,7 +393,7 @@ awful.rules.rules = {
     {
         rule_any = {
             type = {
-                "dialog",
+                "dialog"
             },
             name = {
                 "Save As",
@@ -356,10 +401,10 @@ awful.rules.rules = {
                 "File Upload",
                 "Select a filename",
                 "Enter name of file to save to…",
-                "Library",
+                "Library"
             },
             role = {
-                "GtkFileChooserDialog",
+                "GtkFileChooserDialog"
             }
         },
         properties = {},
@@ -378,10 +423,10 @@ awful.rules.rules = {
                 "File Upload",
                 "Select a filename",
                 "Enter name of file to save to…",
-                "Library",
+                "Library"
             },
             role = {
-                "GtkFileChooserDialog",
+                "GtkFileChooserDialog"
             }
         },
         properties = {},
@@ -395,4 +440,4 @@ awful.rules.rules = {
 -- -------------------------------------------------------------------------------------
 -- Running Autostart Script
 
-awful.spawn.with_shell(config_dir .. "scripts/autostart.sh")
+awful.spawn.with_shell(scripts_dir .. "autostart.sh")

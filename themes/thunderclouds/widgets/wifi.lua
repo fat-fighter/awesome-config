@@ -32,7 +32,7 @@ local wifi = wibox.widget {
 	widget = wibox.container.background
 }
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 wifi:setup {
 	nil,
 	centered(wifi_icon, "horizontal"),

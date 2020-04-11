@@ -37,7 +37,7 @@ local weather_temp_icon = wibox.widget {
 	widget = wibox.widget.imagebox
 }
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 
 local tt = {
     weather_temp,

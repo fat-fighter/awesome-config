@@ -12,7 +12,7 @@ local helpers = require("helpers")
 -- -------------------------------------------------------------------------------------
 -- Creating the Widget
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 
 return {
     {

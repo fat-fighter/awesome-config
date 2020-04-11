@@ -75,7 +75,7 @@ function slider.create_slider(style, update_cmd)
 		{
 			nil, nil,
 			{
-				helpers.center_align_widget(
+				helpers.centered(
 					icon, "horizontal"
 				),
 				bottom = style.icon_bottom,

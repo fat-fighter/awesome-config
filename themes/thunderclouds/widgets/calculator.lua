@@ -23,7 +23,7 @@ local calculator_icon = wibox.widget {
 	widget = wibox.widget.imagebox
 }
 
-local centered = helpers.center_align_widget
+local centered = helpers.centered
 
 local calculator = wibox.widget {
 	centered(

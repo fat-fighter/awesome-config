@@ -33,7 +33,7 @@ local edit = wibox.widget {
 	widget = wibox.widget.imagebox
 }
 
-local notes = {
+local notes = wibox.widget {
 	{
 		{
 			title, nil, edit,
