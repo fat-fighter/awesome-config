@@ -17,7 +17,20 @@ error() {
 }
 
 getactivesink() {
-	pacmd stat | awk -F": " '/^Default sink name: /{print $2}'
+    sink=$(
+        pactl list sinks | awk -F ':' ' \
+            BEGIN{running=0} \
+            /State: RUNNING/ {running=1}
+            /Name/ { \
+                if (running) print $2; running=0; fi
+            } \
+            END{} \
+        ' | head -1
+    )
+    if [ -z $sink ]; then
+        sink=$( pacmd stat | awk -F ': ' '/^Default sink name: /{print $2}' )
+    fi
+	echo $sink
 }
 
 getsinkvolumesymbol() {

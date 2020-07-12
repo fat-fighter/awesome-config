@@ -10,6 +10,11 @@ while pgrep -x compton >/dev/null; do
 	sleep 1;
 done
 
+killall -q redshift
+while pgrep -x redshift >/dev/null; do
+	sleep 1;
+done
+
 killall -q polybar
 while pgrep -x polybar >/dev/null; do
 	sleep 1;

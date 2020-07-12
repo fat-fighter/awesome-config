@@ -32,7 +32,7 @@ local function get_players()
     )
 
     if err then
-        error("Could not get mpris players")
+        error("Error: daemon mpris, could not get mpris players")
     elseif not ret or #ret ~= 1 then
         return
     end
@@ -164,7 +164,7 @@ function daemon.emit(data)
     end
 
     if data.PlaybackStatus then
-        awesome.emit_signal("properties::mpris", "playback", data.PlaybackStatus)
+        awesome.emit_signal("properties::mpris", "playback", data.PlaybackStatus:lower())
     end
 
     if data.Metadata then
@@ -217,7 +217,7 @@ awesome.connect_signal(
         elseif command == "stop" then
             script = "playerctl stop"
         else
-            error("Error: daemon volume, command '" .. command .. "' not found")
+            error("Error: daemon mpris, command '" .. command .. "' not found")
         end
 
         awful.spawn.with_shell(script)

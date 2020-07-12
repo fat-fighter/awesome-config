@@ -21,7 +21,7 @@ libinput-gestures-setup start
 volume set +0
 
 # Run Compton
-compton --config=$HOME/.config/compton/$THEME.config &
+picom --config=$HOME/.config/picom/$THEME.config -b --experimental-backends
 
 # Run dropbox client
 dropbox &
@@ -29,8 +29,10 @@ dropbox &
 # Run blueman-applet
 blueman-applet &
 
-# Run xflux
-# fluxgui &
+# Run redshift
+redshift -P -O 4500 &
 
 # Run alarm clock applet
 # alarm-clock-applet &
+
+wal --theme $THEME -o $HOME/.config/awesome/scripts/theme-config

@@ -1,18 +1,18 @@
---                                                `'::.
---    ██████             ██                     _________H ,%%&%,
---   ░███░░██            ██                    /\     _   \%&&%%&%
+--                                                  `'::.
+--    ██████             ██                    _________H ,%%&%,
+--   ░███░░██           ░██                    /\   _   \%&&%%&%
 --   ░███ ░░   █████    █████                 /  \___/^\___\%&%%&&
---   █████    ░░░░░██  ░░██                   |  | []   [] |%\Y&%'
+--   █████    ░░░░░██  ░░███                  |  | []   [] |%\Y&%'
 --  ░░███      ██████   ░██                   |  |   .-.   | ||
 --   ░██      ███░░██   ░███                ~~|  |   |||   |~||~~~~~~
 --   ████     ░███████  ░░███                ~^~^~^~^~^~^~^~^~^~^~^~
 --  ░░░░      ░░░░░░░    ░░░
---          █████   ████    ██    ███  █████    █████   █████   █████████████    █████
---         ░░░░░██ ░░███   ████   ██  ███░░██ ░███░░   ███░░██ ░░███░░███░░██   ███░░██
---          ██████  ░░███ ██████ ██  ░██████   ░████  ░███ ░██  ░███ ░███ ░██  ░██████
---         ███░░██   ░░█████░░████   ░███░░    ░░░███ ░███ ░██  ░███ ░███ ░██  ░███░░
---         ░███████   ░░███  ░░██    ░░██████  █████  ░░█████   █████░███ ████ ░░██████
---         ░░░░░░░     ░░░    ░░      ░░░░░░  ░░░░░   ░░░░░   ░░░░░ ░░░ ░░░░   ░░░░░░
+--         █████    ████    ██    ███   █████    ████   █████   █████████████    █████
+--        ░░░░░██  ░░███   ████   ██   ███░░██ ░███░   ███░░██ ░░███░░███░░██   ███░░██
+--         ██████   ░░███ ██████ ██   ░██████   ░███  ░███ ░██  ░███ ░███ ░██  ░██████
+--        ███░░██    ░░█████░░████    ░███░░    ░░░██ ░███ ░██  ░███ ░███ ░██  ░███░░
+--        ░███████    ░░███  ░░██     ░░██████  ████  ░░█████   █████░███ ████ ░░██████
+--        ░░░░░░░      ░░░    ░░       ░░░░░░  ░░░░    ░░░░░   ░░░░░ ░░░ ░░░░   ░░░░░░
 --
 -- =====================================================================================
 --   Name:       fat ⌂ awesome
@@ -25,6 +25,7 @@
 
 -- Choosing awful theme
 local theme_collection = {
+    "apocalypse",
     "thunderclouds"
 }
 
@@ -46,11 +47,11 @@ local Gio = lgi.require("Gio")
 -- -------------------------------------------------------------------------------------
 -- Defining Global Variables
 
-terminal = "termite"
+terminal = "kitty"
 editor = terminal .. " -e vim"
-filemanager = terminal .. "-e ranger"
+filemanager = terminal .. " -e ranger"
 
-ntags = 8
+ntags = 6
 
 config_dir = os.getenv("HOME") .. "/.config/awesome/"
 scripts_dir = config_dir .. "scripts/"
@@ -104,13 +105,15 @@ package.path = package.path .. ";" .. theme_dir .. "?.lua"
 local keys = require("keys")
 local naughty = require("components.notify")
 local handlers = require("handlers")
+require("awful.remote")
+require("screenful")
 
 require("components.titlebar")
 
 -- -------------------------------------------------------------------------------------
 -- Error Handling
 
--- Throw startup errors {{
+-- Throw startup errors {{{
 if awesome.startup_errors then
     naughty.notify {
         text = awesome.startup_errors,
@@ -118,9 +121,9 @@ if awesome.startup_errors then
         preset = naughty.config.presets.critical
     }
 end
--- }}
+-- }}}
 
--- Handle runtime errors after startup {{
+-- Handle runtime errors after startup {{{
 local in_error = false
 awesome.connect_signal(
     "debug::error",
@@ -138,11 +141,12 @@ awesome.connect_signal(
         in_error = false
     end
 )
--- }}
+-- }}}
 
 -- -------------------------------------------------------------------------------------
 -- Choosing Layouts
 
+-- Choosing possible layouts for a tag {{{
 awful.layout.layouts = {
     awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal,
@@ -161,6 +165,7 @@ awful.layout.layouts = {
     awful.layout.suit.floating,
     awful.layout.suit.magnifier
 }
+-- }}}
 
 -- -------------------------------------------------------------------------------------
 -- Setting a Wallpaper
@@ -193,7 +198,7 @@ awful.screen.connect_for_each_screen(
         -- Layouts
         local l = awful.layout.suit
 
-        -- Creating tags with separate configurations
+        -- Creating tags with separate configurations {{{
         awful.tag.add(
             tagnames[1],
             {
@@ -208,7 +213,7 @@ awful.screen.connect_for_each_screen(
             {
                 layout = l.spiral.dwindle,
                 screen = s
-                -- Work::Writing
+                -- Work::Code
             }
         )
         awful.tag.add(
@@ -232,7 +237,7 @@ awful.screen.connect_for_each_screen(
             {
                 layout = l.max,
                 screen = s
-                -- Work::Code
+                -- Leisure::Browser
             }
         )
         awful.tag.add(
@@ -240,32 +245,17 @@ awful.screen.connect_for_each_screen(
             {
                 layout = l.max,
                 screen = s
-                -- Leisure::Videos
+                -- Leisure::Chill
             }
         )
-        awful.tag.add(
-            tagnames[7],
-            {
-                layout = l.max,
-                screen = s
-                -- Leisure::Music
-            }
-        )
-        awful.tag.add(
-            tagnames[8],
-            {
-                layout = l.max,
-                screen = s
-                -- Leisure::Social
-            }
-        )
+        -- }}}
     end
 )
 
 -- -------------------------------------------------------------------------------------
 -- Connect Handlers for Clients
 
--- Manage client handlers {{
+-- Manage client handlers {{{
 client.connect_signal(
     "manage",
     function(c)
@@ -295,9 +285,9 @@ client.connect_signal(
         handlers.client_connect_manage(c)
     end
 )
--- }}
+-- }}}
 
--- Focus change handlers {{
+-- Focus change handlers {{{
 client.connect_signal(
     "focus",
     function(c)
@@ -310,9 +300,9 @@ client.connect_signal(
         handlers.client_connect_unfocus(c)
     end
 )
--- }}
+-- }}}
 
--- Make rofi able to unminimize minimized clients {{
+-- Make rofi able to unminimize minimized clients {{{
 -- Note: causes clients to unminimize after restarting awesome
 client.connect_signal(
     "request::activate",
@@ -323,22 +313,22 @@ client.connect_signal(
         awful.ewmh.activate(c, context, hints)
     end
 )
--- }}
+-- }}}
 
--- Fullscreen handler {{
+-- Fullscreen handler {{{
 client.connect_signal(
     "property::fullscreen",
     function(c)
         handlers.client_connect_fullscreen(c)
     end
 )
--- }}
+-- }}}
 
 -- -------------------------------------------------------------------------------------
 -- Adding Awful Rules for Clients
 
 awful.rules.rules = {
-    -- Default properties {{
+    -- Default properties {{{
     {
         rule = {},
         properties = {
@@ -356,9 +346,9 @@ awful.rules.rules = {
             titlebars_enabled = true
         }
     },
-    -- }}
+    -- }}}
 
-    -- Forced disable titlebars {{
+    -- Forced disable titlebars {{{
     {
         rule_any = {
             name = {
@@ -371,9 +361,9 @@ awful.rules.rules = {
         },
         properties = {titlebars_enabled = false}
     },
-    -- }}
+    -- }}}
 
-    -- Floating {{
+    -- Floating {{{
     {
         rule_any = {
             class = {
@@ -387,9 +377,9 @@ awful.rules.rules = {
         },
         properties = {floating = true, ontop = false}
     },
-    -- }}
+    -- }}}
 
-    -- Centered {{
+    -- Centered {{{
     {
         rule_any = {
             type = {
@@ -412,9 +402,9 @@ awful.rules.rules = {
             awful.placement.centered(c, {honor_workarea = true})
         end
     },
-    -- }}
+    -- }}}
 
-    -- Forced titlebars {{
+    -- Forced titlebars {{{
     {
         rule_any = {
             name = {
@@ -434,7 +424,7 @@ awful.rules.rules = {
             awful.titlebar.show(c, beautiful.titlebar.position)
         end
     }
-    -- }}
+    -- }}}
 }
 
 -- -------------------------------------------------------------------------------------

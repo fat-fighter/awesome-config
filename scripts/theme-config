@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+source $HOME/.cache/wal/colors.sh  
+
+# Termite {{{
+sed -i "s/\(background\s\+=\s\+\).*/\1$background/g" ~/.config/termite/config
+sed -i "s/\(foreground\s\+=\s\+\).*/\1$foreground/g" ~/.config/termite/config
+sed -i "s/\(cursor\s\+=\s\+\).*/\1$cursor/g" ~/.config/termite/config
+
+for i in {0..15}; do
+    col=$(eval echo \${color$i})
+
+    sed -i "s/\(color$i\s\+=\s\+\).*/\1$col/g" ~/.config/termite/config
+done
+# }}}
+
+# Kitty {{{
+conf=$HOME/.config/kitty/kitty.conf
+
+sed -i "s/^\(active_tab_foreground\).*/\1 $color0/g" $conf
+sed -i "s/^\(active_tab_background\).*/\1 $color12/g" $conf
+sed -i "s/^\(inactive_tab_foreground\).*/\1 $color15/g" $conf
+sed -i "s/^\(inactive_tab_background\).*/\1 $color0/g" $conf
+sed -i "s/^\(tab_bar_background\).*/\1 none/g" $conf
+# }}}
+
+cat <<CONF > $HOME/.config/zathura/zathurarc
+set completion-bg            "$background"
+set completion-fg            "$foreground"
+set completion-group-bg      "$background"
+set completion-group-fg      "$color2"
+set completion-highlight-bg  "$color4"
+set completion-highlight-fg  "$foreground"
+
+set default-bg               "$background"
+set default-fg               "$foreground"
+
+set inputbar-bg              "$color8"
+set inputbar-fg              "$foreground"
+
+set notification-bg          "$background"
+set notification-fg          "$foreground"
+set notification-error-bg    "$color1"
+set notification-error-fg    "$foreground"
+set notification-warning-bg  "$color9"
+set notification-warning-fg  "$foreground"
+
+set statusbar-bg             "$background"
+set statusbar-fg             "$foreground"
+
+set index-bg                 "$background"
+set index-fg                 "$foreground"
+set index-active-bg          "$foreground"
+set index-active-fg          "$background"
+
+set render-loading-bg        "$background"
+set render-loading-fg        "$foreground"
+
+set highlight-transparency 0.4
+set highlight-color          "$color7"
+set highlight-active-color   "$color11"
+
+set recolor true
+set recolor-darkcolor        "$foreground"
+set recolor-lightcolor       "$background"
+
+set window-title-home-tilde true
+set statusbar-basename true
+set selection-clipboard clipboard
+set font "Iosevka normal 9"
+set incremental-search true
+CONF

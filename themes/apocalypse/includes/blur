@@ -1,0 +1,22 @@
+#!/bin/sh
+
+[ $# -lt 4 ] && { echo "Usage: blur <input> <WxH> <BRxBS> <output>"; exit; }
+
+IFS=x read pw ph <<< $2
+
+convert \
+    $1 \
+   -gravity center \
+   -background black \
+   -extent $(identify -format "%[fx:W+$(( $pw * 2 ))]x%[fx:H+$(( $ph * 2 ))]" $1) \
+    $4
+
+convert \
+	$4 \
+	-blur $3 \
+	$4
+
+convert \
+	$4 \
+	-crop $(identify -format "%Wx%H" $1)+$pw+$ph \
+	$4
