@@ -55,7 +55,7 @@ vicious.register(
 		if state == "-" then
 			if value <= beautiful.low_thresh then
 				bar.color = beautiful.fg_urgent
-				
+
 				if not notified then
 					naughty.notify({
 						title = "Low Battery",
@@ -72,7 +72,7 @@ vicious.register(
 			bar.color = beautiful.fg_charging
 		end
 
-		return tostring(value) .. "% "
+		return " " .. tostring(value) .. "% "
 	end,
 	61,
 	"BAT0"

@@ -1,5 +1,5 @@
 -- =====================================================================================
---   Name:       keys.lua
+--   Name:       controlpanel.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/ ...
 --               ... components/controlpanel.lua
@@ -25,7 +25,7 @@ local function get_width(screen)
     local width = beautiful.width
 
     if type(width) == "function" then
-        width = width()
+        width = width(screen)
     end
 
     screen = screen or awful.screen.focused()
@@ -41,7 +41,7 @@ local function get_height(screen)
     local height = beautiful.height
 
     if type(height) == "function" then
-        height = height()
+        height = height(screen)
     end
 
     screen = screen or awful.screen.focused()
@@ -167,7 +167,7 @@ local function create_controlpanel(screen)
         bottom = beautiful.border.bottom,
         left = beautiful.border.left,
         color = beautiful.border.color,
-        widget = wibox.container.margin,
+        widget = wibox.container.margin
     }
 
     ----------------------------------------------------------------------------
@@ -260,7 +260,7 @@ local function create_controlpanel(screen)
                     target.y = self.screen.workarea.y + self.screen.workarea.height
                     target.height = 1
                 elseif beautiful.animation.style == "slide_lr" then
-                    target.x = self.screen.workarea.y
+                    target.x = self.screen.workarea.x
                     target.width = 1
                 elseif beautiful.animation.style == "slide_rl" then
                     target.x = self.screen.workarea.x + self.screen.workarea.width

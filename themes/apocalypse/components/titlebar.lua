@@ -124,6 +124,7 @@ if beautiful.enabled then
 
                 if pos == beautiful.position then
                     -- }}}
+                    -- }}}
                     -- For main titlebar
 
                     -- Title text widget {{{
@@ -159,7 +160,6 @@ if beautiful.enabled then
                             widget = wibox.container.margin
                         }
                     end
-                    -- }}}
                 else
                     -- For borders as titlebars
                     size = beautiful.border_size
@@ -216,14 +216,9 @@ if beautiful.enabled then
                 local title_widget =
                     wibox.container {
                     {
-                        {
-                            title_text,
-                            buttons = buttons,
-                            layout = wibox.layout.flex[item_layout]
-                        },
-                        left = beautiful.margin,
-                        right = beautiful.margin,
-                        widget = wibox.container.margin
+                        title_text,
+                        buttons = buttons,
+                        layout = wibox.layout.flex[item_layout]
                     },
                     direction = direction,
                     widget = wibox.container.rotate
@@ -232,17 +227,17 @@ if beautiful.enabled then
 
                 -- Setup titlebar {{{
                 titlebar:setup {
-                    title_widget,
                     {
                         {
                             titlebar.sticky,
                             titlebar.ontop,
                             layout = wibox.layout.fixed[item_layout]
                         },
-                        nil,
+                        title_widget,
                         titlebar_buttons,
                         layout = wibox.layout.align[item_layout]
                     },
+                    -- title_widget,
                     layout = wibox.layout.stack
                 }
                 -- }}}

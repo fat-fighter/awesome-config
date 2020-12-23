@@ -42,15 +42,6 @@ local controlpanel_icons = icons .. "controlpanel/"
 local includes = theme_dir .. "includes/"
 -- }}}
 
--- Screen size {{{
-local screen_width = function()
-    return awful.screen.focused().workarea.width
-end
-local screen_height = function()
-    return awful.screen.focused().workarea.height
-end
--- }}}
-
 -- Theme {{{
 local colors = xresources.get_current_theme()
 -- }}}
@@ -163,7 +154,7 @@ titlebar.buttons = {
 titlebar.bg_normal = colors.color0
 titlebar.fg_normal = colors.color4
 
-titlebar.bg_focus = colors.color8 .. "b3"
+titlebar.bg_focus = colors.color6 .. "b3"
 titlebar.fg_focus = colors.color15
 
 titlebar.padding = dpi(50)
@@ -192,11 +183,11 @@ systray.opacity = 0.8
 systray.spacing = dpi(10)
 systray.border_radius = dpi(6)
 
-systray.x = function()
-    return screen_width() - dpi(20) - systray.width
+systray.x = function(screen)
+    return screen.workarea.x + screen.workarea.width - dpi(20) - systray.width
 end
-systray.y = function()
-    return screen_height() - dpi(20) - systray.height
+systray.y = function(screen)
+    return screen.workarea.y + screen.workarea.height - dpi(20) - systray.height
 end
 
 -- Icon spacing is not handled properly in wibox and has to be defined this way
@@ -204,6 +195,48 @@ end
 theme.systray_icon_spacing = systray.spacing
 
 theme.systray = systray
+-- }}}
+
+-- Bar {{{
+local bar = {}
+
+bar.width = function(screen)
+    return screen.workarea.width
+end
+bar.height = dpi(6)
+
+bar.x = 0
+bar.y = function(screen)
+    return screen.workarea.height - bar.height
+end
+
+bar.border = {}
+
+bar.bg = {
+    selected = colors.color2 .. "99",
+    urgent = colors.color1 .. "99",
+    occupied = colors.color12 .. "77",
+    empty = colors.color4 .. "99",
+    active = colors.color9 .. "99"
+}
+bar.bar_bg = "#ffffff00"
+
+bar.border = {
+    radius = dpi(0),
+    rounding = {bl = true, br = true}, -- tl = [t|f], tr = [t|f], br = [t|f], bl = [t|f]
+    top = 0,
+    right = 0,
+    bottom = 0,
+    left = 0,
+    color = colors.color6 .. "99"
+}
+
+bar.separator = {
+    width = dpi(0),
+    color = colors.color7 .. "55"
+}
+
+theme.bar = bar
 -- }}}
 
 -- Controlpanel {{{
@@ -218,12 +251,22 @@ controlpanel.opacity = 1.0
 controlpanel.width = dpi(650)
 controlpanel.height = nil
 
-controlpanel.x = function(screen)
-    return screen.workarea.width - controlpanel.width
-end
+-- controlpanel.shadow = {
+--     top = 0,
+--     right = dpi(50),
+--     bottom = 0,
+--     left = 0
+-- }
+
+controlpanel.x = 0
+-- For right position {{
+-- controlpanel.x = function(screen)
+--     return screen.workarea.width - controlpanel.width
+-- end
+-- }}
 controlpanel.y = 0
 
-controlpanel.animation.style = "slide_rl" -- | "opacity" | "slide_{lr|rl|tb|bt}" | "none"
+controlpanel.animation.style = "slide_lr" -- | "opacity" | "slide_{lr|rl|tb|bt}" | "none"
 controlpanel.animation.easing = "inOutQuart" -- For options, refer to tween.lua documentation
 controlpanel.animation.duration = 0.5
 
@@ -231,9 +274,9 @@ controlpanel.border = {
     radius = dpi(30),
     rounding = {}, -- tl = [t|f], tr = [t|f], br = [t|f], bl = [t|f]
     top = 0,
-    right = 0,
+    right = 1,
     bottom = 0,
-    left = 1,
+    left = 0,
     color = colors.color4 .. "55"
 }
 

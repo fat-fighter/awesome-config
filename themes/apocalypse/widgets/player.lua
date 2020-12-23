@@ -160,56 +160,49 @@ local next_button =
 -- Creating the Widget
 
 local player =
-    helpers.add_shadow(
     helpers.boxed(
+    {
+        {
+            visualizer,
+            margins = beautiful.visualizer.spacing,
+            widget = wibox.container.margin
+        },
         {
             {
-                visualizer,
-                margins = beautiful.visualizer.spacing,
-                widget = wibox.container.margin
-            },
-            {
                 {
-                    {
-                        title_text,
-                        helpers.vpad(0.2),
-                        artist_text,
-                        layout = wibox.layout.align.vertical
-                    },
-                    helpers.vpad(2),
-                    helpers.centered(
-                        {
-                            prev_button,
-                            toggle_button,
-                            next_button,
-                            spacing = beautiful.icons.margin,
-                            layout = wibox.layout.flex.horizontal
-                        },
-                        "horizontal"
-                    ),
-                    helpers.vpad(2),
-                    require("widgets.volume"),
-                    layout = wibox.layout.fixed.vertical
+                    title_text,
+                    helpers.vpad(0.2),
+                    artist_text,
+                    layout = wibox.layout.align.vertical
                 },
-                top = beautiful.padding.topbottom,
-                right = beautiful.padding.leftright,
-                bottom = beautiful.padding.topbottom,
-                left = beautiful.padding.leftright,
-                widget = wibox.container.margin
+                helpers.vpad(2),
+                helpers.centered(
+                    {
+                        prev_button,
+                        toggle_button,
+                        next_button,
+                        spacing = beautiful.icons.margin,
+                        layout = wibox.layout.flex.horizontal
+                    },
+                    "horizontal"
+                ),
+                helpers.vpad(2),
+                require("widgets.volume"),
+                layout = wibox.layout.fixed.vertical
             },
-            layout = wibox.layout.stack
+            top = beautiful.padding.topbottom,
+            right = beautiful.padding.leftright,
+            bottom = beautiful.padding.topbottom,
+            left = beautiful.padding.leftright,
+            widget = wibox.container.margin
         },
-        beautiful.width,
-        beautiful.height,
-        false,
-        beautiful.bg,
-        beautiful.border_radius
-    ),
+        layout = wibox.layout.stack
+    },
     beautiful.width,
     beautiful.height,
-    beautiful.shadow_size,
-    beautiful.border_radius,
-    beautiful.shadow_color
+    false,
+    beautiful.bg,
+    beautiful.border_radius
 )
 
 player.visualizer = visualizer
