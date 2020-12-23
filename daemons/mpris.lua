@@ -164,12 +164,12 @@ function daemon.emit(data)
     end
 
     if data.PlaybackStatus then
-        awesome.emit_signal("properties::mpris", "playback", data.PlaybackStatus:lower())
+        awesome.emit_signal("daemons::mpris", "playback", data.PlaybackStatus:lower())
     end
 
     if data.Metadata then
         local metadata = extract_metadata(data.Metadata)
-        awesome.emit_signal("properties::mpris", "metadata", metadata)
+        awesome.emit_signal("daemons::mpris", "metadata", metadata)
     end
 end
 

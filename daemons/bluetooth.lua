@@ -39,11 +39,11 @@ function add_interface(args)
 
     if adapter == path then
         adapters[path] = bluez.Adapter:new(bus, path)
-        awesome.emit_signal("properties::bluetooth", "adapter:added", adapter, args[2])
+        awesome.emit_signal("daemons::bluetooth", "adapter:added", adapter, args[2])
     elseif path:match(adapter .. "/dev-.*") then
         device = path:sub(#adapter + 1)
         awesome.emit_signal(
-            "properties::bluetooth",
+            "daemons::bluetooth",
             "device:added",
             device,
             adapter,
@@ -63,10 +63,10 @@ function remove_interface(args)
     if adapter == path and adapters[path] then
         adapters[path] = nil
         active_adapter = manager:get_active_adapter()
-        awesome.emit_signal("properties::bluetooth", "adapter:added", adapter)
+        awesome.emit_signal("daemons::bluetooth", "adapter:added", adapter)
     elseif path:match(adapter .. "/dev-.*") then
         device = path:sub(#adapter + 1)
-        awesome.emit_signal("properties::bluetooth", "device:removed", device, adapter)
+        awesome.emit_signal("daemons::bluetooth", "device:removed", device, adapter)
     end
 end
 
@@ -85,11 +85,11 @@ local daemon = {is_running = false}
 
 function daemon.emit(data)
     if data.Powered ~= nil then
-        awesome.emit_signal("properties::bluetooth", "powered", data.Powered)
+        awesome.emit_signal("daemons::bluetooth", "powered", data.Powered)
     end
 
     if data.Connected ~= nil then
-        awesome.emit_signal("properties::bluetooth", "connected", data.Connected)
+        awesome.emit_signal("daemons::bluetooth", "connected", data.Connected)
     end
 end
 

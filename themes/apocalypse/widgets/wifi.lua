@@ -92,7 +92,7 @@ local function update_widget(name, value)
 	end
 end
 
-awesome.connect_signal("properties::wifi", update_widget)
+awesome.connect_signal("daemons::wifi", update_widget)
 
 gears.timer.delayed_call(
     function()

@@ -36,7 +36,7 @@ local function update_widget(cmd, val)
 end
 
 -- Connect to daemon signal {{{
-awesome.connect_signal("properties::brightness", update_widget)
+awesome.connect_signal("daemons::brightness", update_widget)
 
 gears.timer.delayed_call(
     function()

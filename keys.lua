@@ -45,18 +45,6 @@ keys = {
     desktopbuttons = keys.desktopbuttons or {}
 }
 
-local function get_screen()
-    return awful.screen.focused({client = true, mouse = true})
-end
-
-local function screen_width()
-    return get_screen().geometry.width
-end
-
-local function screen_height()
-    return get_screen().geometry.height
-end
-
 -- -------------------------------------------------------------------------------------
 -- Global Shortcuts
 
@@ -231,8 +219,8 @@ keys.globalkeys =
                 terminal,
                 {
                     floating = true,
-                    width = screen_width() * 0.45,
-                    height = screen_height() * 0.5,
+                    width = helpers.screen_width() * 0.45,
+                    height = helpers.screen_height() * 0.5,
                     titlebars_enabled = false,
                     placement = awful.placement.centered
                 }
@@ -286,8 +274,8 @@ keys.globalkeys =
                 editor,
                 {
                     floating = true,
-                    width = screen_width() * 0.45,
-                    height = screen_height() * 0.5,
+                    width = helpers.screen_width() * 0.45,
+                    height = helpers.screen_height() * 0.5,
                     titlebars_enabled = false,
                     placement = awful.placement.centered
                 }
@@ -396,7 +384,7 @@ do
                 direction,
                 function(c)
                     local current_layout =
-                        awful.layout.getname(awful.layout.get(get_screen()))
+                        awful.layout.getname(awful.layout.get(helpers.get_screen()))
 
                     if current_layout == "floating" or c.floating then
                         helpers.move_client_to_edge(c, direction:lower())
@@ -414,7 +402,7 @@ do
                 direction,
                 function(c)
                     local current_layout =
-                        awful.layout.getname(awful.layout.get(get_screen()))
+                        awful.layout.getname(awful.layout.get(helpers.get_screen()))
 
                     if current_layout == "floating" or c.floating then
                         helpers.shift_client(c, direction:lower())
@@ -530,7 +518,7 @@ keys.globalkeys =
         {superkey, shiftkey},
         "v",
         function()
-            local clients = get_screen().clients
+            local clients = helpers.get_screen().clients
             for _, c in pairs(clients) do
                 if not beautiful.titlebars_imitate_borders then
                     awful.titlebar.toggle(c, beautiful.titlebar_position)
@@ -550,7 +538,7 @@ keys.clientkeys =
         {superkey, ctrlkey},
         "space",
         function(c)
-            local current_layout = awful.layout.getname(awful.layout.get(get_screen()))
+            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
             if not c.fullscreen and current_layout ~= "floating" then
                 c.floating = not c.floating
             end
@@ -568,8 +556,8 @@ keys.clientkeys =
 
             c.floating = true
 
-            c.width = screen_width() * 0.7
-            c.height = screen_height() * 0.75
+            c.width = helpers.screen_width() * 0.7
+            c.height = helpers.screen_height() * 0.75
 
             awful.placement.centered(c, {honor_workarea = true})
         end,
@@ -586,8 +574,8 @@ keys.clientkeys =
 
             c.floating = true
 
-            c.width = screen_width() * 0.3
-            c.height = screen_height() * 0.35
+            c.width = helpers.screen_width() * 0.3
+            c.height = helpers.screen_height() * 0.35
 
             awful.placement.centered(c, {honor_workarea = true})
         end,
@@ -604,8 +592,8 @@ keys.clientkeys =
 
             c.floating = true
 
-            c.width = screen_width() * 0.45
-            c.height = screen_height() * 0.5
+            c.width = helpers.screen_width() * 0.45
+            c.height = helpers.screen_height() * 0.5
 
             awful.placement.centered(c, {honor_workarea = true})
         end,
@@ -747,7 +735,7 @@ keys.globalkeys =
         {superkey, ctrlkey},
         "minus",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(get_screen()))
+            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             -- If floating, decrease width
@@ -766,7 +754,7 @@ keys.globalkeys =
         {superkey, ctrlkey},
         "equal",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(get_screen()))
+            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             -- If floating, increase width
@@ -788,7 +776,7 @@ keys.globalkeys =
         {superkey, shiftkey},
         "minus",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(get_screen()))
+            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             if current_layout == "floating" or (c ~= nil and c.floating == true) then
@@ -806,7 +794,7 @@ keys.globalkeys =
         {superkey, shiftkey},
         "equal",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(get_screen()))
+            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             if current_layout == "floating" or (c ~= nil and c.floating == true) then
@@ -876,7 +864,7 @@ for i = 1, ntags do
             {superkey},
             "#" .. i + 9,
             function()
-                local screen = get_screen()
+                local screen = helpers.get_screen()
                 local tag = screen.tags[i]
                 local current_tag = screen.selected_tag
 
@@ -895,7 +883,7 @@ for i = 1, ntags do
             {superkey, ctrlkey},
             "#" .. i + 9,
             function()
-                local screen = get_screen()
+                local screen = helpers.get_screen()
                 local tag = screen.tags[i]
                 if tag then
                     awful.tag.viewtoggle(tag)
@@ -943,7 +931,7 @@ for i = 1, 2 do
             {superkey, altkey},
             "#" .. i + 9,
             function()
-                local screen = get_screen()
+                local screen = helpers.get_screen()
                 local tag = screen.tags[4 + i]
                 local current_tag = screen.selected_tag
 
@@ -962,7 +950,7 @@ for i = 1, 2 do
             {superkey, ctrlkey, altkey},
             "#" .. i + 9,
             function()
-                local screen = get_screen()
+                local screen = helpers.get_screen()
                 local tag = screen.tags[4 + i]
                 if tag then
                     awful.tag.viewtoggle(tag)
@@ -1035,10 +1023,10 @@ do
                     local c = client.focus
                     client.focus = nil
 
-                    local s = get_screen()
+                    local s = helpers.get_screen()
                     awful.screen.focus_bydirection(direction:lower())
 
-                    if s == get_screen() then
+                    if s == helpers.get_screen() then
                         client.focus = c
                     end
                 end,
@@ -1064,7 +1052,7 @@ do
                     if client.focus then
                         local c = client.focus
                         local screen =
-                            get_screen():get_next_in_direction(direction:lower())
+                            helpers.get_screen():get_next_in_direction(direction:lower())
 
                         c:move_to_screen(screen)
                         c:raise()

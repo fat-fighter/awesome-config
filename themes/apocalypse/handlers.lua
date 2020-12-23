@@ -27,6 +27,12 @@ function handlers.connect_for_each_screen(s)
     s.mytaglist = require("components.bar")(s)
     s.systray = st
     s.controlpanel = require("components.controlpanel")(s)
+    s.notifs = {
+        volume = require("notifs.volume"),
+        brightness = {force_hide = function()
+                return
+            end}
+    }
 end
 -- }}}
 

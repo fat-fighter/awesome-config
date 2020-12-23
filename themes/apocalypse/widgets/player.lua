@@ -264,7 +264,7 @@ local function update_widget(cmd, data)
 end
 
 -- Connect to daemon signal {{{
-awesome.connect_signal("properties::mpris", update_widget)
+awesome.connect_signal("daemons::mpris", update_widget)
 
 gears.timer.delayed_call(
     function()

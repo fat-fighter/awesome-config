@@ -11,7 +11,7 @@ $HOME/utilities/general/touchpad/tapping.sh &
 $HOME/utilities/general/touchpad/disabled-while-typing.sh -v &
 
 # Make numpad like in Microsoft
-setxkbmap -option 'numpad:microsoft' -option 'caps:escape'
+setxkbmap -option 'numpad:microsoft' -option 'caps:escape' -option 'escape:caps'
 
 # Make temporary directory for awesome
 mkdir -p $HOME/.config/awesome/.tmp

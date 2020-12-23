@@ -16,6 +16,21 @@ local cairo = require("lgi").cairo
 local helpers = {}
 
 -- -------------------------------------------------------------------------------------
+-- Screen Helpers
+
+helpers.get_screen = function()
+    return awful.screen.focused({client = true, mouse = true})
+end
+
+helpers.screen_width = function()
+    return helpers.get_screen().geometry.width
+end
+
+helpers.screen_height = function()
+    return helpers.get_screen().geometry.height
+end
+
+-- -------------------------------------------------------------------------------------
 -- Shape Functionals
 
 -- Rectangle

@@ -31,7 +31,7 @@ function daemon.emit()
         function(brightness)
             brightness = tonumber(brightness)
 
-            awesome.emit_signal("properties::brightness", "changed", brightness)
+            awesome.emit_signal("daemons::brightness", "changed", brightness)
         end
     )
 end

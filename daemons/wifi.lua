@@ -60,11 +60,11 @@ function daemon.emit(data)
     end
 
     if data.Powered ~= nil then
-        awesome.emit_signal("properties::wifi", "powered", data.Powered)
+        awesome.emit_signal("daemons::wifi", "powered", data.Powered)
     end
 
     if data.Connected ~= nil then
-        awesome.emit_signal("properties::wifi", "connected", data.Connected)
+        awesome.emit_signal("daemons::wifi", "connected", data.Connected)
     end
 end
 

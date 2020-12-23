@@ -24,7 +24,6 @@ local theme = {name = "thunderclouds"}
 ----------------------------------------------------------------------------------------
 -- Including Standard Awesome Libraries
 
-local awful = require("awful")
 local xresources = require("beautiful.xresources")
 local odpi = xresources.apply_dpi
 
@@ -36,6 +35,7 @@ local icons = theme_dir .. "icons/"
 
 local titlebar_icons = icons .. "titlebar/"
 local controlpanel_icons = icons .. "controlpanel/"
+local notification_icons = icons .. "notifications/"
 -- }}}
 
 -- Includes path {{{
@@ -287,7 +287,7 @@ controlpanel.padding = {
 -- }}}
 
 ----------------------------------------------------------------------------------------
--- StartScreen Widgets
+-- Controlpanel Widgets
 
 -- Player {{{
 local player = {}
@@ -588,6 +588,63 @@ theme.hotkeys_group_margin = dpi(50)
 ----------------------------------------------------------------------------------------
 -- Notifications
 
+-- Volume {{{
+local nvolume = {icons = {}}
+
+nvolume.icon_size = dpi(25)
+nvolume.icon_opacity = 0.8
+
+nvolume.bar = {
+    border_radius = dpi(10),
+    color = colors.color1,
+    background = colors.color7 .. "55",
+    height = dpi(300),
+    width = dpi(50)
+}
+nvolume.bar.scale = nvolume.bar.height / 100
+
+nvolume.background = colors.color0 .. "bb"
+
+nvolume.normal_icon = notification_icons .. "volume-normal.png"
+nvolume.mute_icon = notification_icons .. "volume-mute.png"
+
+nvolume.animation = {
+    show = {
+        duration = 0.3,
+        easing = "inOutQuart"
+    },
+    hide = {
+        duration = 0.5,
+        easing = "inOutQuart"
+    }
+}
+nvolume.show_animation_duration = 1
+nvolume.hide_animation_duration = 2
+
+nvolume.border_radius = dpi(0)
+
+nvolume.margin = {
+    top = dpi(50),
+    right = dpi(50),
+    bottom = dpi(50),
+    left = dpi(50)
+}
+nvolume.spacing = dpi(30)
+
+nvolume.width = nvolume.bar.width + nvolume.margin.left + nvolume.margin.right
+nvolume.height =
+    nvolume.bar.height + nvolume.margin.top + nvolume.margin.bottom + nvolume.icon_size +
+    nvolume.spacing
+
+nvolume.x = function(screen)
+    return screen.workarea.width - dpi(40) - nvolume.width
+end
+nvolume.y = function(screen)
+    return screen.workarea.height / 2 - nvolume.height / 2
+end
+-- }}}
+
+-- naughty {{{
 local naughty = {}
 
 naughty.font = "IBM Plex Mono Medium " .. font_size(12)
@@ -615,6 +672,13 @@ naughty.icon_size = dpi(60)
 
 -- BUG: some notifications appear at top_right regardless
 naughty.position = "top_right"
+-- }}}
+
+-- Addig widget settings to theme {{{
+theme.notifications = {
+    volume = nvolume
+}
+-- }}}
 
 theme.naughty = naughty
 ----------------------------------------------------------------------------------------

@@ -144,7 +144,7 @@ local function update_widget(cmd, vol, mute)
 end
 
 -- Connect to daemon signal {{{
-awesome.connect_signal("properties::volume", update_widget)
+awesome.connect_signal("daemons::volume", update_widget)
 
 gears.timer.delayed_call(
     function()

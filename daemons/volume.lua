@@ -34,7 +34,11 @@ function daemon.emit()
                 volume = 100
             end
 
-            awesome.emit_signal("properties::volume", "changed", volume, mute)
+            if volume ~= daemon.volume or mute ~= daemon.mute then
+                awesome.emit_signal("daemons::volume", "changed", volume, mute)
+            end
+            daemon.volume = volume
+            daemon.mute = mute
         end
     )
 end

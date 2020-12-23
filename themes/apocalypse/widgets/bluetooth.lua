@@ -91,7 +91,7 @@ local helpers = require("helpers")
 --     end
 -- end
 --
--- awesome.connect_signal("properties::bluetooth", update_widget)
+-- awesome.connect_signal("daemons::bluetooth", update_widget)
 --
 -- gears.timer.delayed_call(
 --     function()
