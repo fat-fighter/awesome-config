@@ -208,11 +208,11 @@ function helpers.add_shadow(widget, w, h, s, br, col)
     end
 
     for _, side in ipairs(sides) do
-        local pat = cairo.LinearPattern(unpack(side[1]))
+        local pat = cairo.LinearPattern(table.unpack(side[1]))
         pat:add_color_stop_rgba(0, r, g, b, a)
         pat:add_color_stop_rgba(1, r, g, b, 0)
 
-        cr:rectangle(unpack(side[2]))
+        cr:rectangle(table.unpack(side[2]))
         cr:set_source(pat)
         cr:fill()
     end

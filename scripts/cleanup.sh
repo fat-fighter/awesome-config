@@ -5,8 +5,8 @@
 # killed.
 
 # Kill all instances of compton and polybar
-killall -q compton
-while pgrep -x compton >/dev/null; do
+killall -q picom
+while pgrep -x picom >/dev/null; do
 	sleep 1;
 done
 

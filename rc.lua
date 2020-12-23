@@ -44,6 +44,13 @@ local awful = require("awful")
 local lgi = require("lgi")
 local Gio = lgi.require("Gio")
 
+---------------------------------------------------------------------------------------
+-- Set wal theme
+--
+awful.spawn.with_shell(
+    "wal --theme " .. theme_name .. " -o $HOME/.config/awesome/scripts/theme-config"
+)
+
 -- -------------------------------------------------------------------------------------
 -- Defining Global Variables
 
@@ -85,14 +92,12 @@ os.execute(scripts_dir .. "cleanup.sh")
 beautiful.ntags = ntags
 
 local tagnames = {
-    "browser",
-    "editor",
-    "reading",
-    "terminal",
-    "code",
-    "chill",
-    "music",
-    "social"
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
 }
 
 beautiful.tagnames = tagnames
@@ -430,4 +435,4 @@ awful.rules.rules = {
 -- -------------------------------------------------------------------------------------
 -- Running Autostart Script
 
-awful.spawn.with_shell(scripts_dir .. "autostart.sh")
+awful.spawn(terminal .. " -e " .. scripts_dir .. "autostart.sh " .. theme_name)
