@@ -140,7 +140,7 @@ local function update_widget(cmd, vol, mute)
         bar.handle_color = beautiful.handle.color
     end
 
-    bar.value = vol
+    bar.value = math.min(vol, 100)
 end
 
 -- Connect to daemon signal {{{
@@ -148,7 +148,6 @@ awesome.connect_signal("daemons::volume", update_widget)
 
 gears.timer.delayed_call(
     function()
-        volume_daemon.emit()
         if not volume_daemon.is_running then
             volume_daemon.run()
         end

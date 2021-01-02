@@ -14,46 +14,22 @@ local awful = require("awful")
 -- -------------------------------------------------------------------------------------
 -- Defining the Daemon
 
-local daemon = {is_running = false}
-
-local subscribe_script =
-    [[
-	bash -c "
-	    while (inotifywait -e modify /sys/class/backlight/*/brightness -qq) do
-            echo "";
-        done
-	"
-]]
+local daemon = {is_running = false, temp = 4500, brightness = 1.0}
+awful.spawn("redshift -P -O " .. daemon.temp .. " -b " .. daemon.brightness)
 
 function daemon.emit()
-    awful.spawn.easy_async_with_shell(
-        "light -G",
-        function(brightness)
-            brightness = tonumber(brightness)
-
-            awesome.emit_signal("daemons::brightness", "changed", brightness)
-        end
+    awesome.emit_signal(
+        "daemons::brightness",
+        "changed",
+        daemon.brightness,
+        daemon.temp
     )
 end
 
 local function run_brightness_daemon()
     daemon.is_running = true
-
-    awful.spawn.with_line_callback(subscribe_script, {stdout = daemon.emit})
 end
-
--- Kill old process and run daemon
-function daemon.run()
-    awful.spawn.easy_async_with_shell(
-        [[
-            ps x \
-                | grep "[i]notifywait -e modify /sys/class/backlight" \
-                | awk '{print $1}' \
-                | xargs kill
-        ]],
-        run_brightness_daemon
-    )
-end
+daemon.run = run_brightness_daemon
 
 -- -------------------------------------------------------------------------------------
 -- Connect Handlers
@@ -62,18 +38,37 @@ awesome.connect_signal(
     "controls::brightness",
     function(command, brightness)
         if command == "set" then
-            script = "light -S " .. tostring(brightness)
+            brightness = brightness
         elseif command == "increase" then
-            script = "light -A 3"
+            brightness = daemon.brightness + 0.05
         elseif command == "decrease" then
-            script = "light -U 3"
-        elseif command == "off" then
-            script = "xset dpms force off"
+            brightness = daemon.brightness - 0.05
         else
             error("Error: daemon brightness, command '" .. command .. "' not found")
         end
 
-        awful.spawn.with_shell(script)
+        brightness = math.max(math.min(brightness, 1), 0)
+        daemon.brightness = brightness
+
+        awful.spawn("redshift -P -O " .. daemon.temp .. " -b " .. brightness)
+        daemon.emit()
+    end
+)
+awesome.connect_signal(
+    "controls::temperature",
+    function(command, temp)
+        if command == "set" then
+            daemon.temp = temp
+        elseif command == "increase" then
+            daemon.temp = daemon.temp + 100
+        elseif command == "decrease" then
+            daemon.temp = daemon.temp - 100
+        else
+            error("Error: daemon temperature, command '" .. command .. "' not found")
+        end
+
+        awful.spawn("redshift -P -O " .. daemon.temp .. " -b " .. daemon.brightness)
+        daemon.emit()
     end
 )
 

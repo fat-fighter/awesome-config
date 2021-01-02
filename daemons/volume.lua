@@ -30,10 +30,6 @@ function daemon.emit()
             local mute = line:match("^[NHML]") == "N"
             local volume = tonumber(line:match("(%d+)"))
 
-            if volume > 100 then
-                volume = 100
-            end
-
             if volume ~= daemon.volume or mute ~= daemon.mute then
                 awesome.emit_signal("daemons::volume", "changed", volume, mute)
             end

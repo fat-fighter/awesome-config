@@ -1,23 +1,23 @@
 -- =====================================================================================
---   Name:       volume.lua
+--   Name:       brightness.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/config-awesom/themes/apocalypse/notifs ...
---               ... volume.lua
+--               ... brightness.lua
 --   License:    The MIT License (MIT)
 --
---   Custom theme based volume notifications
+--   Custom theme based brightness notifications
 -- =====================================================================================
 
 local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
-local beautiful = require("beautiful").notifications.volume
+local beautiful = require("beautiful").notifications.brightness
 
 -- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
-local volume_daemon = require("daemons.volume")
+local brightness_daemon = require("daemons.brightness")
 local animation = require("animation.animation")
 
 -- -------------------------------------------------------------------------------------
@@ -52,17 +52,12 @@ local function get_y(screen, height)
 end
 
 -- -------------------------------------------------------------------------------------
--- Defining Local Variables
-
-local muted
-
--- -------------------------------------------------------------------------------------
 -- Creating Volume Icons
 
 local icon =
     wibox.widget {
     resize = true,
-    image = beautiful.normal_icon,
+    image = beautiful.icon,
     forced_width = beautiful.icon_size,
     forced_height = beautiful.icon_size,
     opacity = beautiful.icon_opacity,
@@ -148,7 +143,7 @@ bar:connect_signal(
     "button::release",
     function(_, _, _, button, _, _)
         if button == 1 and bar.enabled == true then
-            awesome.emit_signal("controls::volume", "set", bar.value)
+            awesome.emit_signal("controls::brightness", "set", bar.value)
         end
     end
 )
@@ -171,7 +166,7 @@ local wrapper = {
     left = beautiful.margin.left,
     widget = wibox.container.margin
 }
-local volume =
+local brightness =
     awful.popup {
     widget = wrapper,
     shape = helpers.rrect(beautiful.border_radius),
@@ -183,19 +178,19 @@ local volume =
     opacity = 0
 }
 
-volume.visibility = false
-volume.showing = false
-volume.hiding = false
+brightness.visibility = false
+brightness.showing = false
+brightness.hiding = false
 
-volume.show_animator = nil
-volume.hide_animator = nil
+brightness.show_animator = nil
+brightness.hide_animator = nil
 
-function volume:hide()
-    if volume.visibility == false then
-        if volume.showing or volume.hiding then
+function brightness:hide()
+    if brightness.visibility == false then
+        if brightness.showing or brightness.hiding then
             return
         end
-        volume.hiding = true
+        brightness.hiding = true
         hide_animator =
             animation(
             self,
@@ -211,7 +206,7 @@ function volume:hide()
             "anim::animation_finished",
             function()
                 self.visible = false
-                volume.hiding = false
+                brightness.hiding = false
             end
         )
     end
@@ -221,12 +216,12 @@ local hideout_timer =
     timeout = 2,
     autostart = false,
     callback = function()
-        volume:hide()
+        brightness:hide()
     end,
     single_shot = true
 }
 
-function volume:force_hide()
+function brightness:force_hide()
     if self.hiding and self.hide_animator then
         self.hide_animator:stopAnimation()
         self.hiding = false
@@ -241,7 +236,7 @@ function volume:force_hide()
     self.visible = false
 end
 
-function volume:show()
+function brightness:show()
     local screen = helpers.get_screen()
 
     for _, notif in pairs(screen.notifs) do
@@ -255,14 +250,14 @@ function volume:show()
     if self.opacity ~= 1 then
         hideout_timer:stop()
 
-        if volume.showing then
+        if brightness.showing then
             return
         end
-        if volume.hiding then
-            volume.hiding = false
+        if brightness.hiding then
+            brightness.hiding = false
             hide_animator:stopAnimation()
         end
-        volume.showing = true
+        brightness.showing = true
 
         self.x = get_x(screen)
         self.y = get_y(screen)
@@ -282,7 +277,7 @@ function volume:show()
             "anim::animation_finished",
             function()
                 hideout_timer:start()
-                volume.showing = false
+                brightness.showing = false
             end
         )
     else
@@ -290,47 +285,39 @@ function volume:show()
     end
 end
 
-volume:connect_signal(
+brightness:connect_signal(
     "mouse::enter",
     function()
-        volume.visibility = true
-        volume:show()
+        brightness.visibility = true
+        brightness:show()
     end
 )
-volume:connect_signal(
+brightness:connect_signal(
     "mouse::leave",
     function()
-        volume.visibility = false
+        brightness.visibility = false
         hideout_timer:again()
     end
 )
 
-local function update_widget(cmd, vol, mute)
+local function update_widget(cmd, b)
     if cmd ~= "changed" then
         return
     end
 
-    volume:show()
+    brightness:show()
 
-    muted = mute
-    if muted then
-        icon.image = beautiful.mute_icon
-    else
-        icon.image = beautiful.normal_icon
-    end
-
-    bar.enabled = not muted
-    bar.value = math.min(vol, 100)
+    bar.value = b
 end
 
 -- Connect to daemon signal {{{
-awesome.connect_signal("daemons::volume", update_widget)
+awesome.connect_signal("daemons::brightness", update_widget)
 
 gears.timer.delayed_call(
     function()
-        volume_daemon.emit()
-        if not volume_daemon.is_running then
-            volume_daemon.run()
+        brightness_daemon.emit()
+        if not brightness_daemon.is_running then
+            brightness_daemon.run()
         end
     end
 )
@@ -339,51 +326,23 @@ gears.timer.delayed_call(
 -- -------------------------------------------------------------------------------------
 -- Button Controls
 
-volume:buttons(
+brightness:buttons(
     gears.table.join(
-        awful.button(
-            {},
-            3,
-            function()
-                awesome.emit_signal("controls::volume", "mute")
-
-                if muted then
-                    icon.image = beautiful.mute_icon
-                else
-                    icon.image = beautiful.normal_icon
-                end
-
-                bar.enabled = not muted
-                muted = not muted
-            end
-        ),
         awful.button(
             {},
             4,
             function()
-                awesome.emit_signal("controls::volume", "increase")
+                awesome.emit_signal("controls::brightness", "increase")
             end
         ),
         awful.button(
             {},
             5,
             function()
-                awesome.emit_signal("controls::volume", "decrease")
+                awesome.emit_signal("controls::brightness", "decrease")
             end
         )
     )
 )
 
-icon:buttons(
-    gears.table.join(
-        awful.button(
-            {},
-            1,
-            function()
-                awesome.emit_signal("controls::volume", "mute")
-            end
-        )
-    )
-)
-
-return volume
+return brightness

@@ -644,6 +644,61 @@ nvolume.y = function(screen)
 end
 -- }}}
 
+-- Brightness {{{
+local nbrightness = {icons = {}}
+
+nbrightness.icon_size = dpi(25)
+nbrightness.icon_opacity = 0.8
+
+nbrightness.bar = {
+    border_radius = dpi(10),
+    color = colors.color1,
+    background = colors.color7 .. "55",
+    height = dpi(300),
+    width = dpi(50)
+}
+nbrightness.bar.scale = nbrightness.bar.height
+
+nbrightness.background = colors.color0 .. "bb"
+
+nbrightness.icon = notification_icons .. "brightness.png"
+
+nbrightness.animation = {
+    show = {
+        duration = 0.3,
+        easing = "inOutQuart"
+    },
+    hide = {
+        duration = 0.5,
+        easing = "inOutQuart"
+    }
+}
+nbrightness.show_animation_duration = 1
+nbrightness.hide_animation_duration = 2
+
+nbrightness.border_radius = dpi(0)
+
+nbrightness.margin = {
+    top = dpi(50),
+    right = dpi(50),
+    bottom = dpi(50),
+    left = dpi(50)
+}
+nbrightness.spacing = dpi(30)
+
+nbrightness.width = nbrightness.bar.width + nbrightness.margin.left + nbrightness.margin.right
+nbrightness.height =
+    nbrightness.bar.height + nbrightness.margin.top + nbrightness.margin.bottom + nbrightness.icon_size +
+    nbrightness.spacing
+
+nbrightness.x = function(screen)
+    return screen.workarea.width - dpi(40) - nbrightness.width
+end
+nbrightness.y = function(screen)
+    return screen.workarea.height / 2 - nbrightness.height / 2
+end
+-- }}}
+
 -- naughty {{{
 local naughty = {}
 
@@ -676,7 +731,8 @@ naughty.position = "top_right"
 
 -- Addig widget settings to theme {{{
 theme.notifications = {
-    volume = nvolume
+    volume = nvolume,
+    brightness = nbrightness
 }
 -- }}}
 

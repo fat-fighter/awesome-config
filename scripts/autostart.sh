@@ -31,9 +31,6 @@ dropbox &
 # Run blueman-applet
 blueman-applet &
 
-# Run redshift
-redshift -P -O 4500 &
-
 # Run xss-clock
 xss-clock slock &
 
