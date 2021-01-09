@@ -2,7 +2,7 @@
 -- Including Standard Awesome Libraries
 
 local wibox = require("wibox")
-local vicious = require("vicious")
+local vicious = require("modules.vicious")
 local beautiful = require("beautiful").startscreen.datetime
 
 -- -------------------------------------------------------------------------------------

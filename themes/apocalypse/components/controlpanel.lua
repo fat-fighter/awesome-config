@@ -16,7 +16,7 @@ local beautiful = require("beautiful").controlpanel
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
-local animation = require("animation.animation")
+local animation = require("modules.animation")
 
 -- -------------------------------------------------------------------------------------
 -- Defining Helper Functions for Creating Startscreen

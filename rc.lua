@@ -374,13 +374,19 @@ awful.rules.rules = {
             class = {
                 "Lxappearance",
                 "Pavucontrol",
-                "Alarm-clock-applet"
+                "Alarm-clock-applet",
             },
             role = {
                 "pop-up"
             }
         },
         properties = {floating = true, ontop = false}
+    },
+    {
+        rule_any = {
+            class = {"onscreen-selection"}
+        },
+        properties = {floating = true, ontop = true}
     },
     -- }}}
 

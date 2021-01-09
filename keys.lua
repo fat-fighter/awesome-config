@@ -12,6 +12,7 @@ local awful = require("awful")
 local xrandr = require("xrandr")
 local naughty = require("naughty")
 local beautiful = require("beautiful")
+local switcher = require("modules.switcher")
 
 -- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
@@ -355,6 +356,22 @@ keys.globalkeys =
             end
         end,
         {description = "focus previously active", group = "client"}
+    ),
+    awful.key(
+        {altkey},
+        "Tab",
+        function()
+            switcher.switch( 1, "Mod1", "Alt_L", "Shift", "Tab")
+        end,
+        {description = "show switcher and focus next active", group = "client"}
+    ),
+    awful.key(
+        {altkey, shiftkey},
+        "Tab",
+        function()
+            switcher.switch(-1, "Mod1", "Alt_L", "Shift", "Tab")
+        end,
+        {description = "show switcher and focus previous active", group = "client"}
     ),
     awful.key(
         {superkey},

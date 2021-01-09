@@ -18,7 +18,7 @@ local beautiful = require("beautiful").notifications.brightness
 
 local helpers = require("helpers")
 local brightness_daemon = require("daemons.brightness")
-local animation = require("animation.animation")
+local animation = require("modules.animation")
 
 -- -------------------------------------------------------------------------------------
 -- Helper Functions

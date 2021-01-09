@@ -22,5 +22,4 @@
 *.gz*
 
 *-env*
-vicious*
 .tmp*

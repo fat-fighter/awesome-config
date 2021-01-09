@@ -11,7 +11,7 @@
 local wibox = require("wibox")
 local gears = require("gears")
 local awful = require("awful")
-local vicious = require("vicious")
+local vicious = require("modules.vicious")
 local beautiful = require("beautiful").controlpanel.datetime
 
 -- -------------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ local beautiful = require("beautiful").notifications.volume
 
 local helpers = require("helpers")
 local volume_daemon = require("daemons.volume")
-local animation = require("animation.animation")
+local animation = require("modules.animation")
 
 -- -------------------------------------------------------------------------------------
 -- Helper Functions

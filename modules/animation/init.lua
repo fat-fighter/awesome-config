@@ -3,7 +3,7 @@ local GearsObject = gears.object
 local GLibTimer = require('lgi').GLib.Timer
 local timer = gears.timer or require('timer')
 
-local tween = require('animation.tween')
+local tween = require('modules.tween')
 
 -- Delay time for imitate a 60 FPS refresh rate
 local ANIMATION_FRAME_DELAY = 0.0167
