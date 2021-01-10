@@ -110,8 +110,6 @@ package.path = package.path .. ";" .. theme_dir .. "?.lua"
 local keys = require("keys")
 local naughty = require("components.notify")
 local handlers = require("handlers")
-require("awful.remote")
-require("screenful")
 
 require("components.titlebar")
 
@@ -256,6 +254,10 @@ awful.screen.connect_for_each_screen(
         -- }}}
     end
 )
+
+-- Handling tags on screen changes
+screen.connect_signal("removed", awesome.restart)
+screen.connect_signal("added", awesome.restart)
 
 -- -------------------------------------------------------------------------------------
 -- Connect Handlers for Clients

@@ -712,16 +712,16 @@ naughty.fg_critical = foreground_urgent
 
 -- naughty.width = dpi(..)
 -- naughty.height = dpi(..)
-naughty.margin = dpi(30)
+naughty.margin = dpi(20)
 
-naughty.opacity = 0.95
+naughty.opacity = 0.8
 
 naughty.border_width = 0
 naughty.border_color = "#18E3C8"
 naughty.border_radius = theme.window_border_radius
 
 naughty.padding = dpi(10)
-naughty.spacing = dpi(10)
+naughty.spacing = dpi(0)
 
 naughty.icon_size = dpi(60)
 

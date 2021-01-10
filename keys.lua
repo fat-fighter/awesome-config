@@ -9,7 +9,6 @@
 
 local join = require("gears").table.join
 local awful = require("awful")
-local xrandr = require("xrandr")
 local naughty = require("naughty")
 local beautiful = require("beautiful")
 local switcher = require("modules.switcher")
@@ -45,6 +44,8 @@ keys = {
     clientbuttons = keys.clientbuttons or {},
     desktopbuttons = keys.desktopbuttons or {}
 }
+
+local docked = false
 
 -- -------------------------------------------------------------------------------------
 -- Global Shortcuts
@@ -361,7 +362,7 @@ keys.globalkeys =
         {altkey},
         "Tab",
         function()
-            switcher.switch( 1, "Mod1", "Alt_L", "Shift", "Tab")
+            switcher.switch(1, "Mod1", "Alt_L", "Shift", "Tab")
         end,
         {description = "show switcher and focus next active", group = "client"}
     ),
@@ -555,7 +556,8 @@ keys.clientkeys =
         {superkey, ctrlkey},
         "space",
         function(c)
-            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
+            local current_layout =
+                awful.layout.getname(awful.layout.get(helpers.get_screen()))
             if not c.fullscreen and current_layout ~= "floating" then
                 c.floating = not c.floating
             end
@@ -752,7 +754,8 @@ keys.globalkeys =
         {superkey, ctrlkey},
         "minus",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
+            local current_layout =
+                awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             -- If floating, decrease width
@@ -771,7 +774,8 @@ keys.globalkeys =
         {superkey, ctrlkey},
         "equal",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
+            local current_layout =
+                awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             -- If floating, increase width
@@ -793,7 +797,8 @@ keys.globalkeys =
         {superkey, shiftkey},
         "minus",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
+            local current_layout =
+                awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             if current_layout == "floating" or (c ~= nil and c.floating == true) then
@@ -811,7 +816,8 @@ keys.globalkeys =
         {superkey, shiftkey},
         "equal",
         function()
-            local current_layout = awful.layout.getname(awful.layout.get(helpers.get_screen()))
+            local current_layout =
+                awful.layout.getname(awful.layout.get(helpers.get_screen()))
             local c = client.focus
 
             if current_layout == "floating" or (c ~= nil and c.floating == true) then
@@ -1018,9 +1024,18 @@ keys.globalkeys =
         {superkey, altkey},
         "m",
         function()
-            xrandr.xrandr()
+            if docked then
+                awful.spawn(
+                    "xrandr --output eDP-1-1 --auto --output HDMI-0 --off"
+                )
+            else
+                awful.spawn(
+                    "xrandr --output HDMI-0 --auto --output eDP-1-1 --off"
+                )
+            end
+            docked = not docked
         end,
-        {description = "change monitor layout", group = "screen"}
+        {description = "dock/undock laptop", group = "screen"}
     ),
     keys.globalkeys
 )
@@ -1069,7 +1084,9 @@ do
                     if client.focus then
                         local c = client.focus
                         local screen =
-                            helpers.get_screen():get_next_in_direction(direction:lower())
+                            helpers.get_screen():get_next_in_direction(
+                            direction:lower()
+                        )
 
                         c:move_to_screen(screen)
                         c:raise()
