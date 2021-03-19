@@ -24,103 +24,95 @@ local adapters = {}
 for _, path in ipairs(manager:get_adapters()) do
     adapters[path] = bluez.Adapter:new(bus, path)
 end
+-- local primary_adapter = manager:get_active_adapter()
 
 -- -------------------------------------------------------------------------------------
 -- Helper Functions
 
 function add_interface(args)
-    path = unpack(args)[0]
-
     print(args)
-    adapter = path:match("^/org/bluez/hci[0-9]+")
-    if not adapter then
-        return
-    end
-
-    if adapter == path then
-        adapters[path] = bluez.Adapter:new(bus, path)
-        awesome.emit_signal("daemons::bluetooth", "adapter:added", adapter, args[2])
-    elseif path:match(adapter .. "/dev-.*") then
-        device = path:sub(#adapter + 1)
-        awesome.emit_signal(
-            "daemons::bluetooth",
-            "device:added",
-            device,
-            adapter,
-            args[2]
-        )
-    end
+    -- local path = unpack(args)[0]
+    --
+    -- local adapter = path:match("^/org/bluez/hci[0-9]+")
+    -- if not adapter then
+    --     return
+    -- end
+    --
+    -- print(path, adapter)
+    --
+    -- if adapter == path then
+    --     adapters[path] = bluez.Adapter:new(bus, path)
+    --     primary_adapter = manager:get_active_adapter()
+    --
+    --     print("daemons::bluetooth", "adapter:added", adapter, args[2])
+    --
+    -- elseif path:match(adapter .. "/dev-.*") then
+    --     device = path:sub(#adapter + 1)
+    --     print(
+    --         "daemons::bluetooth",
+    --         "device:added",
+    --         device,
+    --         adapter,
+    --         args[2]
+    --     )
+    -- end
 end
 
 function remove_interface(args)
-    path = unpack(args)[0]
-
-    adapter = path:match("^/org/bluez/hci[0-9]+")
-    if not adapter then
-        return
-    end
-
-    if adapter == path and adapters[path] then
-        adapters[path] = nil
-        active_adapter = manager:get_active_adapter()
-        awesome.emit_signal("daemons::bluetooth", "adapter:added", adapter)
-    elseif path:match(adapter .. "/dev-.*") then
-        device = path:sub(#adapter + 1)
-        awesome.emit_signal("daemons::bluetooth", "device:removed", device, adapter)
-    end
+    print(args)
+    -- path = unpack(args)[0]
+    --
+    -- adapter = path:match("^/org/bluez/hci[0-9]+")
+    -- if not adapter then
+    --     return
+    -- end
+    --
+    -- if adapter == path and adapters[path] then
+    --     adapters[path] = nil
+    --     active_adapter = manager:get_active_adapter()
+    --     print("daemons::bluetooth", "adapter:added", adapter)
+    -- elseif path:match(adapter .. "/dev-.*") then
+    --     device = path:sub(#adapter + 1)
+    --     print("daemons::bluetooth", "device:removed", device, adapter)
+    -- end
 end
-
--- -------------------------------------------------------------------------------------
--- Binding Signals
-
-manager.InterfacesAdded(nil, add_interface)
-manager.InterfacesRemoved(nil, remove_interface)
-
-bluez.run_main_loop()
 
 -- -------------------------------------------------------------------------------------
 -- Defining the Daemon
 
-local daemon = {is_running = false}
+-- local daemon = {is_running = false}
 
-function daemon.emit(data)
-    if data.Powered ~= nil then
-        awesome.emit_signal("daemons::bluetooth", "powered", data.Powered)
-    end
+-- function daemon.emit(data)
+--     if data.Powered ~= nil then
+--         print("daemons::bluetooth", "powered", data.Powered)
+--     end
+--
+--     if data.Connected ~= nil then
+--         print("daemons::bluetooth", "connected", data.Connected)
+--     end
+-- end
+--
+--
+-- daemon.is_running = true
 
-    if data.Connected ~= nil then
-        awesome.emit_signal("daemons::bluetooth", "connected", data.Connected)
-    end
-end
+-- Binding signals {{{
+manager.InterfacesAdded(nil, add_interface)
+manager.InterfacesRemoved(nil, remove_interface)
+-- }}}
 
-function daemon.run()
-    daemon.is_running = true
+bluez.run_main_loop()
 
-    local sub_id =
-        system_bus:signal_subscribe(
-        "net.connman",
-        "net.connman.Technology",
-        "PropertyChanged",
-        nil,
-        nil,
-        Gio.DBusSignalFlags.NONE,
-        function(_, _, _, _, _, data)
-            name = data.value[1]
-            value = data.value[2].value
-
-            data = {}
-            data[name] = value
-
-            daemon.emit(data)
-        end
-    )
-
-    if not sub_id then
-        error("Error: daemon mpris, could not connect to session bus")
-    end
-
-    bluez.run_main_loop()
-end
+-- function daemon.run()
+--     daemon.is_running = true
+--
+--     -- Binding signals {{{
+--     manager.InterfacesAdded(nil, add_interface)
+--     manager.InterfacesRemoved(nil, remove_interface)
+--     -- }}}
+--
+--     bluez.run_main_loop()
+-- end
+-- daemon.run()
 
 -- -------------------------------------------------------------------------------------
 -- Connect Handlers
@@ -143,4 +135,4 @@ end
 -- )
 
 -- -------------------------------------------------------------------------------------
-return daemon
+-- return daemon

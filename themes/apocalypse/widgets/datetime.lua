@@ -25,11 +25,11 @@ local helpers = require("helpers")
 local timezones = {
     {
         location = "New York, NY",
-        offset = 240
+        offset = 0
     },
     {
         location = "Kanpur, UP",
-        offset = 38040
+        offset = 37800
     }
 }
 

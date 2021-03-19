@@ -363,7 +363,8 @@ awful.rules.rules = {
                 "Chromium"
             },
             class = {
-                "qutebrowser"
+                "qutebrowser",
+                "Yandex-browser-beta"
             }
         },
         properties = {titlebars_enabled = false}
@@ -376,7 +377,7 @@ awful.rules.rules = {
             class = {
                 "Lxappearance",
                 "Pavucontrol",
-                "Alarm-clock-applet",
+                "Alarm-clock-applet"
             },
             role = {
                 "pop-up"
@@ -389,6 +390,12 @@ awful.rules.rules = {
             class = {"onscreen-selection"}
         },
         properties = {floating = true, ontop = true}
+    },
+    {
+        rule_any = {
+            class = {"Google Assistant"}
+        },
+        properties = {floating = true, ontop = true, titlebars_enabled = false}
     },
     -- }}}
 
