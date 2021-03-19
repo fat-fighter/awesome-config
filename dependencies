@@ -1,0 +1,4 @@
+sudo pacman -S --noconfirm feh inotify-tools redshift
+touch todo
+install ~/.config/awesome/scripts/volume ~/.local/bin/
+

@@ -306,7 +306,7 @@ volume:connect_signal(
 )
 
 local function update_widget(cmd, vol, mute)
-    if cmd ~= "changed" then
+    if cmd ~= "changed" or vol == nil then
         return
     end
 

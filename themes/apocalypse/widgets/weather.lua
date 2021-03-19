@@ -17,7 +17,7 @@ local beautiful = require("beautiful").controlpanel.weather
 -- Including Custom Helper Libraries
 
 local helpers = require("helpers")
-local lunajson = require("lunajson")
+local lunajson = require("modules.lunajson")
 
 -- -------------------------------------------------------------------------------------
 -- Creating the Webcam Widget

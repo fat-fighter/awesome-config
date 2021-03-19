@@ -43,12 +43,13 @@ function Adapter:new(bus, path)
     local name = "org.bluez"
     local iface = "org.bluez.Adapter1"
 
-    local adapter = Proxy:new(bus, name, path, iface)
-
-    setmetatable(adapter, self)
-    self.__index = self
-
-    return adapter
+    return "AS"
+    -- local adapter = Proxy:new(bus, name, path, iface)
+    --
+    -- -- setmetatable(adapter, self)
+    -- self.__index = self
+    --
+    -- return adapter
 end
 -- }}}
 

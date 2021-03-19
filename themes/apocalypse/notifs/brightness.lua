@@ -301,7 +301,7 @@ brightness:connect_signal(
 )
 
 local function update_widget(cmd, b)
-    if cmd ~= "changed" then
+    if cmd ~= "changed" or b == nil then
         return
     end
 

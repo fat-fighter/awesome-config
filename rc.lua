@@ -30,7 +30,11 @@ local theme_collection = {
 }
 
 -- Change this number to use a different theme
-theme_name = os.getenv("THEME") or theme_collection[1]
+theme_name = (
+    os.getenv("THEME") or
+    io.popen("cat ~/.theme"):read("*line") or
+    theme_collection[1]
+)
 theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/" .. theme_name .. "/"
 
 -- -------------------------------------------------------------------------------------
@@ -43,13 +47,6 @@ local awful = require("awful")
 
 local lgi = require("lgi")
 local Gio = lgi.require("Gio")
-
----------------------------------------------------------------------------------------
--- Set wal theme
---
-awful.spawn.with_shell(
-    "wal --theme " .. theme_name .. " -o $HOME/.config/awesome/scripts/theme-config"
-)
 
 -- -------------------------------------------------------------------------------------
 -- Defining Global Variables
@@ -65,6 +62,11 @@ scripts_dir = config_dir .. "scripts/"
 
 system_bus = Gio.bus_get_sync(Gio.BusType.SYSTEM)
 session_bus = Gio.bus_get_sync(Gio.BusType.SESSION)
+
+---------------------------------------------------------------------------------------
+-- Set wal theme
+--
+awful.spawn.with_shell("wal --theme " .. theme_name)
 
 -- -------------------------------------------------------------------------------------
 -- Initializing the Theme
@@ -363,7 +365,8 @@ awful.rules.rules = {
                 "Chromium"
             },
             class = {
-                "qutebrowser"
+                "qutebrowser",
+                "Yandex-browser-beta"
             }
         },
         properties = {titlebars_enabled = false}
@@ -376,7 +379,7 @@ awful.rules.rules = {
             class = {
                 "Lxappearance",
                 "Pavucontrol",
-                "Alarm-clock-applet",
+                "Alarm-clock-applet"
             },
             role = {
                 "pop-up"
@@ -389,6 +392,18 @@ awful.rules.rules = {
             class = {"onscreen-selection"}
         },
         properties = {floating = true, ontop = true}
+    },
+    {
+        rule_any = {
+            class = {"YouTube Music"}
+        },
+        properties = {tag=""}
+    },
+    {
+        rule_any = {
+            class = {"Google Assistant"}
+        },
+        properties = {floating = true, ontop = true, titlebars_enabled = false}
     },
     -- }}}
 

@@ -86,7 +86,7 @@ keys.globalkeys =
         {},
         "Print",
         function()
-            awful.spawn.with_shell("gnome-screenshot -a -f ~/downloads/screenshot.png")
+            awful.spawn.with_shell("kazam -a --nosound")
         end,
         {description = "select area to capture screenshot", group = "screenshots"}
     ),
@@ -94,7 +94,15 @@ keys.globalkeys =
         {superkey},
         "Print",
         function()
-            awful.spawn.with_shell("gnome-screenshot -w -f ~/downloads/screenshot.png")
+            awful.spawn.with_shell("kazam -w --nosound")
+        end,
+        {description = "capture whole screen", group = "screenshots"}
+    ),
+    awful.key(
+        {superkey, shiftkey},
+        "Print",
+        function()
+            awful.spawn.with_shell(scripts_dir .. "pin-scrot")
         end,
         {description = "capture whole screen", group = "screenshots"}
     ),
@@ -1026,11 +1034,11 @@ keys.globalkeys =
         function()
             if docked then
                 awful.spawn(
-                    "xrandr --output eDP-1-1 --auto --output HDMI-0 --off"
+                    "xrandr --output eDP1 --auto --output HDMI-1-0 --off"
                 )
             else
                 awful.spawn(
-                    "xrandr --output HDMI-0 --auto --output eDP-1-1 --off"
+                    "xrandr --output HDMI-1-0 --auto --output eDP1 --off"
                 )
             end
             docked = not docked
