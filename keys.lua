@@ -106,6 +106,14 @@ keys.globalkeys =
         end,
         {description = "capture whole screen", group = "screenshots"}
     ),
+    awful.key(
+        {superkey, shiftkey},
+        "Print",
+        function()
+            awful.spawn.with_shell(scripts_dir .. "pin-scrot")
+        end,
+        {description = "capture whole screen", group = "screenshots"}
+    ),
     -- }
 
     -- Media {
