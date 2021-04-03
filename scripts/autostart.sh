@@ -13,9 +13,6 @@ $HOME/.config/awesome/scripts/touchpad/disabled-while-typing.sh -v &
 # Make numpad like in Microsoft
 setxkbmap -option 'numpad:microsoft' -option 'caps:escape' -option 'escape:caps'
 
-# Make temporary directory for awesome
-mkdir -p $HOME/.config/awesome/.tmp
-
 # Sourcing Xresources
 xrdb ~/.Xresources
 
@@ -24,6 +21,9 @@ picom --config=$HOME/.config/picom/$theme.config -b --experimental-backends
 
 # Run libinput gestures
 libinput-gestures restart
+
+# Running blueman
+blueman-applet &
 
 # Run xss-clock
 # xss-clock slock &

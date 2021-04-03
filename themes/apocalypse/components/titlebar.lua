@@ -228,17 +228,13 @@ if beautiful.enabled then
                 -- Setup titlebar {{{
                 titlebar:setup {
                     {
-                        {
-                            titlebar.sticky,
-                            titlebar.ontop,
-                            layout = wibox.layout.fixed[item_layout]
-                        },
-                        title_widget,
-                        titlebar_buttons,
-                        layout = wibox.layout.align[item_layout]
+                        titlebar.sticky,
+                        titlebar.ontop,
+                        layout = wibox.layout.fixed[item_layout]
                     },
-                    -- title_widget,
-                    layout = wibox.layout.stack
+                    title_widget,
+                    titlebar_buttons,
+                    layout = wibox.layout.align[item_layout]
                 }
                 -- }}}
 

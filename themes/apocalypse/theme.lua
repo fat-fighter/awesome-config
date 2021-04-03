@@ -721,7 +721,7 @@ naughty.border_color = "#18E3C8"
 naughty.border_radius = theme.window_border_radius
 
 naughty.padding = dpi(10)
-naughty.spacing = dpi(0)
+naughty.spacing = dpi(20)
 
 naughty.icon_size = dpi(60)
 
