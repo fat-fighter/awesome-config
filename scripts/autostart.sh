@@ -19,14 +19,11 @@ mkdir -p $HOME/.config/awesome/.tmp
 # Sourcing Xresources
 xrdb ~/.Xresources
 
-# Run Compton
+# Run Composite Manager
 picom --config=$HOME/.config/picom/$theme.config -b --experimental-backends
 
-# Run dropbox client
-# dropbox start -i &
-
-# Run blueman-applet
-# blueman-applet &
+# Run libinput gestures
+libinput-gestures restart
 
 # Run xss-clock
 # xss-clock slock &

@@ -1,19 +1,19 @@
 #! /usr/bin/bash
 
 error() {
-	echo "Usage: volume [command] [arguments]"
-	echo "Control the active sink's volume from the command line"
-	echo ""
-	echo "  volume get     -  prints the volume of the active sink"
-	echo "  volume set [+|-]<left-volume> [<right-volume>]"
-	echo "                 -  sets the volume for the active sink"
-	echo "  volume mute    - toggles mute for the active sink"
-	echo ""
-	echo "  Note 1: If right-volume is not specified, it is set"
-	echo "          to be the same as left-volume"
-	echo "  Note 2: Specifying a sign (+|-) for volume would mean adding"
-	echo "          to the active sink's volume"
-	exit 1;
+    echo "Usage: volume [command] [arguments]"
+    echo "Control the active sink's volume from the command line"
+    echo ""
+    echo "  volume get     -  prints the volume of the active sink"
+    echo "  volume set [+|-]<left-volume> [<right-volume>]"
+    echo "                 -  sets the volume for the active sink"
+    echo "  volume mute    - toggles mute for the active sink"
+    echo ""
+    echo "  Note 1: If right-volume is not specified, it is set"
+    echo "          to be the same as left-volume"
+    echo "  Note 2: Specifying a sign (+|-) for volume would mean adding"
+    echo "          to the active sink's volume"
+    exit 1;
 }
 
 getactivesink() {
@@ -28,100 +28,101 @@ getactivesink() {
         ' | head -1
     )
     if [ -z $sink ]; then
-        sink=$( pacmd stat | awk -F ': ' '/^Default sink name: /{print $2}' )
+        sink=$( pactl info | sed -En 's/Default Sink: (.*)/\1/p' )
     fi
-	echo $sink
-}
-
-getsinkvolumesymbol() {
-	sink=$(getactivesink)
-	muted=(
-		`pacmd list-sinks |
-			awk '/^\s+name: /{activesink = $2 == "<'$sink'>"}
-				/^\s+muted: / && activesink {print $2; exit}'
-		`
-	)
-	if [[ $muted == "no" ]]; then
-		if (( $1 == 0 )); then
-			echo O
-		elif (( $1 < 30 )); then
-			echo L
-		elif (( $1 < 60 )); then
-			echo M
-		else
-			echo H
-		fi
-	else
-		echo N
-	fi
+    echo $sink
 }
 
 getsinkvolume() {
-	vol=(
-		`pacmd list-sinks |
-			awk '/^\s+name: /{indefault = $2 == "<'$(getactivesink)'>"}
-				/^\s+volume: / && indefault {print $0; exit}' | grep -o '[0-9]\+%' | sed 's/%//g'
-		`
-	)
-	len=${#vol[@]}
-	vol=$( echo "${vol[@]}" | tr ' ' '+' )
-	vol=$(( ($vol) / $len ))
-	echo "$(getsinkvolumesymbol $vol) $vol"
+    sink=$(getactivesink)
+    muted=$(
+        pactl list sinks | awk '
+            /^\s+Name: /{activesink = $2 == "'$sink'"}
+            /^\s+Mute: / && activesink {print $2; exit}
+        '
+    )
+    vol=( $(
+        pactl list sinks | awk '
+            /^\s+Name: /{activesink = $2 == "'$sink'"}
+            /^\s+Volume: / && activesink {print; exit}
+        ' | grep -o "[0-9]\+%" | sed 's/%//g'
+    ) )
+
+    len=${#vol[@]}
+    vol=$( echo ${vol[@]} | tr ' ' '+' )
+    vol=$(( ($vol) / $len ))
+    volsymbol=""
+
+    if [[ $muted == "no" ]]; then
+        if (( $vol == 0 )); then
+            volsymbol=O
+        elif (( $vol < 30 )); then
+            volsymbol=L
+        elif (( $vol < 60 )); then
+            volsymbol=M
+        else
+            volsymbol=H
+        fi
+    else
+        volsymbol=N
+    fi
+
+    echo "$volsymbol $vol"
 }
 
 togglesinkmute() {
-	pactl set-sink-mute $(getactivesink) toggle
+    pactl set-sink-mute $(getactivesink) toggle
 }
 
 parsevolume() {
-	voll=$1
-	if [[ "$voll" =~ ^[+-][0-9]+$ ]]; then
-		voll=$(( $2 + $voll ))
-	elif ! [[ "$voll" =~ ^[0-9]+$ ]]; then
-		error
-	fi
-	voll=$(( $voll > 200 ? 200 : $voll ))
-	voll=$(( $voll < 0   ? 0   : $voll ))
-	echo $voll
+    vol=$1
+    if [[ "$vol" =~ ^[+-][0-9]+$ ]]; then
+        vol=$(( $2 + $vol ))
+    elif ! [[ "$vol" =~ ^[0-9]+$ ]]; then
+        error
+    fi
+    voll=$(( $vol > 200 ? 200 : $vol ))
+    voll=$(( $vol < 0   ? 0   : $vol ))
+    echo $vol
 }
 
 setsinkvolume() {
-	sink=$(getactivesink)
-	vol=(
-		`pacmd list-sinks |
-			awk '/^\s+name: /{indefault = $2 == "<'$sink'>"}
-				/^\s+volume: / && indefault {print $0; exit}' | grep -o '[0-9]\+%' | sed 's/%//g'
-		`
-	)
+    sink=$(getactivesink)
+    vol=( $(
+        pactl list sinks | awk '
+            /^\s+Name: /{activesink = $2 == "'$sink'"}
+            /^\s+Volume: / && activesink {print; exit}
+        ' | grep -o "[0-9]\+%" | sed 's/%//g'
+    ) )
 
-	voll=$(parsevolume $1 ${vol[0]})
+    voll=$(parsevolume $1 ${vol[0]})
 
-	volr=$2
-	if [[ -z $volr ]]; then
-		volr=$1
-	fi
-	volr=$(parsevolume $volr ${vol[1]})
+    volr=$2
+    if [[ -z $volr ]]; then
+        volr=$1
+    fi
+    volr=$(parsevolume $volr ${vol[1]})
 
-	pactl set-sink-volume $sink $voll% $volr%
+    pactl set-sink-volume $sink $voll% $volr%
 
-	echo "Sink: $sink, Volume: $voll%, $volr%"
+    echo "Sink: $sink, Volume: $voll%, $volr%"
 }
 
 if [[ $1 == "get" ]]; then
-	if [[ $# != 1 ]]; then
-		error
-	fi
-	getsinkvolume
+    if [[ $# != 1 ]]; then
+        error
+    fi
+    getsinkvolume
 elif [[ $1 == "set" ]]; then
-	if [[ $# != 2 && $# != 3 ]]; then
-		error
-	fi
-	setsinkvolume $2 $3
+    if [[ $# != 2 && $# != 3 ]]; then
+        error
+    fi
+    setsinkvolume $2 $3
 elif [[ $1 == "mute" ]]; then
-	if [[ $# != 1 ]]; then
-		error
-	fi
-	togglesinkmute
+    if [[ $# != 1 ]]; then
+        error
+    fi
+    togglesinkmute
 else
-	error
+    error
 fi
