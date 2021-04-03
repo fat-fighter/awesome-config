@@ -191,7 +191,15 @@ keys.globalkeys =
         {},
         "XF86AudioPlay",
         function()
-            awesome.emit_signal("controls::mpris", "toggle")
+            awesome.emit_signal("controls::mpris", "play")
+        end,
+        {description = "toggle", group = "media"}
+    ),
+    awful.key(
+        {},
+        "XF86AudioPause",
+        function()
+            awesome.emit_signal("controls::mpris", "pause")
         end,
         {description = "toggle", group = "media"}
     ),
@@ -887,6 +895,18 @@ keys.globalkeys =
     awful.key(
         {superkey, ctrlkey},
         "Right",
+        awful.tag.viewnext,
+        {description = "view next", group = "tag"}
+    ),
+    awful.key(
+        {superkey},
+        "Page_Up",
+        awful.tag.viewprev,
+        {description = "view previous", group = "tag"}
+    ),
+    awful.key(
+        {superkey},
+        "Page_Down",
         awful.tag.viewnext,
         {description = "view next", group = "tag"}
     ),

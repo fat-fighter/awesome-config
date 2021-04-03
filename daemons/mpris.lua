@@ -209,7 +209,7 @@ awesome.connect_signal(
         elseif command == "play" then
             script = "playerctl play"
         elseif command == "pause" then
-            script = "playerctl pause"
+            script = "playerctl --all-players pause"
         elseif command == "next" then
             script = "playerctl next"
         elseif command == "prev" then
