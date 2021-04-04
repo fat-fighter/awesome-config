@@ -17,7 +17,6 @@ local beautiful = require("beautiful").controlpanel.player
 -- Custom Helper Libraries
 
 local helpers = require("helpers")
-local mpris_daemon = require("daemons.mpris")
 
 -- -------------------------------------------------------------------------------------
 -- Creating Information Textboxes and Imageboxes
@@ -214,9 +213,9 @@ local playback
 
 local function update_widget(cmd, data)
     if cmd == "metadata" then
-        album = gears.string.xml_escape(data.album) or ""
-        title = gears.string.xml_escape(data.title) or ""
-        artist = gears.string.xml_escape(data.artist) or ""
+        album = gears.string.xml_escape(data.album or "") or ""
+        title = gears.string.xml_escape(data.title or "") or ""
+        artist = gears.string.xml_escape(data.artist or "") or ""
     elseif cmd == "playback" then
         playback = data:lower()
 
@@ -228,8 +227,6 @@ local function update_widget(cmd, data)
             album = ""
             title = ""
             artist = "----------"
-
-            mpris_daemon.emit()
         else
             toggle_button.image = beautiful.icons.play
         end
@@ -266,11 +263,12 @@ end
 -- Connect to daemon signal {{{
 awesome.connect_signal("daemons::mpris", update_widget)
 
+player.mpris_daemon = require("daemons.mpris")
 gears.timer.delayed_call(
     function()
-        mpris_daemon.emit()
-        if not mpris_daemon.is_running then
-            mpris_daemon.run()
+        player.mpris_daemon.emit()
+        if not player.mpris_daemon.is_running then
+            player.mpris_daemon.run()
         end
     end
 )

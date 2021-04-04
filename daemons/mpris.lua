@@ -5,171 +5,162 @@
 --   License:    The MIT License (MIT)
 --
 --   Daemon for media (mpris) control
---
---   Note: This daemon requires playerctl to be installed
 -- =====================================================================================
-
-local awful = require("awful")
 
 local lgi = require("lgi")
 local Gio = lgi.require("Gio")
 local GLib = lgi.require("GLib")
 
 -- -------------------------------------------------------------------------------------
+-- Including Custom Helper Libraries
+
+local h = require("modules.dbus.helpers")
+local proxy = require("modules.dbus.proxy")
+
+-- -------------------------------------------------------------------------------------
+-- Dbus Proxy Definitions + Helpers
+
+local services =
+    proxy.new(
+    session_bus,
+    "org.freedesktop.DBus",
+    "/org/freedesktop/DBus",
+    "org.freedesktop.DBus"
+)
+
+local function player_proxy(name)
+    return proxy.new(
+        session_bus,
+        "org.mpris.MediaPlayer2." .. name,
+        "/org/mpris/MediaPlayer2",
+        "org.mpris.MediaPlayer2.Player"
+    )
+end
+
+-- -------------------------------------------------------------------------------------
 -- Helper Functions
 
-local function get_players()
-    local ret, err =
-        session_bus:call_sync(
-        "org.freedesktop.DBus",
-        "/org/freedesktop/DBus",
-        "org.freedesktop.DBus",
-        "ListNames",
-        nil,
-        GLib.VariantType("(as)"),
-        Gio.DBusCallFlags.NONE,
-        -1
-    )
-
-    if err then
-        error("Error: daemon mpris, could not get mpris players")
-    elseif not ret or #ret ~= 1 then
-        return
+local function clean_metadata(data)
+    local cleaned = {}
+    for key, value in pairs(data) do
+        cleaned[key:gsub("xesam:", "")] = value
     end
 
-    local players = {}
-    local array = ret.value[1]
-
-    for i = 1, #array do
-        local player_name = array[i]:match("^org%.mpris%.MediaPlayer2%.(.+)")
-        if player_name then
-            players[#players + 1] = player_name
-        end
-    end
-
-    return players
+    return cleaned
 end
 
-local function get_all_properties(player)
-    local prop_path =
-        GLib.Variant.new_tuple({GLib.Variant("s", "org.mpris.MediaPlayer2.Player")}, 1)
-
-    local ret, err =
-        session_bus:call_sync(
-        "org.mpris.MediaPlayer2." .. player,
-        "/org/mpris/MediaPlayer2",
-        "org.freedesktop.DBus.Properties",
-        "GetAll",
-        prop_path,
-        nil,
-        Gio.DBusCallFlags.NONE,
-        -1,
-        nil
-    )
-
-    if err then
-        print(err)
-        error("Could not get mpris player " .. player .. "'s properties")
-    elseif not ret or #ret ~= 1 then
-        return nil
-    end
-
-    return ret
+local function run_func(player, func)
+    player:call("org.mpris.MediaPlayer2.Player", func)
 end
 
--- local function get_property(player, property)
---     local prop_path = {"org.mpris.MediaPlayer2.Player", property}
---
---     local ret, err =
---         session_bus:call_sync(
---         "org.mpris.MediaPlayer2." .. player,
---         "/org/mpris/MediaPlayer2",
---         "org.freedesktop.DBus.Properties",
---         "Get",
---         GLib.Variant("(ss)", prop_path),
---         GLib.VariantType("(v)"),
---         Gio.DBusCallFlags.NONE,
---         -1,
---         nil
---     )
---
---     if err then
---         print(err)
---         error("Could not get mpris player " .. player .. "'s property " .. property)
---     elseif not ret or #ret ~= 1 then
---         return
---     end
---
---     return ret
--- end
-
-local function get_active_player()
-    local players = get_players()
-
-    if not players then
-        return
-    end
-
-    local passive_player, passive_props
-
-    for _, player in ipairs(players) do
-        props = get_all_properties(player).value[1]
-
-        if props.PlaybackStatus == "Playing" then
-            return player, props
-        elseif props.PlaybackStatus == "Paused" then
-            passive_player, passive_props = player, props
+local function attach_properties(players)
+    if not players._name then
+        for _, player in pairs(players) do
+            attach_properties(player)
         end
+    else
+        players.metadata =
+            h.unpack_variant(
+            players:call(
+                "org.freedesktop.DBus.Properties",
+                "GetAll",
+                GLib.Variant("(s)", {"org.mpris.MediaPlayer2.Player"})
+            )
+        )
     end
-
-    return passive_player, passive_props
-end
-
-local function extract_metadata(data)
-    local metadata = {
-        album = data["xesam:album"],
-        title = data["xesam:title"]
-    }
-
-    local artist = data["xesam:artist"]
-
-    if type(artist) == "string" then
-        metadata.artist = artist
-    elseif metadata.artist and #metadata.artist.value ~= 0 then
-        local artists = metadata.artist.value
-        local value = artists[1]
-
-        for i = 2, #artists do
-            value = value .. ", " .. artists[i]
-        end
-
-        metadata.artist = value
-    end
-
-    return metadata
 end
 
 -- -------------------------------------------------------------------------------------
 -- Defining the Daemon
 
-local daemon = {is_running = false}
+local daemon = {
+    is_running = false,
+    players = {},
+    active_player = nil
+}
 
-function daemon.emit(data)
-    if not data then
-        _, data = get_active_player()
+function daemon.get_players()
+    local session_dests = h.unpack_variant(services.ListNames())
+    local players = {}
 
-        if not data then
-            return
+    for i = 1, #session_dests do
+        local name = session_dests[i]:match("^org%.mpris%.MediaPlayer2%.(.+)")
+        if name then
+            players[name] = player_proxy(name)
         end
     end
 
-    if data.PlaybackStatus then
-        awesome.emit_signal("daemons::mpris", "playback", data.PlaybackStatus:lower())
+    daemon.players = players
+end
+
+function daemon.filter_running_players()
+    attach_properties(daemon.players)
+    for name, player in pairs(daemon.players) do
+        if player.metadata.PlaybackStatus == "Stopped" then
+            daemon.players[name] = nil
+        end
+    end
+end
+
+function daemon.get_active_player(players, active_player)
+    local active_player_, first
+    local active_found = false
+    for name, player in pairs(players) do
+        if first == nil then
+            first = player
+        end
+
+        -- Custom preference for youtube music {{{
+        if name == "youtube-music-desktop-app" then
+            first = player
+        end
+        -- }}}
+
+        active_found =
+            active_found or
+            (active_player ~= nil and player._name == active_player._name)
+
+        if player.metadata.PlaybackStatus == "Playing" then
+            active_player_ = player
+        end
     end
 
-    if data.Metadata then
-        local metadata = extract_metadata(data.Metadata)
-        awesome.emit_signal("daemons::mpris", "metadata", metadata)
+    if active_found then
+        attach_properties(active_player)
+        if active_player.metadata.PlaybackStatus == "Playing" or not active_player_ then
+            active_player_ = active_player
+        end
+    end
+    if not active_player_ then
+        active_player_ = first
+    end
+
+    return active_player_
+end
+
+function daemon.update()
+    daemon.get_players()
+    daemon.filter_running_players()
+    daemon.active_player =
+        daemon.get_active_player(daemon.players, daemon.active_player)
+end
+
+function daemon.emit()
+    daemon.update()
+
+    if daemon.active_player then
+        awesome.emit_signal(
+            "daemons::mpris",
+            "playback",
+            daemon.active_player.metadata.PlaybackStatus
+        )
+        awesome.emit_signal(
+            "daemons::mpris",
+            "metadata",
+            clean_metadata(daemon.active_player.metadata.Metadata)
+        )
+    else
+        awesome.emit_signal("daemons::mpris", "playback", "Stopped")
     end
 end
 
@@ -181,11 +172,11 @@ function daemon.run()
         nil,
         "org.freedesktop.DBus.Properties",
         "PropertiesChanged",
-        nil,
+        "/org/mpris/MediaPlayer2",
         nil,
         Gio.DBusSignalFlags.NONE,
-        function(_, _, _, _, _, data)
-            daemon.emit(data.value[2])
+        function()
+            daemon.emit()
         end
     )
 
@@ -202,25 +193,28 @@ end
 awesome.connect_signal(
     "controls::mpris",
     function(command)
-        local script
+        daemon.update()
+        if not daemon.active_player then
+            return
+        end
 
         if command == "toggle" then
-            script = "playerctl play-pause"
+            run_func(daemon.active_player, "PlayPause")
         elseif command == "play" then
-            script = "playerctl play"
+            run_func(daemon.active_player, "Play")
         elseif command == "pause" then
-            script = "playerctl --all-players pause"
+            for _, player in pairs(daemon.players) do
+                run_func(player, "Pause")
+            end
         elseif command == "next" then
-            script = "playerctl next"
+            run_func(daemon.active_player, "Next")
         elseif command == "prev" then
-            script = "playerctl previous"
+            run_func(daemon.active_player, "Previous")
         elseif command == "stop" then
-            script = "playerctl stop"
+            run_func(daemon.active_player, "Stop")
         else
             error("Error: daemon mpris, command '" .. command .. "' not found")
         end
-
-        awful.spawn.with_shell(script)
     end
 )
 

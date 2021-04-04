@@ -214,6 +214,8 @@ local function create_controlpanel(screen)
 
         self.visible = true
 
+        self.player.mpris_daemon.emit()
+
         if beautiful.animation.style ~= "none" then
             if self.animator then
                 self.animator:stopAnimation()
