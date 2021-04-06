@@ -46,6 +46,7 @@ keys = {
 }
 
 local docked = false
+local screenshot_format = "/home/fat-fighter/downloads/screenshot-%m_%d_%y-%H:%M:%S.png"
 
 -- -------------------------------------------------------------------------------------
 -- Global Shortcuts
@@ -86,7 +87,21 @@ keys.globalkeys =
         {},
         "Print",
         function()
-            awful.spawn.with_shell("kazam -a --nosound")
+            awful.spawn.with_shell(
+                "file=$(date +'" .. screenshot_format .. "'); scrot -s $file"
+            )
+        end,
+        {description = "select area to capture screenshot", group = "screenshots"}
+    ),
+    awful.key(
+        {ctrlkey},
+        "Print",
+        function()
+            awful.spawn.with_shell(
+                "file=$(date +'" ..
+                    screenshot_format ..
+                        "'); scrot -s $file; xclip -selection c -t image/png -i $file"
+            )
         end,
         {description = "select area to capture screenshot", group = "screenshots"}
     ),
@@ -94,7 +109,9 @@ keys.globalkeys =
         {superkey},
         "Print",
         function()
-            awful.spawn.with_shell("kazam -w --nosound")
+            awful.spawn.with_shell(
+                "file=$(date +'" .. screenshot_format .. "'); scrot -u $file"
+            )
         end,
         {description = "capture whole screen", group = "screenshots"}
     ),
@@ -104,15 +121,7 @@ keys.globalkeys =
         function()
             awful.spawn.with_shell(scripts_dir .. "pin-scrot")
         end,
-        {description = "capture whole screen", group = "screenshots"}
-    ),
-    awful.key(
-        {superkey, shiftkey},
-        "Print",
-        function()
-            awful.spawn.with_shell(scripts_dir .. "pin-scrot")
-        end,
-        {description = "capture whole screen", group = "screenshots"}
+        {description = "capture selection and pin to screen", group = "screenshots"}
     ),
     -- }
 
@@ -1061,13 +1070,9 @@ keys.globalkeys =
         "m",
         function()
             if docked then
-                awful.spawn(
-                    "xrandr --output eDP1 --auto --output HDMI-1-0 --off"
-                )
+                awful.spawn("xrandr --output eDP-1-1 --auto --output HDMI-0 --off")
             else
-                awful.spawn(
-                    "xrandr --output HDMI-1-0 --auto --output eDP1 --off"
-                )
+                awful.spawn("xrandr --output HDMI-0 --auto --output eDP-1-1 --off")
             end
             docked = not docked
         end,
