@@ -46,19 +46,6 @@ local includes = theme_dir .. "includes/"
 local colors = xresources.get_current_theme()
 -- }}}
 
--- Colors {{{
-local background_normal = "#1B1D26"
-local background_urgent = "#FF4971"
-
-local foreground_title = "#FF4971"
-local foreground_focus = "#FFFFFF"
-local foreground_urgent = "#282A36"
-
-local window_highlight_normal = "#252C36"
-local window_highlight_focus = "#15131A"
-local window_highlight_urgent = "#FF4971"
--- }}}
-
 ----------------------------------------------------------------------------------------
 -- Setting Basic Theme Variables
 
@@ -94,9 +81,9 @@ theme.screen_margin = dpi(10)
 theme.window_border_radius = dpi(0)
 theme.window_border_width = dpi(0)
 
-theme.window_border_focus = window_highlight_focus
-theme.window_border_normal = window_highlight_normal
-theme.window_border_urgent = window_highlight_urgent
+theme.window_border_focus = colors.color12
+theme.window_border_normal = colors.color0
+theme.window_border_urgent = colors.color1
 -- }}}
 
 -- Titlebars {{{
@@ -178,7 +165,7 @@ systray.bg = "#000000" -- Better looking system icons using gtk with black
 
 systray.width = dpi(200)
 systray.height = dpi(50)
-systray.margin = dpi(10)
+systray.margin = dpi(15)
 systray.opacity = 0.8
 systray.spacing = dpi(10)
 systray.border_radius = dpi(6)
@@ -448,6 +435,72 @@ todo.border_radius = dpi(0)
 controlpanel.todo = todo
 -- }}}
 
+-- {{{
+local calendar = {
+	bg = {},
+	fg = {},
+	font = {},
+	shape = {},
+	padding = {},
+	border_color = {},
+	border_width = {}
+}
+
+calendar.font = {
+    focus = "Iosevka Bold " .. font_size(13),
+    header = "BebasNeue Bold " .. font_size(25),
+    normal = "Iosevka " .. font_size(13),
+    weekday = "Iosevka Medium " .. font_size(14),
+    weekend = "Iosevka Medium " .. font_size(14),
+}
+
+calendar.bg = {
+    focus = colors.color8,
+    month = colors.color0 .. "00",
+    header = colors.color0 .. "00",
+    normal = colors.color0 .. "00",
+    weekday = colors.color0 .. "00",
+    weekend = colors.color0 .. "00",
+    dweekend = colors.color0 .. "00",
+    default = colors.color0 .. "00"
+}
+
+calendar.fg = {
+    focus = colors.color15,
+    header = colors.color9,
+    normal = colors.color16,
+    weekday = colors.color5,
+    weekend = colors.color5,
+    default = colors.color15
+}
+
+calendar.padding = {
+    default = dpi(5),
+    header = dpi(10)
+}
+
+calendar.border_width = {
+    default = dpi(0),
+    month = dpi(1)
+}
+calendar.border_color.month = colors.color12 .. "22"
+
+calendar.markup = function(text, flag)
+	if calendar.font[flag] then
+		text = "<center><span font_desc='" .. calendar.font[flag] .. "'>" .. text .. "</span></center>"
+	end
+
+	return text
+end
+
+calendar.buttons_size = dpi(16)
+calendar.buttons_depth = dpi(10)
+
+calendar.spacing = dpi(10)
+
+controlpanel.calendar = calendar
+-- }}}
+
 -- Volume {{{
 local volume = {icons = {}}
 
@@ -574,13 +627,13 @@ theme.controlpanel = controlpanel
 ----------------------------------------------------------------------------------------
 -- Hoteys Help
 
-theme.hotkeys_bg = background_normal
+theme.hotkeys_bg = colors.color0
 theme.hotkeys_fg = colors.color15 .. "88"
 theme.hotkeys_border_width = 0
-theme.hotkeys_border_color = background_normal
-theme.hotkeys_modifiers_fg = foreground_focus
-theme.hotkeys_label_bg = background_normal .. "00"
-theme.hotkeys_label_fg = foreground_title
+theme.hotkeys_border_color = colors.color0
+theme.hotkeys_modifiers_fg = colors.color15
+theme.hotkeys_label_bg = colors.color0 .. "00"
+theme.hotkeys_label_fg = colors.color4
 theme.hotkeys_font = "Iosevka Medium " .. font_size(16)
 theme.hotkeys_description_font = "Iosevka Medium " .. font_size(14)
 theme.hotkeys_group_margin = dpi(50)
@@ -704,11 +757,11 @@ local naughty = {}
 
 naughty.font = "IBM Plex Mono Medium " .. font_size(12)
 
-naughty.bg = background_normal
+naughty.bg = colors.color0
 naughty.fg = colors.color15
 
-naughty.bg_critical = background_urgent
-naughty.fg_critical = foreground_urgent
+naughty.bg_critical = colors.color1
+naughty.fg_critical = colors.color0
 
 -- naughty.width = dpi(..)
 -- naughty.height = dpi(..)

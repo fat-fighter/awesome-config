@@ -5,10 +5,8 @@ if [ -n "$1" ]; then
     theme=$1
 fi
 
-# Set natural scrolling and Velocity Scaling
-$HOME/.config/awesome/scripts/touchpad/natural-scrolling.sh &
-$HOME/.config/awesome/scripts/touchpad/tapping.sh &
-$HOME/.config/awesome/scripts/touchpad/disabled-while-typing.sh -v &
+# Touchpad settings
+$HOME/.config/awesome/scripts/touchpad
 
 # Make numpad like in Microsoft
 setxkbmap -option 'numpad:microsoft' -option 'caps:escape' -option 'escape:caps'

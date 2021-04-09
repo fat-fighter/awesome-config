@@ -90,6 +90,4 @@ local function create_systray()
 end
 
 -- -------------------------------------------------------------------------------------
-local systray = create_systray()
-
-return systray
+return create_systray()

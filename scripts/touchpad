@@ -1,0 +1,25 @@
+#!/usr/bin/sh
+
+ids=( $( xinput list | egrep "Touchpad|Trackpad.*slave.*pointer" | cut -f2 | sed "s/.*=//" ) )
+
+for id in ${ids[@]}; do
+    prop=$( xinput list-props $id | grep "Disable While Typing Enabled (" | sed "s/.*(\([0-9]*\)).*/\1/g" )
+    if [[ -n $prop ]]; then
+        xinput --set-prop $id $prop 0
+    fi
+
+    prop=$( xinput list-props $id | grep "Tapping Enabled (" | sed "s/.*(\([0-9]*\)).*/\1/g" )
+    if [[ -n $prop ]]; then
+        xinput --set-prop $id $prop 1
+    fi
+
+    prop=$( xinput list-props $id | grep "Natural Scrolling Enabled (" | sed "s/.*(\([0-9]*\)).*/\1/g" )
+    if [[ -n $prop ]]; then
+        xinput --set-prop $id $prop 1
+    fi
+
+    prop=$( xinput list-props $id | grep "Accel Speed (" | sed "s/.*(\([0-9]*\)).*/\1/g" )
+    if [[ -n $prop ]]; then
+        xinput --set-prop $id $prop 0.2
+    fi
+done
