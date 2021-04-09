@@ -184,31 +184,31 @@ theme.systray_icon_spacing = systray.spacing
 theme.systray = systray
 -- }}}
 
--- Bar {{{
-local bar = {}
+-- Tags Bar {{{
+local tagsbar = {}
 
-bar.width = function(screen)
+tagsbar.width = function(screen)
     return screen.workarea.width
 end
-bar.height = dpi(6)
+tagsbar.height = dpi(6)
 
-bar.x = 0
-bar.y = function(screen)
-    return screen.workarea.height - bar.height
+tagsbar.x = 0
+tagsbar.y = function(screen)
+    return screen.workarea.height - tagsbar.height
 end
 
-bar.border = {}
+tagsbar.border = {}
 
-bar.bg = {
+tagsbar.bg = {
     selected = colors.color2 .. "99",
     urgent = colors.color1 .. "99",
     occupied = colors.color12 .. "77",
     empty = colors.color4 .. "99",
     active = colors.color9 .. "99"
 }
-bar.bar_bg = "#ffffff00"
+tagsbar.bar_bg = "#ffffff00"
 
-bar.border = {
+tagsbar.border = {
     radius = dpi(0),
     rounding = {bl = true, br = true}, -- tl = [t|f], tr = [t|f], br = [t|f], bl = [t|f]
     top = 0,
@@ -218,12 +218,54 @@ bar.border = {
     color = colors.color6 .. "99"
 }
 
-bar.separator = {
+tagsbar.separator = {
     width = dpi(0),
     color = colors.color7 .. "55"
 }
 
-theme.bar = bar
+theme.tagsbar = tagsbar
+-- }}}
+
+-- Tags Bar {{{
+local statusbar = {}
+
+statusbar.width = function(screen)
+    return screen.workarea.width
+end
+statusbar.height = dpi(6)
+
+statusbar.x = 0
+statusbar.y = function(screen)
+    return screen.workarea.height - statusbar.height
+end
+
+statusbar.border = {}
+
+statusbar.bg = {
+    selected = colors.color2 .. "99",
+    urgent = colors.color1 .. "99",
+    occupied = colors.color12 .. "77",
+    empty = colors.color4 .. "99",
+    active = colors.color9 .. "99"
+}
+statusbar.bar_bg = "#ffffff00"
+
+statusbar.border = {
+    radius = dpi(0),
+    rounding = {bl = true, br = true}, -- tl = [t|f], tr = [t|f], br = [t|f], bl = [t|f]
+    top = 0,
+    right = 0,
+    bottom = 0,
+    left = 0,
+    color = colors.color6 .. "99"
+}
+
+statusbar.separator = {
+    width = dpi(0),
+    color = colors.color7 .. "55"
+}
+
+theme.statusbar = tagsbar
 -- }}}
 
 -- Controlpanel {{{

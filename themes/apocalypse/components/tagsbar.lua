@@ -1,8 +1,8 @@
 -- =====================================================================================
---   Name:       bar.lua
+--   Name:       tagsbar.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/ ...
---               ... components/bar.lua
+--               ... components/tagsbar.lua
 --   License:    The MIT License (MIT)
 --
 --   Widget for custom dashboard
@@ -11,7 +11,7 @@
 local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
-local beautiful = require("beautiful").bar
+local beautiful = require("beautiful").tagsbar
 
 -- -------------------------------------------------------------------------------------
 -- Including Custom Helper Libraries
@@ -19,7 +19,7 @@ local beautiful = require("beautiful").bar
 local helpers = require("helpers")
 
 -- -------------------------------------------------------------------------------------
--- Defining Helper Functions for Creating Bar
+-- Defining Helper Functions for Creating Tags Bar
 
 local function get_width(screen)
     local width = beautiful.width
@@ -82,9 +82,9 @@ local function get_y(screen, height)
 end
 
 -- -------------------------------------------------------------------------------------
--- Defining Function to Create a Bar
+-- Defining Function to Create a Tags Bar
 
-local function create_bar(screen)
+local function create_tagsbar(screen)
     ----------------------------------------------------------------------------
     -- Creating the StartScreen
 
@@ -153,7 +153,7 @@ local function create_bar(screen)
     }
 
     local ba = beautiful.border.rounding
-    local bar =
+    local tagsbar =
         wibox {
         visible = true,
         ontop = false,
@@ -162,19 +162,19 @@ local function create_bar(screen)
         shape = helpers.prrect(beautiful.border.radius, ba.tl, ba.tr, ba.br, ba.bl)
     }
 
-    bar:setup {
+    tagsbar:setup {
         widget = taglist
     }
 
-    bar.x = get_x(screen)
-    bar.y = get_y(screen)
+    tagsbar.x = get_x(screen)
+    tagsbar.y = get_y(screen)
 
-    bar.width = get_width(screen)
-    bar.height = get_height(screen)
+    tagsbar.width = get_width(screen)
+    tagsbar.height = get_height(screen)
 
     ----------------------------------------------------------------------------
-    return bar
+    return tagsbar
 end
 
 -- -------------------------------------------------------------------------------------
-return create_bar
+return create_tagsbar
