@@ -2,7 +2,7 @@
 --   Name:       wifi.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
---               ... wifi.lua
+--               ... controlpanel/wifi.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based wifi widget

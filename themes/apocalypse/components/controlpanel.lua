@@ -121,20 +121,20 @@ local function create_controlpanel(screen)
 
     local dpi = require("beautiful").dpi
 
-    controlpanel.player = require("widgets.player")
+    controlpanel.player = require("widgets.controlpanel.player")
     local boxes = {
         helpers.vpad(3),
         {
-            require("widgets.weather"),
-            require("widgets.datetime"),
+            require("widgets.controlpanel.weather"),
+            require("widgets.controlpanel.datetime"),
             layout = wibox.layout.fixed.vertical
         },
         helpers.vpad(1),
         controlpanel.player,
         helpers.vpad(2),
-        require("widgets.todo"),
+        require("widgets.controlpanel.todo"),
         helpers.vpad(2),
-        require("widgets.minicontrols"),
+        require("widgets.controlpanel.minicontrols"),
         layout = wibox.layout.fixed.vertical
     }
 
@@ -148,7 +148,7 @@ local function create_controlpanel(screen)
                     {
                         nil,
                         nil,
-                        require("widgets.battery"),
+                        require("widgets.controlpanel.battery"),
                         expand = "none",
                         layout = wibox.layout.align.horizontal
                     },

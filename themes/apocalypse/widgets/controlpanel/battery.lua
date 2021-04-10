@@ -1,5 +1,12 @@
--- -------------------------------------------------------------------------------------
--- Including Standard Awesome Libraries
+-- =====================================================================================
+--   Name:       wifi.lua
+--   Author:     Gurpreet Singh
+--   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
+--               ... controlpanel/wifi.lua
+--   License:    The MIT License (MIT)
+--
+--   Custom theme based wifi widget
+-- =====================================================================================
 
 local wibox = require("wibox")
 local gears = require("gears")

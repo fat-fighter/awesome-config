@@ -2,7 +2,7 @@
 --   Name:       datetime.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
---               ... datetime.lua
+--               ... controlpanel/datetime.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based datetime widget

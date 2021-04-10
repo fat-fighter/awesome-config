@@ -2,7 +2,7 @@
 --   Name:       weather.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
---               ... weather.lua
+--               ... controlpanel/weather.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based weather widget

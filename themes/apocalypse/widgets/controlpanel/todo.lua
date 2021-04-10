@@ -2,7 +2,7 @@
 --   Name:       todo.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
---               ... todo.lua
+--               ... controlpanel/todo.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based todo/todo widget

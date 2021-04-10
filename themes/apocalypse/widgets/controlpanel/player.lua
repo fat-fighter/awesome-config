@@ -2,7 +2,7 @@
 --   Name:       player.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
---               ... player.lua
+--               ... controlpanel/player.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based player widget
@@ -186,7 +186,7 @@ local player =
                     "horizontal"
                 ),
                 helpers.vpad(2),
-                require("widgets.volume"),
+                require("widgets.controlpanel.volume"),
                 layout = wibox.layout.fixed.vertical
             },
             top = beautiful.padding.topbottom,

@@ -2,7 +2,7 @@
 --   Name:       minicontrols.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/awesome-config/themes/apocalypse/widgets ...
---               ... minicontrols.lua
+--               ... controlpanel/minicontrols.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based mini widget for basic controls
@@ -23,7 +23,7 @@ local minicontrols =
     helpers.boxed(
     {
         {
-            require("widgets.wifi"),
+            require("widgets.controlpanel.wifi"),
             left = beautiful.spacing,
             right = beautiful.spacing,
             widget = wibox.container.margin

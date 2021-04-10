@@ -2,7 +2,7 @@
 --   Name:       volume.lua
 --   Author:     Gurpreet Singh
 --   Url:        https://github.com/ffs97/config-awesom/themes/apocalypse/widgets ...
---               ... volume.lua
+--               ... controlpanel/volume.lua
 --   License:    The MIT License (MIT)
 --
 --   Custom theme based volume widget
