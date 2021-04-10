@@ -5,7 +5,7 @@
 --               ... components/controlpanel.lua
 --   License:    The MIT License (MIT)
 --
---   Widget for custom dashboard
+--   Dock for custom controls and widgets
 -- =====================================================================================
 
 local awful = require("awful")
@@ -93,8 +93,7 @@ local function create_controlpanel(screen)
         visible = true,
         ontop = true,
         bg = beautiful.bg,
-        fg = beautiful.fg,
-        type = "dock"
+        fg = beautiful.fg
     }
 
     controlpanel.screen = screen

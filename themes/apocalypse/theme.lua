@@ -34,6 +34,7 @@ local odpi = xresources.apply_dpi
 local icons = theme_dir .. "icons/"
 
 local titlebar_icons = icons .. "titlebar/"
+local statusbar_icons = icons .. "statusbar/"
 local controlpanel_icons = icons .. "controlpanel/"
 local notification_icons = icons .. "notifications/"
 -- }}}
@@ -44,6 +45,8 @@ local includes = theme_dir .. "includes/"
 
 -- Theme {{{
 local colors = xresources.get_current_theme()
+
+colors.black = "#0f0e17"
 -- }}}
 
 ----------------------------------------------------------------------------------------
@@ -70,8 +73,7 @@ theme.wallpaper = includes .. "wallpaper.jpg"
 -- }}}
 
 -- Gaps {{{
-theme.useless_gap = dpi(15)
-theme.screen_margin = dpi(10)
+theme.useless_gap = dpi(20)
 -- }}}
 
 ----------------------------------------------------------------------------------------
@@ -232,30 +234,20 @@ local statusbar = {}
 statusbar.width = function(screen)
     return screen.workarea.width
 end
-statusbar.height = dpi(6)
+statusbar.height = dpi(30)
 
 statusbar.x = 0
-statusbar.y = function(screen)
-    return screen.workarea.height - statusbar.height
-end
+statusbar.y = 0
 
 statusbar.border = {}
 
-statusbar.bg = {
-    selected = colors.color2 .. "99",
-    urgent = colors.color1 .. "99",
-    occupied = colors.color12 .. "77",
-    empty = colors.color4 .. "99",
-    active = colors.color9 .. "99"
-}
-statusbar.bar_bg = "#ffffff00"
+statusbar.bg = colors.black
 
 statusbar.border = {
     radius = dpi(0),
-    rounding = {bl = true, br = true}, -- tl = [t|f], tr = [t|f], br = [t|f], bl = [t|f]
     top = 0,
     right = 0,
-    bottom = 0,
+    bottom = 2,
     left = 0,
     color = colors.color6 .. "99"
 }
@@ -265,7 +257,7 @@ statusbar.separator = {
     color = colors.color7 .. "55"
 }
 
-theme.statusbar = tagsbar
+theme.statusbar = statusbar
 -- }}}
 
 -- Controlpanel {{{
@@ -278,7 +270,9 @@ controlpanel.fg = colors.color15
 controlpanel.opacity = 1.0
 
 controlpanel.width = dpi(650)
-controlpanel.height = nil
+controlpanel.height = function (screen)
+    return screen.workarea.height + statusbar.height
+end
 
 -- controlpanel.shadow = {
 --     top = 0,
@@ -293,7 +287,7 @@ controlpanel.x = 0
 --     return screen.workarea.width - controlpanel.width
 -- end
 -- }}
-controlpanel.y = 0
+controlpanel.y = -statusbar.height
 
 controlpanel.animation.style = "slide_lr" -- | "opacity" | "slide_{lr|rl|tb|bt}" | "none"
 controlpanel.animation.easing = "inOutQuart" -- For options, refer to tween.lua documentation
@@ -313,6 +307,85 @@ controlpanel.padding = {
     topbottom = dpi(30),
     leftright = dpi(70)
 }
+
+theme.controlpanel = controlpanel
+-- }}}
+
+----------------------------------------------------------------------------------------
+-- Statusbar Widgets
+
+-- Calendar {{{
+local calendar = {
+    bg = {},
+    fg = {},
+    font = {},
+    shape = {},
+    padding = {},
+    border_color = {},
+    border_width = {}
+}
+
+calendar.font = {
+    focus = "Iosevka Bold " .. font_size(13),
+    header = "BebasNeue Bold " .. font_size(17),
+    normal = "Iosevka " .. font_size(13),
+    weekday = "Iosevka Medium " .. font_size(14),
+    default = "Iosevka " .. font_size(13)
+}
+
+calendar.bg = {
+    focus = colors.black,
+    month = colors.black,
+    header = colors.black,
+    normal = colors.black,
+    weekday = colors.color13 .. "11",
+    default = colors.black,
+}
+
+calendar.fg = {
+    focus = colors.color1,
+    header = colors.color15,
+    normal = colors.color15,
+    weekday = colors.color7,
+    default = colors.color15
+}
+
+calendar.padding = {
+    default = dpi(5),
+    weekday = dpi(10),
+    header = dpi(10),
+    month = dpi(20)
+}
+
+calendar.buttons_size = dpi(13)
+calendar.buttons_depth = dpi(10)
+
+calendar.spacing = dpi(0)
+
+statusbar.calendar = calendar
+-- }}}
+
+-- Datetime {{{
+local datetime = {}
+
+datetime.fg = colors.color15
+datetime.font = "BebasNeue Book " .. font_size(15)
+
+datetime.height = statusbar.height
+
+datetime.calendar = {
+    bg = colors.black,
+    border_radius = dpi(10),
+    width = dpi(500),
+    height = dpi(400)
+}
+
+datetime.calendar.x = function(screen)
+    return (screen.workarea.width - datetime.calendar.width) // 2
+end
+datetime.calendar.y = statusbar.height + dpi(15)
+
+statusbar.datetime = datetime
 -- }}}
 
 ----------------------------------------------------------------------------------------
@@ -375,6 +448,8 @@ player.art_size = dpi(80)
 
 player.shadow_size = dpi(0)
 player.shadow_color = colors.color0
+
+controlpanel.player = player
 -- }}}
 
 -- Weather {{{
@@ -415,6 +490,8 @@ weather.margin = {
     right = dpi(20),
     left = dpi(20)
 }
+
+controlpanel.weather = weather
 -- }}}
 
 -- Datetime {{{
@@ -445,6 +522,8 @@ datetime.margin = {
     top = dpi(-30),
     right = dpi(20)
 }
+
+controlpanel.datetime = datetime
 -- }}}
 
 -- Todo {{{
@@ -475,72 +554,6 @@ todo.edit_icon_size = dpi(25)
 todo.border_radius = dpi(0)
 
 controlpanel.todo = todo
--- }}}
-
--- {{{
-local calendar = {
-	bg = {},
-	fg = {},
-	font = {},
-	shape = {},
-	padding = {},
-	border_color = {},
-	border_width = {}
-}
-
-calendar.font = {
-    focus = "Iosevka Bold " .. font_size(13),
-    header = "BebasNeue Bold " .. font_size(25),
-    normal = "Iosevka " .. font_size(13),
-    weekday = "Iosevka Medium " .. font_size(14),
-    weekend = "Iosevka Medium " .. font_size(14),
-}
-
-calendar.bg = {
-    focus = colors.color8,
-    month = colors.color0 .. "00",
-    header = colors.color0 .. "00",
-    normal = colors.color0 .. "00",
-    weekday = colors.color0 .. "00",
-    weekend = colors.color0 .. "00",
-    dweekend = colors.color0 .. "00",
-    default = colors.color0 .. "00"
-}
-
-calendar.fg = {
-    focus = colors.color15,
-    header = colors.color9,
-    normal = colors.color16,
-    weekday = colors.color5,
-    weekend = colors.color5,
-    default = colors.color15
-}
-
-calendar.padding = {
-    default = dpi(5),
-    header = dpi(10)
-}
-
-calendar.border_width = {
-    default = dpi(0),
-    month = dpi(1)
-}
-calendar.border_color.month = colors.color12 .. "22"
-
-calendar.markup = function(text, flag)
-	if calendar.font[flag] then
-		text = "<center><span font_desc='" .. calendar.font[flag] .. "'>" .. text .. "</span></center>"
-	end
-
-	return text
-end
-
-calendar.buttons_size = dpi(16)
-calendar.buttons_depth = dpi(10)
-
-calendar.spacing = dpi(10)
-
-controlpanel.calendar = calendar
 -- }}}
 
 -- Volume {{{
@@ -575,6 +588,8 @@ volume.low_icon = controlpanel_icons .. "volume-mute.png"
 volume.high_icon = controlpanel_icons .. "volume-high.png"
 
 volume.border_radius = dpi(0)
+
+controlpanel.volume = volume
 -- }}}
 
 -- Battery {{{
@@ -596,6 +611,8 @@ battery.decoration = dpi(7)
 
 battery.low_icon = controlpanel_icons .. "low-battery.png"
 battery.low_thresh = 20
+
+controlpanel.battery = battery
 -- }}}
 
 -- Minicontrols {{{
@@ -613,6 +630,8 @@ minicontrols.margin = dpi(30)
 minicontrols.spacing = dpi(30)
 minicontrols.shadow_size = dpi(0)
 minicontrols.shadow_color = colors.color0
+
+controlpanel.minicontrols = minicontrols
 -- }}}
 
 -- Wifi {{{
@@ -633,6 +652,8 @@ wifi.bg.hover = colors.color15 .. "55"
 wifi.border_width = dpi(1)
 wifi.border_color_on = colors.color15 .. "BB"
 wifi.border_color_off = colors.color15 .. "77"
+
+controlpanel.wifi = wifi
 -- }}}
 
 -- Bluetooth {{{
@@ -651,20 +672,9 @@ bluetooth.bg.hover = minicontrols.bg_hover
 bluetooth.border_width = dpi(1)
 bluetooth.border_color_on = colors.color15 .. "BB"
 bluetooth.border_color_off = colors.color15 .. "77"
--- }}}
 
--- Adding widget settings to theme {{{
-controlpanel.wifi = wifi
-controlpanel.player = player
-controlpanel.volume = volume
-controlpanel.battery = battery
-controlpanel.weather = weather
-controlpanel.datetime = datetime
-controlpanel.minicontrols = minicontrols
 controlpanel.bluetooth = bluetooth
 -- }}}
-
-theme.controlpanel = controlpanel
 
 ----------------------------------------------------------------------------------------
 -- Hoteys Help
@@ -781,9 +791,11 @@ nbrightness.margin = {
 }
 nbrightness.spacing = dpi(30)
 
-nbrightness.width = nbrightness.bar.width + nbrightness.margin.left + nbrightness.margin.right
+nbrightness.width =
+    nbrightness.bar.width + nbrightness.margin.left + nbrightness.margin.right
 nbrightness.height =
-    nbrightness.bar.height + nbrightness.margin.top + nbrightness.margin.bottom + nbrightness.icon_size +
+    nbrightness.bar.height + nbrightness.margin.top + nbrightness.margin.bottom +
+    nbrightness.icon_size +
     nbrightness.spacing
 
 nbrightness.x = function(screen)

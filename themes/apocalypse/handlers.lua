@@ -23,6 +23,7 @@ handlers = {}
 -- Screen {{{
 function handlers.connect_for_each_screen(s)
     s.tagsbar = require("components.tagsbar")(s)
+    s.statusbar = require("components.statusbar")(s)
     s.systray = require("components.systray")
     s.controlpanel = require("components.controlpanel")(s)
     s.notifs = {

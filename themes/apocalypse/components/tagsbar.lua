@@ -5,7 +5,7 @@
 --               ... components/tagsbar.lua
 --   License:    The MIT License (MIT)
 --
---   Widget for custom dashboard
+--   Dock to visualize active and non-empty tags
 -- =====================================================================================
 
 local awful = require("awful")
@@ -157,7 +157,6 @@ local function create_tagsbar(screen)
         wibox {
         visible = true,
         ontop = false,
-        type = "dock",
         bg = beautiful.bar_bg,
         shape = helpers.prrect(beautiful.border.radius, ba.tl, ba.tr, ba.br, ba.bl)
     }

@@ -73,14 +73,14 @@ for i = 1, #timezones do
         time,
         vicious.widgets.date,
         colorize("%H:%M", beautiful.time.fg),
-        2,
+        30,
         timezones[i].offset
     )
     vicious.register(
         date,
         vicious.widgets.date,
         colorize("%A %b %d", beautiful.date.fg),
-        2,
+        30,
         timezones[i].offset
     )
 
