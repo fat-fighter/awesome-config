@@ -63,6 +63,11 @@ next_button:setup {
 -- Creating Styles for Different Cell Types
 
 local function decorate_cell(widget, flag)
+    if widget.get_text and widget.set_markup and flag ~= "header" then
+        local markup = widget:get_text():gsub("%s+", "")
+        widget:set_markup(markup)
+    end
+
     widget.font = beautiful.font[flag] or beautiful.font.default
 
     widget.align = "center"
@@ -76,19 +81,29 @@ local function decorate_cell(widget, flag)
             next_button,
             layout = wibox.layout.align.horizontal
         }
+    elseif flag == "focus" then
+        widget = require("widgets.elements.highlight")(widget, beautiful.focus_highlight)
     end
 
     local padding = beautiful.padding[flag] or beautiful.padding.default
 
     return wibox.widget {
         {
-            widget,
-            margins = padding,
-            widget = wibox.container.margin
+            {
+                widget,
+                margins = padding,
+                widget = wibox.container.margin
+            },
+            fg = beautiful.fg[flag] or beautiful.fg.default,
+            bg = beautiful.bg[flag] or beautiful.bg.default,
+            widget = wibox.container.background
         },
-        fg = beautiful.fg[flag] or beautiful.fg.default,
-        bg = beautiful.bg[flag] or beautiful.fg.default,
-        widget = wibox.container.background
+        top = (beautiful.margins[flag] or {}).top,
+        right = (beautiful.margins[flag] or {}).right,
+        bottom = (beautiful.margins[flag] or {}).bottom,
+        left = (beautiful.margins[flag] or {}).left,
+        color = (beautiful.margins[flag] or {}).color,
+        widget = wibox.container.margin
     }
 end
 
