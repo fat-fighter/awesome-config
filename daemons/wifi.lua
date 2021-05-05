@@ -4,9 +4,10 @@
 --   Url:        https://github.com/ffs97/awesome-config/daemons/wifi.lua
 --   License:    The MIT License (MIT)
 --
---   Daemon for wifi control
+--   Daemon for wifi control using connman and the DBUS api exposed by connman
 --
---   Note: This daemon requires connman to be installed
+--   Dependencies:
+--      - connman
 -- =====================================================================================
 
 local awful = require("awful")

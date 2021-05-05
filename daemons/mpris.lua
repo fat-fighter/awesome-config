@@ -4,7 +4,7 @@
 --   Url:        https://github.com/ffs97/awesome-config/daemons/mpris.lua
 --   License:    The MIT License (MIT)
 --
---   Daemon for media (mpris) control
+--   Daemon for media (mpris) control using DBUS
 -- =====================================================================================
 
 local lgi = require("lgi")

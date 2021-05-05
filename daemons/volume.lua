@@ -18,9 +18,7 @@ local daemon = {is_running = false}
 
 local subscribe_script =
     [[
-	bash -c "
-		pactl subscribe 2> /dev/null | grep --line-buffered 'sink #'
-	"
+	bash -c "pactl subscribe 2> /dev/null | grep --line-buffered 'sink #'"
 ]]
 
 function daemon.emit()
@@ -40,9 +38,10 @@ function daemon.emit()
 end
 
 local function run_volume_daemon()
-    daemon.is_running = true
-
-    awful.spawn.with_line_callback(subscribe_script, {stdout = daemon.emit})
+    if not daemon.is_running then
+        daemon.is_running = true
+        awful.spawn.with_line_callback(subscribe_script, {stdout = daemon.emit})
+    end
 end
 
 -- Kill old process and run daemon

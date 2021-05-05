@@ -30,11 +30,8 @@ local theme_collection = {
 }
 
 -- Change this number to use a different theme
-theme_name = (
-    os.getenv("THEME") or
-    io.popen("cat ~/.theme"):read("*line") or
-    theme_collection[1]
-)
+theme_name =
+    (os.getenv("THEME") or io.popen("cat ~/.theme"):read("*line") or theme_collection[1])
 theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/" .. theme_name .. "/"
 
 -- -------------------------------------------------------------------------------------
@@ -98,7 +95,7 @@ local tagnames = {
     "",
     "",
     "",
-    "",
+    "✉",
     ""
 }
 
@@ -353,27 +350,55 @@ awful.rules.rules = {
             honor_workarea = true,
             size_hints_honor = false,
             titlebars_enabled = true
-        }
+        },
+        callback = function(c)
+            if c.floating then
+                awful.placement.centered(c, {honor_workarea = true})
+            end
+        end
     },
     -- }}}
 
     -- Forced disable titlebars {{{
     {
         rule_any = {
-            name = {
-                "Chrome",
-                "Chromium"
-            },
             class = {
                 "qutebrowser",
-                "Yandex-browser-beta"
+                "Yandex-browser-beta",
+                "firefox",
+                "Chromium"
             }
         },
         properties = {titlebars_enabled = false}
     },
     -- }}}
 
-    -- Floating {{{
+    -- Tag based rules {{{
+    {
+        rule_any = {
+            class = {
+                "Slack"
+            }
+        },
+        properties = {tag = tagnames[5]}
+    },
+    {
+        rule_any = {
+            class = {
+                "YouTube Music"
+            }
+        },
+        properties = {tag = tagnames[6]}
+    },
+
+    -- Application specific rules {{{
+    {
+        rule = {
+            class = "Yandex-browser-beta",
+            name = "Outlook"
+        },
+        properties = {floating = false, tag = tagnames[5]}
+    },
     {
         rule_any = {
             class = {
@@ -385,54 +410,28 @@ awful.rules.rules = {
                 "pop-up"
             }
         },
-        properties = {floating = true, ontop = false}
+        properties = {floating = true}
     },
     {
         rule_any = {
-            class = {"onscreen-selection"}
+            class = {
+                "onscreen-selection"
+            }
         },
         properties = {floating = true, ontop = true}
     },
     {
         rule_any = {
-            class = {"YouTube Music"}
-        },
-        properties = {tag=""}
-    },
-    {
-        rule_any = {
-            class = {"Google Assistant"}
+            class = {
+                "Google Assistant",
+                "Indicator-stickynotes"
+            }
         },
         properties = {floating = true, ontop = true, titlebars_enabled = false}
     },
     -- }}}
 
-    -- Centered {{{
-    {
-        rule_any = {
-            type = {
-                "dialog"
-            },
-            name = {
-                "Save As",
-                "Open File",
-                "File Upload",
-                "Select a filename",
-                "Enter name of file to save to…",
-                "Library"
-            },
-            role = {
-                "GtkFileChooserDialog"
-            }
-        },
-        properties = {},
-        callback = function(c)
-            awful.placement.centered(c, {honor_workarea = true})
-        end
-    },
-    -- }}}
-
-    -- Forced titlebars {{{
+    -- Dialog Boxes {{{
     {
         rule_any = {
             name = {
@@ -447,10 +446,7 @@ awful.rules.rules = {
                 "GtkFileChooserDialog"
             }
         },
-        properties = {},
-        callback = function(c)
-            awful.titlebar.show(c, beautiful.titlebar.position)
-        end
+        properties = {titlebars_enabled = true, floating = true, ontop = true}
     }
     -- }}}
 }

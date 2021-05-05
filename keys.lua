@@ -79,6 +79,10 @@ keys.globalkeys =
         "space",
         function()
             naughty.destroy_all_notifications()
+
+            local s = helpers.get_screen()
+
+            s:destroy_popups()
         end,
         {description = "dismiss notification", group = "notifications"}
     ),

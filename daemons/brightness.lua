@@ -5,8 +5,6 @@
 --   License:    The MIT License (MIT)
 --
 --   Daemon for brightness control
---
---   Note: This daemon requires light, inotifywait to be installed
 -- =====================================================================================
 
 local awful = require("awful")
